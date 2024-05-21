@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace Domain.Models;
 
 [Index(nameof(Key), IsUnique = true)]
-public class TextEntry
+public class Content
 {
     public long Id { get; set; }
 

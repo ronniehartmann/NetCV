@@ -10,5 +10,11 @@ public partial class CvContext : DbContext
     {
     }
 
-    public DbSet<TextEntry> TextEntries { get; set; }
+    public DbSet<Content> Contents { get; set; }
+
+    public DbSet<Experience> Experiences { get; set; }
+
+    public DbSet<Hobby> Hobbies { get; set; }
+
+    public DbSet<Skill> Skills { get; set; }
 }
