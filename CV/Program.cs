@@ -1,7 +1,6 @@
 using CV.Components;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
