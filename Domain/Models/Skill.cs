@@ -9,8 +9,7 @@ public class Skill
 {
     public long Id { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [Range(0, 100)]
     public int Level { get; set; }

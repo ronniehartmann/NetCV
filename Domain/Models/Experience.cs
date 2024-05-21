@@ -8,7 +8,7 @@ public class Experience
 
     public DateOnly? EndDate { get; set; }
 
-    public string Company { get; set; }
+    public required string Company { get; set; }
 
-    public string Text { get; set; }
+    public string? Text { get; set; }
 }

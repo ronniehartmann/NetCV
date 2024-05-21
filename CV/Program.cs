@@ -1,3 +1,4 @@
+using Application.Services;
 using CV.Components;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddRadzenComponents();
+
+builder.Services.AddTransient<IContentService>();
+builder.Services.AddTransient<IExperienceService>();
+builder.Services.AddTransient<IHobbyService>();
+builder.Services.AddTransient<ISkillService>();
 
 var app = builder.Build();
 
