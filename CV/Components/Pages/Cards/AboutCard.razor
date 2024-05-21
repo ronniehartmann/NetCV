@@ -1,0 +1,85 @@
+﻿<RadzenCard id="about">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="7">
+            <RadzenText TextStyle="TextStyle.H4" Text="About Me" />
+            <RadzenText TextStyle="TextStyle.Body1" Style="padding-right: 10px;">
+                Hey! I'm Ronnie Hartmann and I'm in the fourth year of my apprenticeship as an application 
+                developer. In the first year of my apprenticeship at Noser Young, I was introduced to computer science and gained
+                experience with Java. I am now in my fourth year at Noser Engineering and have spent the
+                last three years working mainly with C# and the .NET Framework.
+            </RadzenText>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="5">
+            <RadzenText TextStyle="TextStyle.H4" Text="Bio" />
+            <RadzenRow>
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
+                        <RadzenIcon Icon="calendar_today" />
+                        <RadzenText>Age</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    @Age
+                </RadzenColumn>
+
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
+                        <RadzenIcon Icon="email" />
+                        <RadzenText>E-Mail</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenLink Path="mailto:contact@ronniehartmann.ch" Text="contact@ronniehartmann.ch" />
+                </RadzenColumn>
+
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
+                        <RadzenIcon Icon="phone" />
+                        <RadzenText>Phone</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenLink Path="tel:0768221930" Text="+41 76 822 19 30" />
+                </RadzenColumn>
+
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
+                        <RadzenIcon Icon="code" />
+                        <RadzenText>Github</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenLink Path="https://github.com/ronniehart" Text="ronhart" />
+                </RadzenColumn>
+
+                <RadzenColumn Size="5">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
+                        <RadzenIcon Icon="place" />
+                        <RadzenText>Wohnort</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenText Text="8426 Lufingen, Switzerland" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+
+@code {
+    private string Age = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var dateOfBirth = new DateTime(2004, 10, 25);
+        var today = DateTime.Now;
+        var age = today.Year - dateOfBirth.Year;
+
+        if (today < dateOfBirth.AddYears(age))
+        {
+            age--;
+        }
+
+        Age = age.ToString();
+    }
+}

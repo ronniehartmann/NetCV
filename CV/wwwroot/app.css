@@ -1,0 +1,46 @@
+/* General */
+
+/* Radzen Typography */
+.rz-text-h4 {
+    padding-bottom: 15px;
+}
+
+.rz-link {
+    color: var(--rz-primary);
+}
+
+/* Radzen Layout */
+.rz-header {
+    padding: 15px;
+    background-color: #FFF;
+    box-shadow: none;
+}
+
+    .rz-header a, .rz-header a:hover, .rz-header a:focus {
+        color: #000;
+    }
+
+    .rz-header .rz-link:hover .rz-link-text, .rz-header .rz-link:focus .rz-link-text {
+        text-decoration: none;
+    }
+
+    .rz-header .rz-text-display-h6 {
+        margin-bottom: 0;
+    }
+
+/* Radzen Card */
+.rz-card {
+    padding: 40px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+/* Radzen ProgressBar */
+.rz-progressbar {
+    height: 20px;
+    border-radius: 10px;
+}
+
+.rz-progressbar-value {
+    border-radius: 10px;
+}

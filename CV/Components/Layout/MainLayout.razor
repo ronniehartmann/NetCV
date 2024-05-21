@@ -1,0 +1,40 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenLayout>
+    <RadzenHeader>
+        <RadzenRow Style="height: 100%;">
+            <RadzenColumn Size="0" SizeMD="2" />
+            <RadzenColumn Size="12" SizeMD="8">
+                <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenText TextStyle="TextStyle.DisplayH6">CV Ronnie Hartmann</RadzenText>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
+                        <RadzenLink Path="#about" Text="About" />
+                        <RadzenLink Path="#hobbies" Text="Hobbies" />
+                        <RadzenLink Path="#skills" Text="Skills" />
+                        <RadzenLink Path="#experience" Text="Experience" />
+                        <RadzenLink Path="#education" Text="Education" />
+                        <RadzenLink Path="#portfolio" Text="Portfolio" />
+                        <RadzenLink Path="#references" Text="References" />
+                        <RadzenLink Path="#contact" Text="Contact" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="0" SizeMD="2" />
+        </RadzenRow>
+    </RadzenHeader>
+    
+    <RadzenBody>
+        <div class="rz-p-4">
+            <RadzenRow>
+                <RadzenColumn Size="0" SizeMD="2" />
+                <RadzenColumn Size="12" SizeMD="8">
+                    @Body
+                </RadzenColumn>
+                <RadzenColumn Size="0" SizeMD="2" />
+            </RadzenRow>
+        </div>
+    </RadzenBody>
+    <RadzenFooter>
+        Footer
+    </RadzenFooter>
+</RadzenLayout>

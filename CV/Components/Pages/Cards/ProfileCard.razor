@@ -1,0 +1,28 @@
+﻿@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+<RadzenCard Style="background-image: url('/images/profile-background.jpg'); background-size: cover; background-position: center;">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="4">
+            <img src="images/portrait.jpg" class="portrait" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="8">
+            <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%;">
+                <div style="text-align: center;">
+                    <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">Ronnie Hartmann</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">Software Engineer</RadzenText>
+                </div>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center ">
+                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Text="Hire me"
+                                  Click="@(() => NavigationManager.NavigateTo("#contact"))" />
+                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Icon="file_download" Text="Download CV" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+
+@code {
+
+}
