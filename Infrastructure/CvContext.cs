@@ -22,6 +22,11 @@ public partial class CvContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        Seed(modelBuilder);
+    }
+
+    private void Seed(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Content>().HasData(
             new Content { Id = 1, Key = "PROFILE_FULLNAME", Value = DEFAULT_VALUE },
             new Content { Id = 2, Key = "PROFILE_EMPLOYMENT", Value = DEFAULT_VALUE },
@@ -33,13 +38,7 @@ public partial class CvContext : DbContext
             new Content { Id = 8, Key = "ABOUT_PHONE_LINK", Value = "tel:0123456789" },
             new Content { Id = 9, Key = "ABOUT_GITHUB", Value = DEFAULT_VALUE },
             new Content { Id = 10, Key = "ABOUT_GITHUB_LINK", Value = "https://github.com/maxmuster" },
-            new Content { Id = 11, Key = "ABOUT_RESIDENCE", Value = DEFAULT_VALUE },
-            new Content { Id = 12, Key = "", Value = DEFAULT_VALUE },
-            new Content { Id = 13, Key = "", Value = DEFAULT_VALUE },
-            new Content { Id = 14, Key = "", Value = DEFAULT_VALUE },
-            new Content { Id = 15, Key = "", Value = DEFAULT_VALUE },
-            new Content { Id = 16, Key = "", Value = DEFAULT_VALUE },
-            new Content { Id = 17, Key = "", Value = DEFAULT_VALUE }
+            new Content { Id = 11, Key = "ABOUT_RESIDENCE", Value = DEFAULT_VALUE }
         );
 
         modelBuilder.Entity<Hobby>().HasData(
@@ -48,13 +47,12 @@ public partial class CvContext : DbContext
         );
 
         modelBuilder.Entity<Skill>().HasData(
-            new Skill { Id = 1, Name = DEFAULT_VALUE, Level = 70 },
-            new Skill { Id = 1, Name = DEFAULT_VALUE, Level = 60 }
+            new Skill { Id = 1, Name = DEFAULT_VALUE, Level = 70 }
         );
 
         modelBuilder.Entity<Experience>().HasData(
             new Experience { Id = 1, Company = "Example", Text = DEFAULT_VALUE, StartDate = new DateOnly(2020, 8, 1) },
-            new Experience { Id = 2, Company = "Elpmaxe", Text = DEFAULT_VALUE, StartDate = new DateOnly(2016, 1, 1), EndDate = new DateOnly(2020, 31, 7) }
+            new Experience { Id = 2, Company = "Elpmaxe", Text = DEFAULT_VALUE, StartDate = new DateOnly(2016, 1, 1), EndDate = new DateOnly(2020, 7, 31) }
         );
     }
 }

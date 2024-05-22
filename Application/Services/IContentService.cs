@@ -11,4 +11,8 @@ public interface IContentService
     void SetValue(string key, string value);
 
     Task SetValueAsync(string key, string value);
+
+    void RemoveValue(string key);
+
+    Task RemoveValueAsync(string key);
 }
