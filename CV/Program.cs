@@ -1,13 +1,17 @@
+using Application.Authentication;
 using Application.Services;
 using Application.Services.Impl;
 using CV.Components;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("BasicAuthentication");
+builder.Services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, CvAuthenticationHandler>("BasicAuthentication", null);
+
 builder.Services.AddDbContextPool<CvContext>(options => options
         .UseMySql(
             connectionString,
