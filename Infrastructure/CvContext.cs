@@ -30,6 +30,10 @@ public partial class CvContext : DbContext
         modelBuilder.Entity<Hobby>().Property(h => h.Text).HasMaxLength(50);
         modelBuilder.Entity<Hobby>().Property(h => h.Icon).HasMaxLength(30);
 
+        modelBuilder.Entity<Reference>().Property(r => r.Title).HasMaxLength(30);
+        modelBuilder.Entity<Reference>().Property(r => r.Employment).HasMaxLength(30);
+        modelBuilder.Entity<Reference>().Property(r => r.Text).HasMaxLength(500);
+
         modelBuilder.Entity<Skill>().Property(s => s.Name).HasMaxLength(50);
         modelBuilder.Entity<Skill>()
             .ToTable(t => t.HasCheckConstraint("CK_Skill_Level", "'Level' >= 0 AND 'Level' <= 100"));
@@ -53,18 +57,22 @@ public partial class CvContext : DbContext
             new Content { Key = "ABOUT_RESIDENCE", Value = DEFAULT_VALUE }
         );
 
+        modelBuilder.Entity<Experience>().HasData(
+            new Experience { Id = 1, Company = "Example", Text = DEFAULT_VALUE, StartDate = new DateOnly(2020, 8, 1), IsEducation = false },
+            new Experience { Id = 2, Company = "Elpmaxe", Text = DEFAULT_VALUE, StartDate = new DateOnly(2016, 1, 1), EndDate = new DateOnly(2020, 7, 31), IsEducation = false }
+        );
+
         modelBuilder.Entity<Hobby>().HasData(
             new Hobby { Id = 1, Text = DEFAULT_VALUE, Icon = "code" },
             new Hobby { Id = 2, Text = DEFAULT_VALUE, Icon = "code" }
         );
 
-        modelBuilder.Entity<Skill>().HasData(
-            new Skill { Id = 1, Name = DEFAULT_VALUE, Level = 70 }
+        modelBuilder.Entity<Reference>().HasData(
+            new Reference { Id = 1, Title = "Max Mustermann", Employment = "Musterer", Text = DEFAULT_VALUE }
         );
 
-        modelBuilder.Entity<Experience>().HasData(
-            new Experience { Id = 1, Company = "Example", Text = DEFAULT_VALUE, StartDate = new DateOnly(2020, 8, 1) },
-            new Experience { Id = 2, Company = "Elpmaxe", Text = DEFAULT_VALUE, StartDate = new DateOnly(2016, 1, 1), EndDate = new DateOnly(2020, 7, 31) }
+        modelBuilder.Entity<Skill>().HasData(
+            new Skill { Id = 1, Name = DEFAULT_VALUE, Level = 70 }
         );
     }
 }
