@@ -16,6 +16,8 @@ public partial class CvContext : DbContext
 
     public DbSet<Hobby> Hobbies { get; set; }
 
+    public DbSet<Reference> References { get; set; }
+
     public DbSet<Skill> Skills { get; set; }
 
     private const string DEFAULT_VALUE = "Edit the value in the administrator panel.";

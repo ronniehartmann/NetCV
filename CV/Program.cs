@@ -23,6 +23,7 @@ builder.Services.AddTransient<CvContext>();
 builder.Services.AddTransient<IContentService, ContentService>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<IHobbyService, HobbyService>();
+builder.Services.AddTransient<IReferenceService, ReferenceService>();
 builder.Services.AddTransient<ISkillService, SkillService>();
 
 var app = builder.Build();

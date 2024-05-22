@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(CvContext))]
-    [Migration("20240522165649_Reference")]
+    [Migration("20240522175334_Reference")]
     partial class Reference
     {
         /// <inheritdoc />
@@ -206,7 +206,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reference");
+                    b.ToTable("References");
 
                     b.HasData(
                         new

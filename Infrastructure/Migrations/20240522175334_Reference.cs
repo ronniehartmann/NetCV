@@ -12,7 +12,7 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Reference",
+                name: "References",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -26,12 +26,12 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reference", x => x.Id);
+                    table.PrimaryKey("PK_References", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
-                table: "Reference",
+                table: "References",
                 columns: new[] { "Id", "Employment", "Text", "Title" },
                 values: new object[] { 1L, "Musterer", "Edit the value in the administrator panel.", "Max Mustermann" });
         }
@@ -40,7 +40,7 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Reference");
+                name: "References");
         }
     }
 }

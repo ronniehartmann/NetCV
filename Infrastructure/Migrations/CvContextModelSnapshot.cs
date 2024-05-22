@@ -203,7 +203,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reference");
+                    b.ToTable("References");
 
                     b.HasData(
                         new
