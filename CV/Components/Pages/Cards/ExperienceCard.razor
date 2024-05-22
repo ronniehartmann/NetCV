@@ -1,35 +1,34 @@
-﻿<RadzenCard id="experience">
-    <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
+﻿@inject IExperienceService ExperienceService
 
-    <RadzenTimeline >
+<RadzenCard id="experience">
+    <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
+    <RadzenTimeline>
         <Items>
-            <RadzenTimelineItem PointStyle="PointStyle.Info">
-                <LabelContent>
-                    <RadzenBadge IsPill="true">August 2021 - July 2024</RadzenBadge>
-                </LabelContent>
-                <ChildContent>
-                    <RadzenText TextStyle="TextStyle.H5" Text="Noser Engineering" />
-                    <RadzenText>
-                        After completing the basic apprenticeship year at Noser Young, I joined 
-                        the partner company Noser Engineering. There I learned the programming 
-                        language C# and the .NET Framework. I worked in teams on customer projects 
-                        for the first time and gained experience with Scrum.
-                    </RadzenText>
-                </ChildContent>
-            </RadzenTimelineItem>
-            <RadzenTimelineItem>
-                <LabelContent>
-                    <RadzenBadge IsPill="true" BadgeStyle="BadgeStyle.Light">August 2020 - July 2021</RadzenBadge>
-                </LabelContent>
-                <ChildContent>
-                    <RadzenText TextStyle="TextStyle.H5" Text="Noser Young" />
-                    <RadzenText>
-                        I started my apprenticeship as an application developer at Noser Young, 
-                        where I gained my first professional experience. I was introduced to 
-                        computer science there and learned the programming language Java.
-                    </RadzenText>
-                </ChildContent>
-            </RadzenTimelineItem>
+            @foreach (var experience in Experiences)
+            {
+                <RadzenTimelineItem PointStyle="@(experience.IsActive ? PointStyle.Primary : PointStyle.Light)">
+                    <LabelContent>
+                        <RadzenBadge IsPill="true" BadgeStyle="@(experience.IsActive ? BadgeStyle.Primary : BadgeStyle.Light)">
+                            @experience.Duration
+                        </RadzenBadge>
+                    </LabelContent>
+                    <ChildContent>
+                        <RadzenText TextStyle="TextStyle.H5" Text="@experience.Company" />
+                        <RadzenText>
+                            @experience.Text
+                        </RadzenText>
+                    </ChildContent>
+                </RadzenTimelineItem>
+            }
         </Items>
     </RadzenTimeline>
 </RadzenCard>
+
+@code {
+    private IEnumerable<ExperienceDto> Experiences = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Experiences = await ExperienceService.GetExperiencesAsync();
+    }
+}

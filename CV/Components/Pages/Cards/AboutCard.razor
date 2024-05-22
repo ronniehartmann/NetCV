@@ -1,12 +1,13 @@
-﻿<RadzenCard id="about">
+﻿@using System.Globalization
+
+@inject IContentService ContentService
+
+<RadzenCard id="about">
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="7">
             <RadzenText TextStyle="TextStyle.H4" Text="About Me" />
             <RadzenText TextStyle="TextStyle.Body1" Style="padding-right: 10px;">
-                Hey! I'm Ronnie Hartmann and I'm in the fourth year of my apprenticeship as an application 
-                developer. In the first year of my apprenticeship at Noser Young, I was introduced to computer science and gained
-                experience with Java. I am now in my fourth year at Noser Engineering and have spent the
-                last three years working mainly with C# and the .NET Framework.
+                @ContentService.GetValue("ABOUT_TEXT")
             </RadzenText>
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="5">
@@ -29,7 +30,7 @@
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
-                    <RadzenLink Path="mailto:contact@ronniehartmann.ch" Text="contact@ronniehartmann.ch" />
+                    <RadzenLink Path="@ContentService.GetValue("ABOUT_EMAIL_LINK")" Text="@ContentService.GetValue("ABOUT_EMAIL")" />
                 </RadzenColumn>
 
                 <RadzenColumn Size="5">
@@ -39,7 +40,7 @@
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
-                    <RadzenLink Path="tel:0768221930" Text="+41 76 822 19 30" />
+                    <RadzenLink Path="@ContentService.GetValue("ABOUT_PHONE_LINK")" Text="@ContentService.GetValue("ABOUT_PHONE")" />
                 </RadzenColumn>
 
                 <RadzenColumn Size="5">
@@ -49,7 +50,7 @@
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
-                    <RadzenLink Path="https://github.com/ronniehart" Text="ronhart" />
+                    <RadzenLink Path="@ContentService.GetValue("ABOUT_GITHUB_LINK")" Text="@ContentService.GetValue("ABOUT_GITHUB")" />
                 </RadzenColumn>
 
                 <RadzenColumn Size="5">
@@ -59,7 +60,7 @@
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
-                    <RadzenText Text="8426 Lufingen, Switzerland" />
+                    <RadzenText Text="@ContentService.GetValue("ABOUT_RESIDENCE")" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenColumn>
@@ -71,7 +72,8 @@
 
     protected override void OnInitialized()
     {
-        var dateOfBirth = new DateTime(2004, 10, 25);
+        var plainDateOfBirth = ContentService.GetValue("ABOUT_BIRTHDATE");
+        var dateOfBirth = DateTime.ParseExact(plainDateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture);
         var today = DateTime.Now;
         var age = today.Year - dateOfBirth.Year;
 

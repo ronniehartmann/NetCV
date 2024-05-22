@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager NavigationManager
+@inject IContentService ContentService
 
 @rendermode InteractiveServer
 
@@ -10,8 +11,8 @@
         <RadzenColumn Size="12" SizeMD="8">
             <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%;">
                 <div style="text-align: center;">
-                    <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">Ronnie Hartmann</RadzenText>
-                    <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">Software Engineer</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">@ContentService.GetValue("PROFILE_FULLNAME")</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@ContentService.GetValue("PROFILE_EMPLOYMENT")</RadzenText>
                 </div>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center ">
                     <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Text="Hire me"
