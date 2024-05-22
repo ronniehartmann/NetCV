@@ -21,8 +21,6 @@ namespace Infrastructure.Migrations
                 name: "Contents",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Key = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "longtext", nullable: false)
@@ -30,7 +28,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contents", x => x.Id);
+                    table.PrimaryKey("PK_Contents", x => x.Key);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -42,9 +40,9 @@ namespace Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    Company = table.Column<string>(type: "longtext", nullable: false)
+                    Company = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Text = table.Column<string>(type: "longtext", nullable: true)
+                    Text = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -59,9 +57,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Text = table.Column<string>(type: "longtext", nullable: false)
+                    Text = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Icon = table.Column<string>(type: "longtext", nullable: true)
+                    Icon = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -76,32 +74,33 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Level = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.CheckConstraint("CK_Skill_Level", "'Level' >= 0 AND 'Level' <= 100");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "Contents",
-                columns: new[] { "Id", "Key", "Value" },
+                columns: new[] { "Key", "Value" },
                 values: new object[,]
                 {
-                    { 1L, "PROFILE_FULLNAME", "Edit the value in the administrator panel." },
-                    { 2L, "PROFILE_EMPLOYMENT", "Edit the value in the administrator panel." },
-                    { 3L, "ABOUT_TEXT", "Edit the value in the administrator panel." },
-                    { 4L, "ABOUT_BIRTH_DATE", "25/10/2004" },
-                    { 5L, "ABOUT_EMAIL", "Edit the value in the administrator panel." },
-                    { 6L, "ABOUT_EMAIL_LINK", "mailto:maxmuster@example.com" },
-                    { 7L, "ABOUT_PHONE", "Edit the value in the administrator panel." },
-                    { 8L, "ABOUT_PHONE_LINK", "tel:0123456789" },
-                    { 9L, "ABOUT_GITHUB", "Edit the value in the administrator panel." },
-                    { 10L, "ABOUT_GITHUB_LINK", "https://github.com/maxmuster" },
-                    { 11L, "ABOUT_RESIDENCE", "Edit the value in the administrator panel." }
+                    { "ABOUT_BIRTHDATE", "25/10/2004" },
+                    { "ABOUT_EMAIL", "Edit the value in the administrator panel." },
+                    { "ABOUT_EMAIL_LINK", "mailto:maxmuster@example.com" },
+                    { "ABOUT_GITHUB", "Edit the value in the administrator panel." },
+                    { "ABOUT_GITHUB_LINK", "https://github.com/maxmuster" },
+                    { "ABOUT_PHONE", "Edit the value in the administrator panel." },
+                    { "ABOUT_PHONE_LINK", "tel:0123456789" },
+                    { "ABOUT_RESIDENCE", "Edit the value in the administrator panel." },
+                    { "ABOUT_TEXT", "Edit the value in the administrator panel." },
+                    { "PROFILE_EMPLOYMENT", "Edit the value in the administrator panel." },
+                    { "PROFILE_FULLNAME", "Edit the value in the administrator panel." }
                 });
 
             migrationBuilder.InsertData(
@@ -126,18 +125,6 @@ namespace Infrastructure.Migrations
                 table: "Skills",
                 columns: new[] { "Id", "Level", "Name" },
                 values: new object[] { 1L, 70, "Edit the value in the administrator panel." });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contents_Key",
-                table: "Contents",
-                column: "Key",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Skills_Name",
-                table: "Skills",
-                column: "Name",
-                unique: true);
         }
 
         /// <inheritdoc />

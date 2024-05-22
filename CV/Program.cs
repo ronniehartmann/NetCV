@@ -18,6 +18,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddRadzenComponents();
 
+builder.Services.AddTransient<CvContext>();
+
 builder.Services.AddTransient<IContentService, ContentService>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<IHobbyService, HobbyService>();

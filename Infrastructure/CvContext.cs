@@ -22,23 +22,35 @@ public partial class CvContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Content>().HasKey(c => c.Key);
+
+        modelBuilder.Entity<Experience>().Property(e => e.Company).HasMaxLength(50);
+        modelBuilder.Entity<Experience>().Property(e => e.Text).HasMaxLength(500);
+
+        modelBuilder.Entity<Hobby>().Property(h => h.Text).HasMaxLength(50);
+        modelBuilder.Entity<Hobby>().Property(h => h.Icon).HasMaxLength(30);
+
+        modelBuilder.Entity<Skill>().Property(s => s.Name).HasMaxLength(50);
+        modelBuilder.Entity<Skill>()
+            .ToTable(t => t.HasCheckConstraint("CK_Skill_Level", "'Level' >= 0 AND 'Level' <= 100"));
+
         Seed(modelBuilder);
     }
 
     private void Seed(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Content>().HasData(
-            new Content { Id = 1, Key = "PROFILE_FULLNAME", Value = DEFAULT_VALUE },
-            new Content { Id = 2, Key = "PROFILE_EMPLOYMENT", Value = DEFAULT_VALUE },
-            new Content { Id = 3, Key = "ABOUT_TEXT", Value = DEFAULT_VALUE },
-            new Content { Id = 4, Key = "ABOUT_BIRTH_DATE", Value = "25/10/2004" },
-            new Content { Id = 5, Key = "ABOUT_EMAIL", Value = DEFAULT_VALUE },
-            new Content { Id = 6, Key = "ABOUT_EMAIL_LINK", Value = "mailto:maxmuster@example.com" },
-            new Content { Id = 7, Key = "ABOUT_PHONE", Value = DEFAULT_VALUE },
-            new Content { Id = 8, Key = "ABOUT_PHONE_LINK", Value = "tel:0123456789" },
-            new Content { Id = 9, Key = "ABOUT_GITHUB", Value = DEFAULT_VALUE },
-            new Content { Id = 10, Key = "ABOUT_GITHUB_LINK", Value = "https://github.com/maxmuster" },
-            new Content { Id = 11, Key = "ABOUT_RESIDENCE", Value = DEFAULT_VALUE }
+            new Content { Key = "PROFILE_FULLNAME", Value = DEFAULT_VALUE },
+            new Content { Key = "PROFILE_EMPLOYMENT", Value = DEFAULT_VALUE },
+            new Content { Key = "ABOUT_TEXT", Value = DEFAULT_VALUE },
+            new Content { Key = "ABOUT_BIRTHDATE", Value = "25/10/2004" },
+            new Content { Key = "ABOUT_EMAIL", Value = DEFAULT_VALUE },
+            new Content { Key = "ABOUT_EMAIL_LINK", Value = "mailto:maxmuster@example.com" },
+            new Content { Key = "ABOUT_PHONE", Value = DEFAULT_VALUE },
+            new Content { Key = "ABOUT_PHONE_LINK", Value = "tel:0123456789" },
+            new Content { Key = "ABOUT_GITHUB", Value = DEFAULT_VALUE },
+            new Content { Key = "ABOUT_GITHUB_LINK", Value = "https://github.com/maxmuster" },
+            new Content { Key = "ABOUT_RESIDENCE", Value = DEFAULT_VALUE }
         );
 
         modelBuilder.Entity<Hobby>().HasData(

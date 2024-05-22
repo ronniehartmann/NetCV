@@ -24,91 +24,70 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.Content", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Key")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
+                    b.HasKey("Key");
 
                     b.ToTable("Contents");
 
                     b.HasData(
                         new
                         {
-                            Id = 1L,
                             Key = "PROFILE_FULLNAME",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 2L,
                             Key = "PROFILE_EMPLOYMENT",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 3L,
                             Key = "ABOUT_TEXT",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 4L,
-                            Key = "ABOUT_BIRTH_DATE",
+                            Key = "ABOUT_BIRTHDATE",
                             Value = "25/10/2004"
                         },
                         new
                         {
-                            Id = 5L,
                             Key = "ABOUT_EMAIL",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 6L,
                             Key = "ABOUT_EMAIL_LINK",
                             Value = "mailto:maxmuster@example.com"
                         },
                         new
                         {
-                            Id = 7L,
                             Key = "ABOUT_PHONE",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 8L,
                             Key = "ABOUT_PHONE_LINK",
                             Value = "tel:0123456789"
                         },
                         new
                         {
-                            Id = 9L,
                             Key = "ABOUT_GITHUB",
                             Value = "Edit the value in the administrator panel."
                         },
                         new
                         {
-                            Id = 10L,
                             Key = "ABOUT_GITHUB_LINK",
                             Value = "https://github.com/maxmuster"
                         },
                         new
                         {
-                            Id = 11L,
                             Key = "ABOUT_RESIDENCE",
                             Value = "Edit the value in the administrator panel."
                         });
@@ -124,7 +103,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Company")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
@@ -133,7 +113,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Text")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
 
@@ -166,11 +147,13 @@ namespace Infrastructure.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Icon")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -204,14 +187,15 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", t =>
+                        {
+                            t.HasCheckConstraint("CK_Skill_Level", "'Level' >= 0 AND 'Level' <= 100");
+                        });
 
                     b.HasData(
                         new
