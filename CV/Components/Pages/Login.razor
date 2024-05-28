@@ -11,6 +11,7 @@
 <RadzenRow>
     <RadzenColumn Size="2" />
     <RadzenColumn Size="8">
+        <RadzenText TextStyle="TextStyle.H2" Text="Login" TextAlign="TextAlign.Center" />
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUserAsync" FormName="login">
             <DataAnnotationsValidator />
             <div class="form-floating mb-3">
@@ -25,9 +26,7 @@
             </div>
             @if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                <div class="alert alert-danger" role="alert">
-                    @ErrorMessage
-                </div>
+                <RadzenAlert AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Text="@ErrorMessage" AllowClose="false" />
             }
             <div>
                 <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
