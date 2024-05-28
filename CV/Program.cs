@@ -29,6 +29,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddRoleStore<DummyRoleStore>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+});
+
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddTransient<IContentService, ContentService>();

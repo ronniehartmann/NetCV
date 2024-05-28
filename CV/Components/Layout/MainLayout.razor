@@ -1,12 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
+@inject IContentService ContentService
+
 <RadzenLayout>
     <RadzenHeader>
         <RadzenRow Style="height: 100%;">
             <RadzenColumn Size="0" SizeMD="2" />
             <RadzenColumn Size="12" SizeMD="8">
                 <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenText TextStyle="TextStyle.DisplayH6">CV Ronnie Hartmann</RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME")</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
                         <RadzenLink Path="#about" Text="About" />
                         <RadzenLink Path="#hobbies" Text="Hobbies" />

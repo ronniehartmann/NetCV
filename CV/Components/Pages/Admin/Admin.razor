@@ -1,8 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 
+@inject NavigationManager NavigationManager
+
 @attribute [Authorize]
 @page "/Admin"
 
 @code {
-
+    protected override void OnAfterRender(bool firstRender)
+    {
+        NavigationManager.NavigateTo("/Admin/Profile", true);
+    }
 }
