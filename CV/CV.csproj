@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Components\Pages\Cards\ProfileCard.razor.css" />
+    <None Remove="Components\Pages\Cv\Cards\ProfileCard.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Components\Pages\Cards\ProfileCard.razor.css" />
+    <Content Include="Components\Pages\Cv\Cards\ProfileCard.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
