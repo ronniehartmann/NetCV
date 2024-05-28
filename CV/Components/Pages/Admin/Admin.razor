@@ -6,8 +6,9 @@
 @page "/Admin"
 
 @code {
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
         NavigationManager.NavigateTo("/Admin/Profile", true);
+        await base.OnInitializedAsync();
     }
 }
