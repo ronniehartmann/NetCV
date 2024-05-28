@@ -2,18 +2,22 @@
 using Domain.Models;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Impl;
 
-public class ExperienceService(CvContext context, ILogger<ExperienceService> logger) : IExperienceService
+public class ExperienceService(IServiceProvider serviceProvider, ILogger<ExperienceService> logger) : IExperienceService
 {
-    private readonly CvContext _context = context;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<ExperienceService> _logger = logger;
 
     public async Task<IEnumerable<ExperienceDto>> GetExperiencesAsync()
     {
-        var experiences = await _context.Experiences.ToListAsync();
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var experiences = await context.Experiences.ToListAsync();
         var experienceDtos = experiences.Select(ConvertToExperienceDto);
         return experienceDtos;
     }
@@ -21,6 +25,9 @@ public class ExperienceService(CvContext context, ILogger<ExperienceService> log
     public async Task AddExperienceAsync(AddExperienceDto experience)
     {
         ArgumentNullException.ThrowIfNull(experience);
+
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
         var experienceModel = new Experience
         {
@@ -30,8 +37,8 @@ public class ExperienceService(CvContext context, ILogger<ExperienceService> log
             Text = experience.Text
         };
 
-        _context.Experiences.Add(experienceModel);
-        await _context.SaveChangesAsync();
+        context.Experiences.Add(experienceModel);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Added experience with company {}", experience.Company);
     }
 
@@ -42,15 +49,18 @@ public class ExperienceService(CvContext context, ILogger<ExperienceService> log
             throw new ArgumentException($"Provided id {id} is invalid.");
         }
 
-        var experience = await _context.Experiences.FindAsync(id);
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var experience = await context.Experiences.FindAsync(id);
         if (experience is null)
         {
             _logger.LogError("Couldn't find experience with id {}", id);
             throw new InvalidOperationException($"Couldn't find experience with id {id}.");
         }
 
-        _context.Experiences.Remove(experience);
-        await _context.SaveChangesAsync();
+        context.Experiences.Remove(experience);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Removed experience {}", id);
     }
 

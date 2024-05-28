@@ -2,18 +2,22 @@
 using Domain.Models;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Impl;
 
-public class SkillService(CvContext context, ILogger<SkillService> logger) : ISkillService
+public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService> logger) : ISkillService
 {
-    private readonly CvContext _context = context;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<SkillService> _logger = logger;
 
     public async Task<IEnumerable<SkillDto>> GetSkillsAsync()
     {
-        var skills = await _context.Skills.ToListAsync();
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var skills = await context.Skills.ToListAsync();
         var skillDtos = skills.Select(ConvertToSkillDto);
         return skillDtos;
     }
@@ -22,14 +26,17 @@ public class SkillService(CvContext context, ILogger<SkillService> logger) : ISk
     {
         ArgumentNullException.ThrowIfNull(skill);
 
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
         var skillModel = new Skill
         {
             Name = skill.Name,
             Level = skill.Level
         };
 
-        _context.Skills.Add(skillModel);
-        await _context.SaveChangesAsync();
+        context.Skills.Add(skillModel);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Added skill {}", skill.Name);
     }
 
@@ -40,15 +47,18 @@ public class SkillService(CvContext context, ILogger<SkillService> logger) : ISk
             throw new ArgumentException($"Provided id {id} is invalid.");
         }
 
-        var skill = await _context.Skills.FindAsync(id);
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var skill = await context.Skills.FindAsync(id);
         if (skill is null)
         {
             _logger.LogError("Couldn't find skill with id {}", id);
             throw new InvalidOperationException($"Couldn't find skill with id {id}.");
         }
 
-        _context.Skills.Remove(skill);
-        await _context.SaveChangesAsync();
+        context.Skills.Remove(skill);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Removed skill {}", id);
     }
 

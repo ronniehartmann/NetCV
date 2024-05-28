@@ -2,18 +2,22 @@
 using Domain.Models;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Impl;
 
-public class ReferenceService(CvContext context, ILogger<ReferenceService> logger) : IReferenceService
+public class ReferenceService(IServiceProvider serviceProvider, ILogger<ReferenceService> logger) : IReferenceService
 {
-    private readonly CvContext _context = context;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<ReferenceService> _logger = logger;
 
     public async Task<IEnumerable<ReferenceDto>> GetReferencesAsync()
     {
-        var references = await _context.References.ToListAsync();
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var references = await context.References.ToListAsync();
         var referenceDtos = references.Select(ConvertToReferenceDto);
         return referenceDtos;
     }
@@ -22,6 +26,9 @@ public class ReferenceService(CvContext context, ILogger<ReferenceService> logge
     {
         ArgumentNullException.ThrowIfNull(reference);
 
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
         var referenceModel = new Reference
         {
             Title = reference.Title,
@@ -29,8 +36,8 @@ public class ReferenceService(CvContext context, ILogger<ReferenceService> logge
             Text = reference.Text
         };
 
-        _context.References.Add(referenceModel);
-        await _context.SaveChangesAsync();
+        context.References.Add(referenceModel);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Added reference {}", reference.Title);
     }
 
@@ -41,15 +48,18 @@ public class ReferenceService(CvContext context, ILogger<ReferenceService> logge
             throw new ArgumentException($"Provided id {id} is invalid.");
         }
 
-        var reference = await _context.References.FindAsync(id);
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var reference = await context.References.FindAsync(id);
         if (reference is null)
         {
             _logger.LogError("Couldn't find reference with id {}", id);
             throw new InvalidOperationException($"Couldn't find reference with id {id}.");
         }
 
-        _context.References.Remove(reference);
-        await _context.SaveChangesAsync();
+        context.References.Remove(reference);
+        await context.SaveChangesAsync();
         _logger.LogInformation("Removed reference {}", id);
     }
 
