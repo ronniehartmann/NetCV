@@ -1,24 +1,40 @@
+using Application.Authentication;
+using Application.Authentication.Stores;
 using Application.Services;
 using Application.Services.Impl;
 using CV.Components;
 using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContextPool<CvContext>(options => options
-        .UseMySql(
-            connectionString,
-            new MariaDbServerVersion(new Version(10, 5, 23))));
-
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddRadzenComponents();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IdentityRedirectManager>();
 
-builder.Services.AddTransient<CvContext>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<CvContext>(options =>
+    options.UseMySql(connectionString, new MariaDbServerVersion(new Version(10, 5, 23))));
+
+builder.Services.Configure<AdminUserConfig>(builder.Configuration.GetSection("Administrator"));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddUserStore<ConfigurationStore>()
+    .AddRoleStore<DummyRoleStore>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+});
+
+builder.Services.AddRadzenComponents();
 
 builder.Services.AddTransient<IContentService, ContentService>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
