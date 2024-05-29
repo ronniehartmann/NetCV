@@ -38,14 +38,14 @@ public class ReferenceService(IServiceProvider serviceProvider, ILogger<Referenc
 
         context.References.Add(referenceModel);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Added reference {}", reference.Title);
+        _logger.LogInformation("Added reference '{}'", reference.Title);
     }
 
     public async Task DeleteReferenceAsync(long id)
     {
         if (id <= 0)
         {
-            throw new ArgumentException($"Provided id {id} is invalid.");
+            throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
         using var scope = _serviceProvider.CreateScope();
@@ -54,13 +54,13 @@ public class ReferenceService(IServiceProvider serviceProvider, ILogger<Referenc
         var reference = await context.References.FindAsync(id);
         if (reference is null)
         {
-            _logger.LogError("Couldn't find reference with id {}", id);
-            throw new InvalidOperationException($"Couldn't find reference with id {id}.");
+            _logger.LogError("Couldn't find reference with id '{}'", id);
+            throw new InvalidOperationException($"Couldn't find reference with id '{id}'.");
         }
 
         context.References.Remove(reference);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Removed reference {}", id);
+        _logger.LogInformation("Removed reference '{}'", id);
     }
 
     private static ReferenceDto ConvertToReferenceDto(Reference reference)

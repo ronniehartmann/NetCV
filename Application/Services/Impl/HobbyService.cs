@@ -72,7 +72,7 @@ public class HobbyService(IServiceProvider serviceProvider, ILogger<HobbyService
 
         context.Hobbies.Remove(hobby);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Removed hobby {}", id);
+        _logger.LogInformation("Removed hobby '{}'", id);
     }
 
     private static HobbyDto ConvertToHobbyDto(Hobby hobby)

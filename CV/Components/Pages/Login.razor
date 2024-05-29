@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 
+@inject ILogger<Login> Logger
 @inject IdentityRedirectManager RedirectManager
 @inject SignInManager<IdentityUser> SignInManager
 
@@ -63,10 +64,16 @@
 
         if (result.Succeeded)
         {
+            Logger.LogInformation("Successful login from IP '{}'",
+                HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else
         {
+            Logger.LogInformation("Invalid login attempt from IP '{}'",
+                HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
             ErrorMessage = "Invalid login attempt.";
         }
     }
