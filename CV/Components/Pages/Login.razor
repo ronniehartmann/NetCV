@@ -60,7 +60,7 @@
     private async Task LoginUserAsync()
     {
         var result = await SignInManager.PasswordSignInAsync(
-            Input.Username, Input.Password, false, lockoutOnFailure: false);
+            Input.Username, Input.Password, false, lockoutOnFailure: true);
 
         if (result.Succeeded)
         {
@@ -68,6 +68,11 @@
                 HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
 
             RedirectManager.RedirectTo(ReturnUrl);
+        }
+        else if (result.IsLockedOut)
+        {
+            Logger.LogWarning("User '{}' locked out.", Input.Username);
+            ErrorMessage = "Account locked out. Please try again later.";
         }
         else
         {

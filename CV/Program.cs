@@ -15,6 +15,8 @@ builder.Logging.AddLog4Net("log4net.config");
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddSingleton<LockoutService>();
+
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
 
@@ -26,6 +28,9 @@ builder.Services.Configure<AdminUserConfig>(builder.Configuration.GetSection("Ad
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+        options.Lockout.MaxFailedAccessAttempts = 3;
+        options.Lockout.AllowedForNewUsers = true;
     })
     .AddUserStore<ConfigurationStore>()
     .AddRoleStore<DummyRoleStore>()

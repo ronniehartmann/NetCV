@@ -3,8 +3,12 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Authentication.Stores;
 
-public class ConfigurationStore(IOptions<AdminUserConfig> options) : IUserStore<IdentityUser>, IUserPasswordStore<IdentityUser>
+public class ConfigurationStore(
+    LockoutService lockoutService,
+    IOptions<AdminUserConfig> options)
+    : IUserStore<IdentityUser>, IUserPasswordStore<IdentityUser>, IUserLockoutStore<IdentityUser>
 {
+    private readonly LockoutService _lockoutService = lockoutService;
     private readonly AdminUserConfig _adminUser = options.Value;
 
     public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
@@ -61,7 +65,7 @@ public class ConfigurationStore(IOptions<AdminUserConfig> options) : IUserStore<
 
     public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(IdentityResult.Success);
     }
 
     public Task SetPasswordHashAsync(IdentityUser user, string? passwordHash, CancellationToken cancellationToken)
@@ -78,5 +82,44 @@ public class ConfigurationStore(IOptions<AdminUserConfig> options) : IUserStore<
     public Task<bool> HasPasswordAsync(IdentityUser user, CancellationToken cancellationToken)
     {
         return Task.FromResult(true);
+    }
+
+    public Task<DateTimeOffset?> GetLockoutEndDateAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_lockoutService.GetLockoutEndDate());
+    }
+
+    public Task SetLockoutEndDateAsync(IdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+    {
+        _lockoutService.SetLockoutEndDate(lockoutEnd);
+        return Task.CompletedTask;
+    }
+
+    public Task<int> IncrementAccessFailedCountAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        _lockoutService.IncrementAccessFailedCount();
+        return Task.FromResult(_lockoutService.GetAccessFailedCount());
+    }
+
+    public Task ResetAccessFailedCountAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        _lockoutService.ResetAccessFailedCount();
+        return Task.CompletedTask;
+    }
+
+    public Task<int> GetAccessFailedCountAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_lockoutService.GetAccessFailedCount());
+    }
+
+    public Task<bool> GetLockoutEnabledAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_lockoutService.GetLockoutEndDate() > DateTimeOffset.Now);
+    }
+
+    public Task SetLockoutEnabledAsync(IdentityUser user, bool enabled, CancellationToken cancellationToken)
+    {
+        _lockoutService.SetLockoutEnabled(enabled);
+        return Task.CompletedTask;
     }
 }
