@@ -1,0 +1,19 @@
+﻿@using Application.Authentication
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+
+@inject IdentityRedirectManager RedirectManager
+@inject SignInManager<IdentityUser> SignInManager
+
+@page "/Account/Logout"
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        RedirectManager.RedirectTo("/");
+    }
+}
