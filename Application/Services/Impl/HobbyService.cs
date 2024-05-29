@@ -39,15 +39,18 @@ public class HobbyService(IServiceProvider serviceProvider, ILogger<HobbyService
             };
 
             context.Hobbies.Add(hobbyModel);
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Added hobby '{}'", hobby.Name);
         }
         else
         {
             existingHobby.Text = hobby.Name;
             existingHobby.Icon = hobby.Icon;
-        }
+            await context.SaveChangesAsync();
 
-        await context.SaveChangesAsync();
-        _logger.LogInformation("Added hobby {}", hobby.Name);
+            _logger.LogInformation("Updated hobby {}", existingHobby.Id);
+        }
     }
 
     public async Task DeleteHobbyAsync(long id)

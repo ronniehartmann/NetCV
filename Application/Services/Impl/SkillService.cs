@@ -22,22 +22,35 @@ public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService
         return skillDtos;
     }
 
-    public async Task AddSkillAsync(SkillDto skill)
+    public async Task AddOrUpdateSkillAsync(SkillDto skill)
     {
         ArgumentNullException.ThrowIfNull(skill);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var skillModel = new Skill
+        var existingSkill = await context.Skills.FindAsync(skill.Id);
+        if (existingSkill is null)
         {
-            Name = skill.Name,
-            Level = skill.Level
-        };
+            var skillModel = new Skill
+            {
+                Name = skill.Name,
+                Level = skill.Level
+            };
 
-        context.Skills.Add(skillModel);
-        await context.SaveChangesAsync();
-        _logger.LogInformation("Added skill {}", skill.Name);
+            context.Skills.Add(skillModel);
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Added skill '{}'", skill.Name);
+        }
+        else
+        {
+            existingSkill.Name = skill.Name;
+            existingSkill.Level = skill.Level;
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Updated skill {}", existingSkill.Id);
+        }
     }
 
     public async Task DeleteSkillAsync(long id)
