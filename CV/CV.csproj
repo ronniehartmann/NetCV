@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Components\Pages\Cards\ProfileCard.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\ContentEditor.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\HobbyEditor.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\SkillsEditor.razor.css" />
+    <None Remove="Components\Pages\Cv\Cards\ProfileCard.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Components\Pages\Cards\ProfileCard.razor.css" />
+    <Content Include="Components\Pages\Admin\Editors\ContentEditor.razor.css" />
+    <Content Include="Components\Pages\Admin\Editors\HobbyEditor.razor.css" />
+    <Content Include="Components\Pages\Admin\Editors\SkillsEditor.razor.css" />
+    <Content Include="Components\Pages\Cv\Cards\ProfileCard.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,11 +26,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Radzen.Blazor" Version="4.31.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,138 @@
+﻿@using Microsoft.AspNetCore.Authorization
+
+@inject NotificationService NotificationService
+@inject ISkillService SkillService
+
+@rendermode InteractiveServer
+@attribute [Authorize]
+@page "/Admin/Skills"
+
+<RadzenText TextStyle="TextStyle.H2" Text="Skills" />
+
+@if (!Skills.Any())
+{
+    <RadzenText Text="No skills created yet" />
+}
+else
+{
+    <div class="scroll-container">
+        @foreach (var skill in Skills)
+        {
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenLabel Component="Name" Text="Name" />
+                        <RadzenTextBox Name="Name" Value="@skill.Name" class="w-100" Change="name => TrackChange(skill.Id, name, skill.Level)" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="5">
+                        <RadzenLabel Component="Level" Text="@($"Level ({skill.Level})")" />
+                        <RadzenSlider Name="Level" class="w-100" TValue="int" Value="@skill.Level" Min="0" Max="100" Change="level => TrackChange(skill.Id, skill.Name, level)" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="1">
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Right" AlignItems="AlignItems.Center" Style="height: 100%;">
+                            <RadzenButton Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="async () => await DeleteSkillAsync(skill.Id)" />
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        }
+    </div>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Variant="Variant.Flat" Icon="done"
+                      Text="Save changes" Click="async () => await SaveChangesAsync()"
+                      Disabled="!ChangedSkills.Any()" />
+    </RadzenStack>
+
+    <hr />
+    <RadzenText TextStyle="TextStyle.H4" Text="Add Skill" />
+
+    <RadzenCard Variant="Variant.Outlined">
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenLabel Component="AddSkillName" Text="Name" />
+                <RadzenTextBox Name="AddSkillName" class="w-100" @bind-Value="SkillToAdd.Name" Placeholder="Java" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenLabel Component="AddSkillLevel" Text="@($"Level ({SkillToAdd.Level})")" />
+                <RadzenSlider Name="AddSkillLevel" class="w-100" @bind-Value="SkillToAdd.Level" Min="0" Max="100" />
+            </RadzenColumn>
+            <RadzenColumn Size="12">
+                <RadzenButton Variant="Variant.Flat" Text="Add Skill" Icon="add" class="w-100"
+                              Click="async () => await AddSkillAsync()" />
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenCard>
+}
+
+@code {
+    private IList<SkillDto> Skills = [];
+    private IList<SkillDto> ChangedSkills = [];
+    private SkillDto SkillToAdd = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Skills = (await SkillService.GetSkillsAsync()).ToList();
+    }
+
+    private void TrackChange(long skillId, string skillName, int skillLevel)
+    {
+        var skill = Skills.Single(s => s.Id == skillId);
+        skill.Name = skillName;
+        skill.Level = skillLevel;
+
+        var existingChangedSkill = ChangedSkills.SingleOrDefault(s => s.Id == skillId);
+        if (existingChangedSkill is null)
+        {
+            ChangedSkills.Add(new SkillDto { Id = skillId, Name = skillName, Level = skillLevel });
+        }
+        else
+        {
+            existingChangedSkill.Name = skillName;
+            existingChangedSkill.Level = skillLevel;
+        }
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        foreach (var skill in ChangedSkills)
+        {
+            await SkillService.AddOrUpdateSkillAsync(skill);
+        }
+        NotificationService.Notify(NotificationSeverity.Success,
+            "Updated skills", $"{ChangedSkills.Count} skills were updated.");
+
+        ChangedSkills.Clear();
+    }
+
+    private async Task DeleteSkillAsync(long id)
+    {
+        await SkillService.DeleteSkillAsync(id);
+
+        var existingChangedSkill = ChangedSkills.SingleOrDefault(s => s.Id == id);
+        if (existingChangedSkill is not null)
+        {
+            ChangedSkills.Remove(existingChangedSkill);
+        }
+
+        var existingDbSkill = Skills.Single(s => s.Id == id);
+        Skills.Remove(existingDbSkill);
+
+        NotificationService.Notify(NotificationSeverity.Success,
+            "Deleted skill", $"Skill '{existingDbSkill.Name}' was deleted.");
+    }
+
+    private async Task AddSkillAsync()
+    {
+        if (string.IsNullOrEmpty(SkillToAdd.Name))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add skill", $"The field {nameof(SkillToAdd.Name)} is required");
+            return;
+        }
+
+        await SkillService.AddOrUpdateSkillAsync(SkillToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added skill", $"Added new skill '{SkillToAdd.Name}'");
+
+        Skills = (await SkillService.GetSkillsAsync()).ToList();
+        SkillToAdd = new();
+    }
+}

@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(CvContext))]
-    partial class CvContextModelSnapshot : ModelSnapshot
+    [Migration("20240522160715_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,9 +112,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<bool>("IsEducation")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
@@ -128,7 +128,6 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1L,
                             Company = "Example",
-                            IsEducation = false,
                             StartDate = new DateOnly(2020, 8, 1),
                             Text = "Edit the value in the administrator panel."
                         },
@@ -137,7 +136,6 @@ namespace Infrastructure.Migrations
                             Id = 2L,
                             Company = "Elpmaxe",
                             EndDate = new DateOnly(2020, 7, 31),
-                            IsEducation = false,
                             StartDate = new DateOnly(2016, 1, 1),
                             Text = "Edit the value in the administrator panel."
                         });
@@ -176,42 +174,6 @@ namespace Infrastructure.Migrations
                             Id = 2L,
                             Icon = "code",
                             Text = "Edit the value in the administrator panel."
-                        });
-                });
-
-            modelBuilder.Entity("Domain.Models.Reference", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Employment")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("References");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Employment = "Musterer",
-                            Text = "Edit the value in the administrator panel.",
-                            Title = "Max Mustermann"
                         });
                 });
 

@@ -2,7 +2,7 @@
 
 @inject IContentService ContentService
 
-<RadzenComponents />
+<RadzenComponents @rendermode="InteractiveServer" />
 
 <RadzenLayout>
     <RadzenHeader>
@@ -10,23 +10,19 @@
             <RadzenColumn Size="0" SizeMD="2" />
             <RadzenColumn Size="12" SizeMD="8">
                 <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME")</RadzenText>
+                    <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME") - Admin</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
-                        <RadzenLink Path="#about" Text="About" />
-                        <RadzenLink Path="#hobbies" Text="Hobbies" />
-                        <RadzenLink Path="#skills" Text="Skills" />
-                        <RadzenLink Path="#experience" Text="Experience" />
-                        <RadzenLink Path="#education" Text="Education" />
-                        <RadzenLink Path="#portfolio" Text="Portfolio" />
-                        <RadzenLink Path="#references" Text="References" />
-                        <RadzenLink Path="#contact" Text="Contact" />
+                        <RadzenLink Path="/Admin/Content" Text="Content" />
+                        <RadzenLink Path="/Admin/Hobbies" Text="Hobbies" />
+                        <RadzenLink Path="/Admin/Skills" Text="Skills" />
+                        <RadzenLink Style="font-size: 16pt;" Icon="logout" Path="/Account/Logout" />
                     </RadzenStack>
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="0" SizeMD="2" />
         </RadzenRow>
     </RadzenHeader>
-    
+
     <RadzenBody>
         <div class="rz-p-4">
             <RadzenRow>
