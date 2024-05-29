@@ -5,7 +5,6 @@ public class LockoutService
     private readonly object _lock = new();
     private int _accessFailedCount;
     private DateTimeOffset? _lockoutEnd;
-    private bool _lockoutEnabled;
 
     public int GetAccessFailedCount()
     {
@@ -21,11 +20,6 @@ public class LockoutService
         {
             _accessFailedCount++;
         }
-    }
-
-    public void SetAccessFailedCount(int accessFailedCount)
-    {
-        _accessFailedCount = accessFailedCount;
     }
 
     public void ResetAccessFailedCount()
@@ -48,23 +42,7 @@ public class LockoutService
     {
         lock (_lock)
         {
-            _lockoutEnd = lockoutEnd.Value.AddHours(4);
-        }
-    }
-
-    public bool GetLockoutEnabled()
-    {
-        lock (_lock)
-        {
-            return _lockoutEnabled;
-        }
-    }
-
-    public void SetLockoutEnabled(bool enabled)
-    {
-        lock (_lock)
-        {
-            _lockoutEnabled = enabled;
+            _lockoutEnd = lockoutEnd;
         }
     }
 }

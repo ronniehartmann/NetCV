@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Authentication.Stores;
 
-public class ConfigurationStore(
+public class MonoConfigurationUserStore(
     LockoutService lockoutService,
     IOptions<AdminUserConfig> options)
     : IUserStore<IdentityUser>, IUserPasswordStore<IdentityUser>, IUserLockoutStore<IdentityUser>
@@ -11,25 +11,22 @@ public class ConfigurationStore(
     private readonly LockoutService _lockoutService = lockoutService;
     private readonly AdminUserConfig _adminUser = options.Value;
 
-    public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    private const string USER_EDIT_NOT_SUPPORTED = "Editing users is not supported.";
 
-    public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-        return;
-    }
-
+    #region Supported Methods
     public Task<IdentityUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        var user = _adminUser.Username == userId ? new IdentityUser { Id = userId, UserName = _adminUser.Username } : null;
-        return Task.FromResult(user);
+        if (string.Equals(_adminUser.Username, userId))
+        {
+            var user = new IdentityUser
+            {
+                Id = userId,
+                UserName = userId
+            } ?? null;
+            return Task.FromResult(user);
+        }
+
+        return Task.FromResult<IdentityUser?>(null);
     }
 
     public Task<IdentityUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
@@ -43,6 +40,11 @@ public class ConfigurationStore(
         return Task.FromResult(user.UserName?.ToUpper());
     }
 
+    public Task SetNormalizedUserNameAsync(IdentityUser user, string? normalizedName, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
     public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken)
     {
         return Task.FromResult(user.UserName!);
@@ -51,26 +53,6 @@ public class ConfigurationStore(
     public Task<string?> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
     {
         return Task.FromResult(user.UserName);
-    }
-
-    public Task SetNormalizedUserNameAsync(IdentityUser user, string? normalizedName, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task SetUserNameAsync(IdentityUser user, string? userName, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(IdentityResult.Success);
-    }
-
-    public Task SetPasswordHashAsync(IdentityUser user, string? passwordHash, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
     }
 
     public Task<string?> GetPasswordHashAsync(IdentityUser user, CancellationToken cancellationToken)
@@ -84,9 +66,14 @@ public class ConfigurationStore(
         return Task.FromResult(true);
     }
 
-    public Task<DateTimeOffset?> GetLockoutEndDateAsync(IdentityUser user, CancellationToken cancellationToken)
+    public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_lockoutService.GetLockoutEndDate());
+        return Task.FromResult(IdentityResult.Success);
+    }
+
+    public void Dispose()
+    {
+        return;
     }
 
     public Task SetLockoutEndDateAsync(IdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
@@ -119,7 +106,34 @@ public class ConfigurationStore(
 
     public Task SetLockoutEnabledAsync(IdentityUser user, bool enabled, CancellationToken cancellationToken)
     {
-        _lockoutService.SetLockoutEnabled(enabled);
         return Task.CompletedTask;
     }
+
+    public Task<DateTimeOffset?> GetLockoutEndDateAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_lockoutService.GetLockoutEndDate());
+    }
+    #endregion
+
+    #region Unsupported Methods
+    public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        throw new NotSupportedException(USER_EDIT_NOT_SUPPORTED);
+    }
+
+    public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        throw new NotSupportedException(USER_EDIT_NOT_SUPPORTED);
+    }
+
+    public Task SetUserNameAsync(IdentityUser user, string? userName, CancellationToken cancellationToken)
+    {
+        throw new NotSupportedException(USER_EDIT_NOT_SUPPORTED);
+    }
+
+    public Task SetPasswordHashAsync(IdentityUser user, string? passwordHash, CancellationToken cancellationToken)
+    {
+        throw new NotSupportedException(USER_EDIT_NOT_SUPPORTED);
+    }
+    #endregion
 }
