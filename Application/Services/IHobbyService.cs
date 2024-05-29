@@ -6,7 +6,7 @@ public interface IHobbyService
 {
     Task<IEnumerable<HobbyDto>> GetHobbiesAsync();
 
-    Task AddHobbyAsync(HobbyDto hobby);
+    Task AddOrUpdateHobbyAsync(HobbyDto hobby);
 
     Task DeleteHobbyAsync(long id);
 }

@@ -2,6 +2,8 @@
 
 @inject IContentService ContentService
 
+<RadzenComponents @rendermode="InteractiveServer" />
+
 <RadzenLayout>
     <RadzenHeader>
         <RadzenRow Style="height: 100%;">
@@ -11,6 +13,7 @@
                     <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME") - Admin</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
                         <RadzenLink Path="/Admin/Content" Text="Content" />
+                        <RadzenLink Path="/Admin/Hobbies" Text="Hobbies" />
                         <RadzenLink Icon="logout" Path="/Account/Login" />
                     </RadzenStack>
                 </RadzenStack>
