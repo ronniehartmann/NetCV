@@ -2,6 +2,8 @@
 
 public interface IContentService
 {
+    Task<IDictionary<string, string>> GetAllValuesAsync();
+
     string GetValue(string key);
 
     Task<string> GetValueAsync(string key);

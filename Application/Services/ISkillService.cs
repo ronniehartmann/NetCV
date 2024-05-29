@@ -6,7 +6,7 @@ public interface ISkillService
 {
     Task<IEnumerable<SkillDto>> GetSkillsAsync();
 
-    Task AddSkillAsync(SkillDto skill);
+    Task AddOrUpdateSkillAsync(SkillDto skill);
 
     Task DeleteSkillAsync(long id);
 }

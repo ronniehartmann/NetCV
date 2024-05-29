@@ -22,22 +22,35 @@ public class HobbyService(IServiceProvider serviceProvider, ILogger<HobbyService
         return hobbyDtos;
     }
 
-    public async Task AddHobbyAsync(HobbyDto hobby)
+    public async Task AddOrUpdateHobbyAsync(HobbyDto hobby)
     {
         ArgumentNullException.ThrowIfNull(hobby);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var hobbyModel = new Hobby
+        var existingHobby = await context.Hobbies.FindAsync(hobby.Id);
+        if (existingHobby is null)
         {
-            Text = hobby.Name,
-            Icon = hobby.Icon
-        };
+            var hobbyModel = new Hobby
+            {
+                Text = hobby.Name,
+                Icon = hobby.Icon
+            };
 
-        context.Hobbies.Add(hobbyModel);
-        await context.SaveChangesAsync();
-        _logger.LogInformation("Added hobby {}", hobby.Name);
+            context.Hobbies.Add(hobbyModel);
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Added hobby '{}'", hobby.Name);
+        }
+        else
+        {
+            existingHobby.Text = hobby.Name;
+            existingHobby.Icon = hobby.Icon;
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Updated hobby {}", existingHobby.Id);
+        }
     }
 
     public async Task DeleteHobbyAsync(long id)

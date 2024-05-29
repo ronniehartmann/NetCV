@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Authorization
+
+@inject NotificationService NotificationService
+@inject IContentService ContentService
+
+@rendermode InteractiveServer
+@attribute [Authorize]
+@page "/Admin/Content"
+
+<RadzenText TextStyle="TextStyle.H2" Text="Content" />
+
+<div class="scroll-container">
+    <RadzenRow>
+        @foreach (var content in Contents)
+        {
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenCard class="p-3" Variant="Variant.Outlined">
+                    <RadzenText TextStyle="TextStyle.Caption" Text="@content.Key" />
+                    <RadzenTextBox Value="@Contents[content.Key]"
+                                   class="w-100" Change="value => TrackChange(content.Key, value)" />
+                </RadzenCard>
+            </RadzenColumn>
+        }
+    </RadzenRow>
+</div>
+
+<RadzenButton Text="Save Changes" Disabled="!ChangedContents.Any()"
+              Variant="Variant.Flat" class="w-100" Click="SaveChanges" />
+
+@code {
+    private Dictionary<string, string> Contents = [];
+    private Dictionary<string, string> ChangedContents = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Contents = (Dictionary<string, string>)await ContentService.GetAllValuesAsync();
+    }
+
+    private void TrackChange(string key, string value)
+    {
+        Contents[key] = value;
+
+        if (ChangedContents.ContainsKey(key))
+        {
+            ChangedContents[key] = value;
+        }
+        else
+        {
+            ChangedContents.Add(key, value);
+        }
+    }
+
+    private void SaveChanges()
+    {
+        foreach (var content in ChangedContents)
+        {
+            ContentService.SetValue(content.Key, content.Value);
+        }
+        NotificationService.Notify(NotificationSeverity.Success, 
+            "Updated content", $"{ChangedContents.Count} content entries were updated.");
+
+        ChangedContents.Clear();
+    }
+}

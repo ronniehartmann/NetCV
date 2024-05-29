@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +10,15 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<ContentService> _logger = logger;
+
+    public async Task<IDictionary<string, string>> GetAllValuesAsync()
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var contents = await context.Contents.ToListAsync();
+        return contents.ToDictionary(x => x.Key, x => x.Value);
+    }
 
     public string GetValue(string key)
     {
@@ -66,13 +76,23 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var content = new Content
+        var existingContent = context.Contents.Find(key);
+        if (existingContent is null)
         {
-            Key = key,
-            Value = value
-        };
+            var content = new Content
+            {
+                Key = key,
+                Value = value
+            };
 
-        context.Contents.Add(content);
+            context.Contents.Add(content);
+        }
+        else
+        {
+            existingContent.Value = value;
+            context.Contents.Update(existingContent);
+        }
+
         context.SaveChanges();
     }
 
@@ -84,13 +104,23 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var content = new Content
+        var existingContent = await context.Contents.FindAsync(key);
+        if (existingContent is null)
         {
-            Key = key,
-            Value = value
-        };
+            var content = new Content
+            {
+                Key = key,
+                Value = value
+            };
 
-        context.Contents.Add(content);
+            context.Contents.Add(content);
+        }
+        else
+        {
+            existingContent.Value = value;
+            context.Contents.Update(existingContent);
+        }
+
         await context.SaveChangesAsync();
     }
 
