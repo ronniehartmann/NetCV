@@ -49,7 +49,7 @@ public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService
             existingSkill.Level = skill.Level;
             await context.SaveChangesAsync();
 
-            _logger.LogInformation("Updated skill {}", existingSkill.Id);
+            _logger.LogInformation("Updated skill '{}'", existingSkill.Id);
         }
     }
 
@@ -57,7 +57,7 @@ public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService
     {
         if (id <= 0)
         {
-            throw new ArgumentException($"Provided id {id} is invalid.");
+            throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
         using var scope = _serviceProvider.CreateScope();
@@ -66,13 +66,13 @@ public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService
         var skill = await context.Skills.FindAsync(id);
         if (skill is null)
         {
-            _logger.LogError("Couldn't find skill with id {}", id);
-            throw new InvalidOperationException($"Couldn't find skill with id {id}.");
+            _logger.LogError("Couldn't find skill with id '{}'", id);
+            throw new InvalidOperationException($"Couldn't find skill with id '{id}'.");
         }
 
         context.Skills.Remove(skill);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Removed skill {}", id);
+        _logger.LogInformation("Removed skill '{}'", id);
     }
 
     private static SkillDto ConvertToSkillDto(Skill skill)

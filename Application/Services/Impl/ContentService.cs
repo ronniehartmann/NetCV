@@ -86,14 +86,18 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
             };
 
             context.Contents.Add(content);
+            context.SaveChanges();
+
+            _logger.LogInformation("Added new content '{}'", key);
         }
         else
         {
             existingContent.Value = value;
             context.Contents.Update(existingContent);
-        }
+            context.SaveChanges();
 
-        context.SaveChanges();
+            _logger.LogInformation("Updated value of content '{}' to '{}'", key, value);
+        }
     }
 
     public async Task SetValueAsync(string key, string value)
@@ -114,14 +118,18 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
             };
 
             context.Contents.Add(content);
+            await context.SaveChangesAsync();
+
+            _logger.LogInformation("Added new content '{}'", key);
         }
         else
         {
             existingContent.Value = value;
             context.Contents.Update(existingContent);
-        }
+            await context.SaveChangesAsync();
 
-        await context.SaveChangesAsync();
+            _logger.LogInformation("Updated value of content '{}' to '{}'", key, value);
+        }
     }
 
     public void RemoveValue(string key)
@@ -140,7 +148,7 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
 
         context.Contents.Remove(content);
         context.SaveChanges();
-        _logger.LogInformation("Removed content {}", key);
+        _logger.LogInformation("Removed content '{}'", key);
     }
 
     public async Task RemoveValueAsync(string key)
@@ -159,6 +167,6 @@ public class ContentService(IServiceProvider serviceProvider, ILogger<ContentSer
 
         context.Contents.Remove(content);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Removed content {}", key);
+        _logger.LogInformation("Removed content '{}'", key);
     }
 }

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 
+@inject ILogger<Login> Logger
 @inject IdentityRedirectManager RedirectManager
 @inject SignInManager<IdentityUser> SignInManager
 
@@ -59,14 +60,25 @@
     private async Task LoginUserAsync()
     {
         var result = await SignInManager.PasswordSignInAsync(
-            Input.Username, Input.Password, false, lockoutOnFailure: false);
+            Input.Username, Input.Password, false, lockoutOnFailure: true);
 
         if (result.Succeeded)
         {
+            Logger.LogInformation("Successful login from IP '{}'",
+                HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
             RedirectManager.RedirectTo(ReturnUrl);
+        }
+        else if (result.IsLockedOut)
+        {
+            Logger.LogWarning("User '{}' locked out.", Input.Username);
+            ErrorMessage = "Account locked out. Please try again later.";
         }
         else
         {
+            Logger.LogInformation("Invalid login attempt from IP '{}'",
+                HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
             ErrorMessage = "Invalid login attempt.";
         }
     }

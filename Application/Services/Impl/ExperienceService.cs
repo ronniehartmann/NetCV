@@ -39,14 +39,14 @@ public class ExperienceService(IServiceProvider serviceProvider, ILogger<Experie
 
         context.Experiences.Add(experienceModel);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Added experience with company {}", experience.Company);
+        _logger.LogInformation("Added experience with company '{}'", experience.Company);
     }
 
     public async Task DeleteExperienceAsync(long id)
     {
         if (id <= 0)
         {
-            throw new ArgumentException($"Provided id {id} is invalid.");
+            throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
         using var scope = _serviceProvider.CreateScope();
@@ -55,13 +55,13 @@ public class ExperienceService(IServiceProvider serviceProvider, ILogger<Experie
         var experience = await context.Experiences.FindAsync(id);
         if (experience is null)
         {
-            _logger.LogError("Couldn't find experience with id {}", id);
-            throw new InvalidOperationException($"Couldn't find experience with id {id}.");
+            _logger.LogError("Couldn't find experience with id '{}'", id);
+            throw new InvalidOperationException($"Couldn't find experience with id '{id}'.");
         }
 
         context.Experiences.Remove(experience);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Removed experience {}", id);
+        _logger.LogInformation("Removed experience '{}'", id);
     }
 
     private static ExperienceDto ConvertToExperienceDto(Experience experience)
