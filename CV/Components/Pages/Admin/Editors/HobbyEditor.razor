@@ -49,42 +49,45 @@ else
         }
     </div>
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Variant="Variant.Flat" Text="Cancel"
+                      Visible="ChangedHobbies.Any()" ButtonStyle="ButtonStyle.Info" Shade="Shade.Lighter"
+                      Click="async () => await CancelChangesAsync()" />
         <RadzenButton Variant="Variant.Flat" Icon="done"
                       Text="Save changes" Click="async () => await SaveChangesAsync()"
                       Disabled="!ChangedHobbies.Any()" />
     </RadzenStack>
-
-    <hr />
-    <RadzenText TextStyle="TextStyle.H4" Text="Add Hobby" />
-
-    <RadzenCard Variant="Variant.Outlined">
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="7">
-                <RadzenLabel Component="AddHobbyName" Text="Name" />
-                <RadzenTextBox Name="AddHobbyName" class="w-100" @bind-Value="HobbyToAdd.Name" Placeholder="Football" />
-            </RadzenColumn>
-            <RadzenColumn Size="8" SizeMD="3">
-                <RadzenLabel Component="AddHobbyIcon" Text="Icon" />
-                <RadzenTextBox Name="AddHobbyIcon" class="w-100" @bind-Value="HobbyToAdd.Icon" Placeholder="sports_soccer" />
-            </RadzenColumn>
-            <RadzenColumn Size="4" SizeMD="2">
-                <RadzenLabel Text="Icon Preview" class="w-100" />
-                @if (string.IsNullOrEmpty(HobbyToAdd.Icon))
-                {
-                    <RadzenText Text="-" class="p-2" />
-                }
-                else
-                {
-                    <RadzenIcon Icon="@HobbyToAdd.Icon" class="p-3" />
-                }
-            </RadzenColumn>
-            <RadzenColumn Size="12">
-                <RadzenButton Variant="Variant.Flat" Text="Add Hobby" Icon="add" class="w-100"
-                              Click="async () => await AddHobbyAsync()" />
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenCard>
 }
+
+<hr />
+<RadzenText TextStyle="TextStyle.H4" Text="Add Hobby" />
+
+<RadzenCard Variant="Variant.Outlined">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="7">
+            <RadzenLabel Component="AddHobbyName" Text="Name" />
+            <RadzenTextBox Name="AddHobbyName" class="w-100" @bind-Value="HobbyToAdd.Name" Placeholder="Football" />
+        </RadzenColumn>
+        <RadzenColumn Size="8" SizeMD="3">
+            <RadzenLabel Component="AddHobbyIcon" Text="Icon" />
+            <RadzenTextBox Name="AddHobbyIcon" class="w-100" @bind-Value="HobbyToAdd.Icon" Placeholder="sports_soccer" />
+        </RadzenColumn>
+        <RadzenColumn Size="4" SizeMD="2">
+            <RadzenLabel Text="Icon Preview" class="w-100" />
+            @if (string.IsNullOrEmpty(HobbyToAdd.Icon))
+            {
+                <RadzenText Text="-" class="p-2" />
+            }
+            else
+            {
+                <RadzenIcon Icon="@HobbyToAdd.Icon" class="p-3" />
+            }
+        </RadzenColumn>
+        <RadzenColumn Size="12">
+            <RadzenButton Variant="Variant.Flat" Text="Add Hobby" Icon="add" class="w-100"
+                          Click="async () => await AddHobbyAsync()" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
 
 @code {
     private IList<HobbyDto> Hobbies = [];
@@ -105,12 +108,11 @@ else
         var existingChangedHobby = ChangedHobbies.SingleOrDefault(h => h.Id == hobbyId);
         if (existingChangedHobby is null)
         {
-            ChangedHobbies.Add(new HobbyDto { Id = hobbyId, Name = hobbyName, Icon = hobbyIcon });
+            ChangedHobbies.Add(hobby);
         }
         else
         {
-            existingChangedHobby.Name = hobbyName;
-            existingChangedHobby.Icon = hobbyIcon;
+            existingChangedHobby = hobby;
         }
     }
 
@@ -124,6 +126,12 @@ else
             "Updated hobbies", $"{ChangedHobbies.Count} hobbies were updated.");
 
         ChangedHobbies.Clear();
+    }
+
+    public async Task CancelChangesAsync()
+    {
+        ChangedHobbies.Clear();
+        Hobbies = (await HobbyService.GetHobbiesAsync()).ToList();
     }
 
     private async Task DeleteHobbyAsync(long id)

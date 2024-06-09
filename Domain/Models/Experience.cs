@@ -10,7 +10,7 @@ public class Experience
 
     public required string Company { get; set; }
 
-    public string? Text { get; set; }
+    public string? CompanyLink { get; set; }
 
-    public bool IsEducation { get; set; }
+    public string? Text { get; set; }
 }

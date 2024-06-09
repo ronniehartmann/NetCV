@@ -38,31 +38,34 @@ else
         }
     </div>
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Variant="Variant.Flat" Text="Cancel"
+                      Visible="ChangedSkills.Any()" ButtonStyle="ButtonStyle.Info" Shade="Shade.Lighter"
+                      Click="async () => await CancelChangesAsync()" />
         <RadzenButton Variant="Variant.Flat" Icon="done"
                       Text="Save changes" Click="async () => await SaveChangesAsync()"
                       Disabled="!ChangedSkills.Any()" />
     </RadzenStack>
-
-    <hr />
-    <RadzenText TextStyle="TextStyle.H4" Text="Add Skill" />
-
-    <RadzenCard Variant="Variant.Outlined">
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="6">
-                <RadzenLabel Component="AddSkillName" Text="Name" />
-                <RadzenTextBox Name="AddSkillName" class="w-100" @bind-Value="SkillToAdd.Name" Placeholder="Java" />
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="6">
-                <RadzenLabel Component="AddSkillLevel" Text="@($"Level ({SkillToAdd.Level})")" />
-                <RadzenSlider Name="AddSkillLevel" class="w-100" @bind-Value="SkillToAdd.Level" Min="0" Max="100" />
-            </RadzenColumn>
-            <RadzenColumn Size="12">
-                <RadzenButton Variant="Variant.Flat" Text="Add Skill" Icon="add" class="w-100"
-                              Click="async () => await AddSkillAsync()" />
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenCard>
 }
+
+<hr />
+<RadzenText TextStyle="TextStyle.H4" Text="Add Skill" />
+
+<RadzenCard Variant="Variant.Outlined">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddSkillName" Text="Name" />
+            <RadzenTextBox Name="AddSkillName" class="w-100" @bind-Value="SkillToAdd.Name" Placeholder="Java" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddSkillLevel" Text="@($"Level ({SkillToAdd.Level})")" />
+            <RadzenSlider Name="AddSkillLevel" class="w-100" @bind-Value="SkillToAdd.Level" Min="0" Max="100" />
+        </RadzenColumn>
+        <RadzenColumn Size="12">
+            <RadzenButton Variant="Variant.Flat" Text="Add Skill" Icon="add" class="w-100"
+                          Click="async () => await AddSkillAsync()" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
 
 @code {
     private IList<SkillDto> Skills = [];
@@ -102,6 +105,12 @@ else
             "Updated skills", $"{ChangedSkills.Count} skills were updated.");
 
         ChangedSkills.Clear();
+    }
+
+    public async Task CancelChangesAsync()
+    {
+        ChangedSkills.Clear();
+        Skills = (await SkillService.GetSkillsAsync()).ToList();
     }
 
     private async Task DeleteSkillAsync(long id)
