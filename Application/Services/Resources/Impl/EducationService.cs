@@ -5,14 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services.Impl;
+namespace Application.Services.Resources.Impl;
 
-public class EducationService(IServiceProvider serviceProvider, ILogger<EducationService> logger) : IEducationService
+public class EducationService(
+    IServiceProvider serviceProvider,
+    ILogger<EducationService> logger) : ResourceService<EducationDto>
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<EducationService> _logger = logger;
 
-    public async Task<IEnumerable<EducationDto>> GetEducationsAsync()
+    public override async Task<IEnumerable<EducationDto>> GetResourcesAsync()
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
@@ -22,49 +24,49 @@ public class EducationService(IServiceProvider serviceProvider, ILogger<Educatio
         return experienceDtos.OrderByDescending(e => e.StartDate);
     }
 
-    public async Task AddEducationAsync(EducationDto education)
+    public override async Task AddResourceAsync(EducationDto resource)
     {
-        ArgumentNullException.ThrowIfNull(education);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
         var educationModel = new Education
         {
-            School = education.School,
-            Title = education.Title,
-            StartDate = education.StartDate,
-            EndDate = education.EndDate
+            School = resource.School,
+            Title = resource.Title,
+            StartDate = resource.StartDate,
+            EndDate = resource.EndDate
         };
 
         context.Educations.Add(educationModel);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Added education with school '{}'", education.School);
+        _logger.LogInformation("Added education with school '{}'", resource.School);
     }
 
-    public async Task UpdateEducationAsync(EducationDto education)
+    public override async Task UpdateResourceAsync(EducationDto resource)
     {
-        ArgumentNullException.ThrowIfNull(education);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var existingEducation = await context.Educations.FindAsync(education.Id)
-            ?? throw new InvalidOperationException($"No education with id '{education.Id}' found");
+        var existingEducation = await context.Educations.FindAsync(resource.Id)
+            ?? throw new InvalidOperationException($"No education with id '{resource.Id}' found");
 
-        if (HasChanges(existingEducation, education))
+        if (!resource.IsEqualToModel(existingEducation))
         {
-            existingEducation.StartDate = education.StartDate;
-            existingEducation.EndDate = education.EndDate;
-            existingEducation.School = education.School;
-            existingEducation.Title = education.Title;
+            existingEducation.StartDate = resource.StartDate;
+            existingEducation.EndDate = resource.EndDate;
+            existingEducation.School = resource.School;
+            existingEducation.Title = resource.Title;
 
             await context.SaveChangesAsync();
-            _logger.LogInformation("Updated education '{}'", education.Id);
+            _logger.LogInformation("Updated education '{}'", resource.Id);
         }
     }
 
-    public async Task DeleteEducationAsync(long id)
+    public override async Task DeleteResourceAsync(long id)
     {
         if (id <= 0)
         {
@@ -84,14 +86,6 @@ public class EducationService(IServiceProvider serviceProvider, ILogger<Educatio
         context.Educations.Remove(education);
         await context.SaveChangesAsync();
         _logger.LogInformation("Removed education '{}'", id);
-    }
-
-    private static bool HasChanges(Education education, EducationDto educationDto)
-    {
-        return education.StartDate != educationDto.StartDate
-            || education.EndDate != educationDto.EndDate
-            || !string.Equals(education.School, educationDto.School)
-            || !string.Equals(education.Title, educationDto.Title);
     }
 
     private static EducationDto ConvertToEducationDto(Education education)

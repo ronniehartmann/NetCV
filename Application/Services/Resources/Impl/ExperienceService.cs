@@ -5,14 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services.Impl;
+namespace Application.Services.Resources.Impl;
 
-public class ExperienceService(IServiceProvider serviceProvider, ILogger<ExperienceService> logger) : IExperienceService
+public class ExperienceService(
+    IServiceProvider serviceProvider,
+    ILogger<ExperienceService> logger) : ResourceService<ExperienceDto>
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<ExperienceService> _logger = logger;
 
-    public async Task<IEnumerable<ExperienceDto>> GetExperiencesAsync()
+    public override async Task<IEnumerable<ExperienceDto>> GetResourcesAsync()
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
@@ -22,51 +24,51 @@ public class ExperienceService(IServiceProvider serviceProvider, ILogger<Experie
         return experienceDtos.OrderByDescending(e => e.StartDate);
     }
 
-    public async Task AddExperienceAsync(ExperienceDto experience)
+    public override async Task AddResourceAsync(ExperienceDto resource)
     {
-        ArgumentNullException.ThrowIfNull(experience);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
         var experienceModel = new Experience
         {
-            StartDate = experience.StartDate,
-            EndDate = experience.EndDate,
-            Company = experience.Company,
-            CompanyLink = experience.CompanyLink,
-            Text = experience.Text
+            StartDate = resource.StartDate,
+            EndDate = resource.EndDate,
+            Company = resource.Company,
+            CompanyLink = resource.CompanyLink,
+            Text = resource.Text
         };
 
         context.Experiences.Add(experienceModel);
         await context.SaveChangesAsync();
-        _logger.LogInformation("Added experience with company '{}'", experience.Company);
+        _logger.LogInformation("Added experience with company '{}'", resource.Company);
     }
 
-    public async Task UpdateExperienceAsync(ExperienceDto experience)
+    public override async Task UpdateResourceAsync(ExperienceDto resource)
     {
-        ArgumentNullException.ThrowIfNull(experience);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var existingExperience = await context.Experiences.FindAsync(experience.Id)
-            ?? throw new InvalidOperationException($"No experience with id '{experience.Id}' found");
+        var existingExperience = await context.Experiences.FindAsync(resource.Id)
+            ?? throw new InvalidOperationException($"No experience with id '{resource.Id}' found");
 
-        if (HasChanges(existingExperience, experience))
+        if (!resource.IsEqualToModel(existingExperience))
         {
-            existingExperience.StartDate = experience.StartDate;
-            existingExperience.EndDate = experience.EndDate;
-            existingExperience.Company = experience.Company;
-            existingExperience.CompanyLink = experience.CompanyLink;
-            existingExperience.Text = experience.Text;
+            existingExperience.StartDate = resource.StartDate;
+            existingExperience.EndDate = resource.EndDate;
+            existingExperience.Company = resource.Company;
+            existingExperience.CompanyLink = resource.CompanyLink;
+            existingExperience.Text = resource.Text;
 
             await context.SaveChangesAsync();
-            _logger.LogInformation("Updated experience '{}'", experience.Id);
+            _logger.LogInformation("Updated experience '{}'", resource.Id);
         }
     }
 
-    public async Task DeleteExperienceAsync(long id)
+    public override async Task DeleteResourceAsync(long id)
     {
         if (id <= 0)
         {
@@ -86,15 +88,6 @@ public class ExperienceService(IServiceProvider serviceProvider, ILogger<Experie
         context.Experiences.Remove(experience);
         await context.SaveChangesAsync();
         _logger.LogInformation("Removed experience '{}'", id);
-    }
-
-    private static bool HasChanges(Experience experience, ExperienceDto experienceDto)
-    {
-        return experience.StartDate != experienceDto.StartDate
-            || experience.EndDate != experienceDto.EndDate
-            || !string.Equals(experience.Company, experienceDto.Company)
-            || !string.Equals(experience.CompanyLink, experienceDto.CompanyLink)
-            || !string.Equals(experience.Text, experienceDto.Text);
     }
 
     private static ExperienceDto ConvertToExperienceDto(Experience experience)

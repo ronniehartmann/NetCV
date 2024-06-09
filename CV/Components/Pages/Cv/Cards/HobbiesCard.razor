@@ -1,4 +1,6 @@
-﻿@inject IHobbyService HobbyService
+﻿@using Application.Services.Resources
+
+@inject ResourceService<HobbyDto> HobbyService
 
 <RadzenCard id="hobbies">
     <RadzenText TextStyle="TextStyle.H4" Text="Hobbies" />
@@ -17,6 +19,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Hobbies = await HobbyService.GetHobbiesAsync();
+        Hobbies = await HobbyService.GetResourcesAsync();
     }
 }

@@ -1,8 +1,9 @@
-﻿@using CV.Components.Pages.Shared
+﻿@using Application.Services.Resources
+@using CV.Components.Pages.Shared
 @using Microsoft.AspNetCore.Authorization
 
 @inject NotificationService NotificationService
-@inject IExperienceService ExperienceService
+@inject ResourceService<ExperienceDto> ExperienceService
 
 @rendermode InteractiveServer
 @attribute [Authorize]
@@ -101,7 +102,7 @@ else if (Experiences is not null)
 
     protected override async Task OnInitializedAsync()
     {
-        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+        Experiences = (await ExperienceService.GetResourcesAsync()).ToList();
     }
 
     private async Task SaveChangesAsync()
@@ -110,7 +111,7 @@ else if (Experiences is not null)
         {
             foreach (var experience in Experiences!)
             {
-                await ExperienceService.UpdateExperienceAsync(experience);
+                await ExperienceService.UpdateResourceAsync(experience);
             }
             HasChanges = false;
             NotificationService.Notify(NotificationSeverity.Success,
@@ -120,7 +121,7 @@ else if (Experiences is not null)
 
     private async Task CancelChangesAsync()
     {
-        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+        Experiences = (await ExperienceService.GetResourcesAsync()).ToList();
         HasChanges = false;
     }
 
@@ -132,16 +133,16 @@ else if (Experiences is not null)
             return;
         }
 
-        await ExperienceService.AddExperienceAsync(ExperienceToAdd);
+        await ExperienceService.AddResourceAsync(ExperienceToAdd);
         NotificationService.Notify(NotificationSeverity.Success, "Added experience", $"Added new experience '{ExperienceToAdd.Company}'");
 
-        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+        Experiences = (await ExperienceService.GetResourcesAsync()).ToList();
         ExperienceToAdd = new();
     }
 
     private async Task DeleteExperienceAsync(long id)
     {
-        await ExperienceService.DeleteExperienceAsync(id);
+        await ExperienceService.DeleteResourceAsync(id);
 
         var existingDbExperience = Experiences!.Single(e => e.Id == id);
         Experiences!.Remove(existingDbExperience);

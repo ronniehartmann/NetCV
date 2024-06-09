@@ -5,14 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services.Impl;
+namespace Application.Services.Resources.Impl;
 
-public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService> logger) : ISkillService
+public class SkillService(
+    IServiceProvider serviceProvider, 
+    ILogger<SkillService> logger) : ResourceService<SkillDto>
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly ILogger<SkillService> _logger = logger;
 
-    public async Task<IEnumerable<SkillDto>> GetSkillsAsync()
+    public override async Task<IEnumerable<SkillDto>> GetResourcesAsync()
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
@@ -22,38 +24,45 @@ public class SkillService(IServiceProvider serviceProvider, ILogger<SkillService
         return skillDtos;
     }
 
-    public async Task AddOrUpdateSkillAsync(SkillDto skill)
+    public override async Task AddResourceAsync(SkillDto resource)
     {
-        ArgumentNullException.ThrowIfNull(skill);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CvContext>();
 
-        var existingSkill = await context.Skills.FindAsync(skill.Id);
-        if (existingSkill is null)
+        var skillModel = new Skill
         {
-            var skillModel = new Skill
-            {
-                Name = skill.Name,
-                Level = skill.Level
-            };
+            Name = resource.Name,
+            Level = resource.Level
+        };
 
-            context.Skills.Add(skillModel);
-            await context.SaveChangesAsync();
+        context.Skills.Add(skillModel);
+        await context.SaveChangesAsync();
+        _logger.LogInformation("Added skill '{}'", resource.Name);
+    }
 
-            _logger.LogInformation("Added skill '{}'", skill.Name);
-        }
-        else
+    public override async Task UpdateResourceAsync(SkillDto resource)
+    {
+        ArgumentNullException.ThrowIfNull(resource);
+
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
+
+        var existingSkill = await context.Skills.FindAsync(resource.Id)
+            ?? throw new InvalidOperationException($"No skill with id '{resource.Id}' found");
+
+        if (!resource.IsEqualToModel(existingSkill))
         {
-            existingSkill.Name = skill.Name;
-            existingSkill.Level = skill.Level;
-            await context.SaveChangesAsync();
+            existingSkill.Name = resource.Name;
+            existingSkill.Level = resource.Level;
 
-            _logger.LogInformation("Updated skill '{}'", existingSkill.Id);
+            await context.SaveChangesAsync();
+            _logger.LogInformation("Updated skill '{}'", resource.Id);
         }
     }
 
-    public async Task DeleteSkillAsync(long id)
+    public override async Task DeleteResourceAsync(long id)
     {
         if (id <= 0)
         {
