@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <None Remove="Components\Pages\Admin\Editors\ContentEditor.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\EducationEditor.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\ExperienceEditor - Copy.razor.css" />
+    <None Remove="Components\Pages\Admin\Editors\ExperienceEditor.razor.css" />
     <None Remove="Components\Pages\Admin\Editors\HobbyEditor.razor.css" />
     <None Remove="Components\Pages\Admin\Editors\SkillsEditor.razor.css" />
     <None Remove="Components\Pages\Cv\Cards\ProfileCard.razor.css" />
@@ -15,6 +18,8 @@
 
   <ItemGroup>
     <Content Include="Components\Pages\Admin\Editors\ContentEditor.razor.css" />
+    <Content Include="Components\Pages\Admin\Editors\EducationEditor.razor.css" />
+    <Content Include="Components\Pages\Admin\Editors\ExperienceEditor.razor.css" />
     <Content Include="Components\Pages\Admin\Editors\HobbyEditor.razor.css" />
     <Content Include="Components\Pages\Admin\Editors\SkillsEditor.razor.css" />
     <Content Include="Components\Pages\Cv\Cards\ProfileCard.razor.css" />

@@ -10,11 +10,15 @@
             <RadzenColumn Size="0" SizeMD="2" />
             <RadzenColumn Size="12" SizeMD="8">
                 <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME") - Admin</RadzenText>
+                    <RadzenLink Path="/">
+                        <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME") - Admin</RadzenText>
+                    </RadzenLink>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
                         <RadzenLink Path="/Admin/Content" Text="Content" />
                         <RadzenLink Path="/Admin/Hobbies" Text="Hobbies" />
                         <RadzenLink Path="/Admin/Skills" Text="Skills" />
+                        <RadzenLink Path="/Admin/Experience" Text="Experience" />
+                        <RadzenLink Path="/Admin/Education" Text="Education" />
                         <RadzenLink Style="font-size: 16pt;" Icon="logout" Path="/Account/Logout" />
                     </RadzenStack>
                 </RadzenStack>

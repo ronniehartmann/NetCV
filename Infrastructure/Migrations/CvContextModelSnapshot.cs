@@ -39,17 +39,17 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Key = "PROFILE_FULLNAME",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "Max Mustermann"
                         },
                         new
                         {
                             Key = "PROFILE_EMPLOYMENT",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "Applikationsentwickler"
                         },
                         new
                         {
                             Key = "ABOUT_TEXT",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "Hello!"
                         },
                         new
                         {
@@ -59,17 +59,17 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Key = "ABOUT_EMAIL",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "max@ronniehartmann.ch"
                         },
                         new
                         {
                             Key = "ABOUT_EMAIL_LINK",
-                            Value = "mailto:maxmuster@example.com"
+                            Value = "mailto:max@ronniehartmann.ch"
                         },
                         new
                         {
                             Key = "ABOUT_PHONE",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "012 345 67 89"
                         },
                         new
                         {
@@ -79,17 +79,55 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Key = "ABOUT_GITHUB",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "ronniehartmann"
                         },
                         new
                         {
                             Key = "ABOUT_GITHUB_LINK",
-                            Value = "https://github.com/maxmuster"
+                            Value = "https://github.com/ronniehartmann"
                         },
                         new
                         {
                             Key = "ABOUT_RESIDENCE",
-                            Value = "Edit the value in the administrator panel."
+                            Value = "9999 Musterstadt, Switzerland"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Models.Education", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("School")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Educations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            School = "BMS Zürich",
+                            StartDate = new DateOnly(2020, 8, 1),
+                            Title = "Technische Maturität"
                         });
                 });
 
@@ -103,14 +141,14 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Company")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("CompanyLink")
+                        .HasColumnType("longtext");
 
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
-
-                    b.Property<bool>("IsEducation")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -127,19 +165,17 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            Company = "Example",
-                            IsEducation = false,
+                            Company = "Contoso",
                             StartDate = new DateOnly(2020, 8, 1),
-                            Text = "Edit the value in the administrator panel."
+                            Text = "Hello!"
                         },
                         new
                         {
                             Id = 2L,
-                            Company = "Elpmaxe",
+                            Company = "Musterfirma",
                             EndDate = new DateOnly(2020, 7, 31),
-                            IsEducation = false,
                             StartDate = new DateOnly(2016, 1, 1),
-                            Text = "Edit the value in the administrator panel."
+                            Text = "Hey"
                         });
                 });
 
@@ -168,14 +204,14 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            Icon = "code",
-                            Text = "Edit the value in the administrator panel."
+                            Icon = "skateboarding",
+                            Text = "Skating"
                         },
                         new
                         {
                             Id = 2L,
                             Icon = "code",
-                            Text = "Edit the value in the administrator panel."
+                            Text = "Coding"
                         });
                 });
 
@@ -209,8 +245,8 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            Employment = "Musterer",
-                            Text = "Edit the value in the administrator panel.",
+                            Employment = "Applikationsentwickler",
+                            Text = "Hey!",
                             Title = "Max Mustermann"
                         });
                 });
@@ -242,8 +278,20 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
+                            Level = 80,
+                            Name = "C#"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Level = 50,
+                            Name = "Java"
+                        },
+                        new
+                        {
+                            Id = 3L,
                             Level = 70,
-                            Name = "Edit the value in the administrator panel."
+                            Name = ".NET Framework"
                         });
                 });
 #pragma warning restore 612, 618

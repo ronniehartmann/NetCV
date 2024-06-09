@@ -44,6 +44,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddTransient<IContentService, ContentService>();
+builder.Services.AddTransient<IEducationService, EducationService>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<IHobbyService, HobbyService>();
 builder.Services.AddTransient<IReferenceService, ReferenceService>();
