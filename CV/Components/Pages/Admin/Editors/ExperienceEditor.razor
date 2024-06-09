@@ -1,0 +1,152 @@
+﻿@using CV.Components.Pages.Shared
+@using Microsoft.AspNetCore.Authorization
+
+@inject NotificationService NotificationService
+@inject IExperienceService ExperienceService
+
+@rendermode InteractiveServer
+@attribute [Authorize]
+@page "/Admin/Experience"
+
+<RadzenText TextStyle="TextStyle.H2">Work Experience</RadzenText>
+
+<LoadingIndicator IsLoading="Experiences is null" />
+
+@if (Experiences is not null && !Experiences.Any())
+{
+    <RadzenText Text="No experiences created yet" />
+}
+else if (Experiences is not null)
+{
+    <div class="scroll-container">
+        @foreach (var experience in Experiences)
+        {
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenText TextStyle="TextStyle.H5" Text="@experience.Company" />
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="5">
+                        <RadzenLabel Component="Company" Text="Company" />
+                        <RadzenTextBox Name="Company" Value="@experience.Company" class="w-100" Change="company => { experience.Company = company; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="3">
+                        <RadzenLabel Component="StartDate" Text="Start Date" />
+                        <RadzenDatePicker TValue="DateOnly" Name="StartDate" Value="@experience.StartDate" class="w-100" Change="startDate => { experience.StartDate = DateOnly.FromDateTime(startDate ?? DateTime.MinValue); HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="3">
+                        <RadzenLabel Component="EndDate" Text="End Date" />
+                        <RadzenDatePicker TValue="DateOnly" Name="EndDate" Value="@experience.EndDate" class="w-100" Change="endDate => { experience.EndDate = DateOnly.FromDateTime(endDate ?? DateTime.MinValue); HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="5">
+                        <RadzenLabel Component="CompanyLink" Text="Company Link" />
+                        <RadzenTextBox Name="CompanyLink" Value="@experience.CompanyLink" class="w-100" Change="companyLink => { experience.CompanyLink = companyLink; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenLabel Component="Text" Text="Text" />
+                        <RadzenTextBox Name="Text" Value="@experience.Text" class="w-100" Change="text => { experience.Text = text; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="1" Style="text-align: right;">
+                        <RadzenLabel class="w-100" />
+                        <RadzenButton Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="async () => await DeleteExperienceAsync(experience.Id)" />
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        }
+    </div>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Variant="Variant.Flat" Text="Cancel"
+                      Visible="HasChanges" ButtonStyle="ButtonStyle.Info" Shade="Shade.Lighter"
+                      Click="async () => await CancelChangesAsync()" />
+        <RadzenButton Variant="Variant.Flat" Icon="done"
+                      Text="Save changes" Click="async () => await SaveChangesAsync()"
+                      Disabled="!HasChanges" />
+    </RadzenStack>
+}
+
+<hr />
+<RadzenText TextStyle="TextStyle.H4" Text="Add Experience" />
+
+<RadzenCard Variant="Variant.Outlined">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddExperienceCompany" Text="Company" />
+            <RadzenTextBox Name="AddExperienceCompany" class="w-100" @bind-Value="ExperienceToAdd.Company" Placeholder="Contoso" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="3">
+            <RadzenLabel Component="AddExperienceStartDate" Text="Start Date" />
+            <RadzenDatePicker TValue="DateOnly" Name="AddExperienceStartDate" class="w-100" @bind-Value="ExperienceToAdd.StartDate" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="3">
+            <RadzenLabel Component="AddExperienceEndDate" Text="End Date" />
+            <RadzenDatePicker TValue="DateOnly?" Name="AddExperienceEndDate" class="w-100" @bind-Value="ExperienceToAdd.EndDate" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddExperienceCompanyLink" Text="Company Link" />
+            <RadzenTextBox Name="AddExperienceCompanyLink" class="w-100" @bind-Value="ExperienceToAdd.CompanyLink" Placeholder="https://example.com" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddExperienceText" Text="Text" />
+            <RadzenTextBox Name="AddExperienceText" class="w-100" @bind-Value="ExperienceToAdd.Text" />
+        </RadzenColumn>
+        <RadzenColumn Size="12">
+            <RadzenButton Variant="Variant.Flat" Text="Add Experience" Icon="add" class="w-100"
+                          Click="async () => await AddExperienceAsync()" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+
+@code {
+    private IList<ExperienceDto>? Experiences;
+    private bool HasChanges;
+    private ExperienceDto ExperienceToAdd = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        if (HasChanges)
+        {
+            foreach (var experience in Experiences!)
+            {
+                await ExperienceService.UpdateExperienceAsync(experience);
+            }
+            HasChanges = false;
+            NotificationService.Notify(NotificationSeverity.Success,
+                "Updated experiences", "Experiences were updated.");
+        }
+    }
+
+    private async Task CancelChangesAsync()
+    {
+        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+        HasChanges = false;
+    }
+
+    private async Task AddExperienceAsync()
+    {
+        if (string.IsNullOrEmpty(ExperienceToAdd.Company))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add experience", $"The field {nameof(ExperienceToAdd.Company)} is required");
+            return;
+        }
+
+        await ExperienceService.AddExperienceAsync(ExperienceToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added experience", $"Added new experience '{ExperienceToAdd.Company}'");
+
+        Experiences = (await ExperienceService.GetExperiencesAsync()).ToList();
+        ExperienceToAdd = new();
+    }
+
+    private async Task DeleteExperienceAsync(long id)
+    {
+        await ExperienceService.DeleteExperienceAsync(id);
+
+        var existingDbExperience = Experiences!.Single(e => e.Id == id);
+        Experiences!.Remove(existingDbExperience);
+
+        NotificationService.Notify(NotificationSeverity.Success,
+            "Deleted experience", $"Experience '{existingDbExperience.Company}' was deleted.");
+    }
+}

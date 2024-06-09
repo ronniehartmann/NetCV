@@ -6,7 +6,9 @@ public interface IExperienceService
 {
     Task<IEnumerable<ExperienceDto>> GetExperiencesAsync();
 
-    Task AddExperienceAsync(AddExperienceDto experience);
+    Task AddExperienceAsync(ExperienceDto experience);
+
+    Task UpdateExperienceAsync(ExperienceDto experience);
 
     Task DeleteExperienceAsync(long id);
 }

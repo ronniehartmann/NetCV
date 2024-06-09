@@ -6,10 +6,22 @@
         <Items>
             @foreach (var experience in Experiences)
             {
-                <RadzenTimelineItem PointStyle="@(experience.IsActive ? PointStyle.Primary : PointStyle.Light)">
+                var isActive = !experience.EndDate.HasValue || experience.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
+                var duration = $"{experience.StartDate.ToString("dd.MM.yyyy")} - ";
+                if (experience.EndDate.HasValue)
+                {
+                    duration += experience.EndDate.Value.ToString("dd.MM.yyyy");
+                }
+                else
+                {
+                    isActive = true;
+                    duration += "Today";
+                }
+
+                <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Light)">
                     <LabelContent>
-                        <RadzenBadge IsPill="true" BadgeStyle="@(experience.IsActive ? BadgeStyle.Primary : BadgeStyle.Light)">
-                            @experience.Duration
+                        <RadzenBadge IsPill="true" BadgeStyle="@(isActive ? BadgeStyle.Primary : BadgeStyle.Light)">
+                            @duration
                         </RadzenBadge>
                     </LabelContent>
                     <ChildContent>

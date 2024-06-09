@@ -1,0 +1,46 @@
+﻿@inject IEducationService EducationService
+
+<RadzenCard id="education">
+    <RadzenText TextStyle="TextStyle.H4" Text="Education" />
+    <RadzenTimeline>
+        <Items>
+            @foreach (var education in Educations)
+            {
+                var isActive = !education.EndDate.HasValue || education.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
+                var duration = $"{education.StartDate.ToString("dd.MM.yyyy")} - ";
+                if (education.EndDate.HasValue)
+                {
+                    duration += education.EndDate.Value.ToString("dd.MM.yyyy");
+                }
+                else
+                {
+                    isActive = true;
+                    duration += "Today";
+                }
+
+                <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Success)">
+                    <LabelContent>
+                        <RadzenBadge IsPill="true" BadgeStyle="@(isActive ? BadgeStyle.Primary : BadgeStyle.Light)">
+                            @duration
+                        </RadzenBadge>
+                    </LabelContent>
+                    <ChildContent>
+                        <RadzenText TextStyle="TextStyle.H5" Text="@education.School" />
+                        <RadzenText>
+                            @education.Title
+                        </RadzenText>
+                    </ChildContent>
+                </RadzenTimelineItem>
+            }
+        </Items>
+    </RadzenTimeline>
+</RadzenCard>
+
+@code {
+    private IEnumerable<EducationDto> Educations = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Educations = await EducationService.GetEducationsAsync();
+    }
+}
