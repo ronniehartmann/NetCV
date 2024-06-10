@@ -1,4 +1,6 @@
-﻿@inject IEducationService EducationService
+﻿@using Application.Services.Resources
+
+@inject ResourceService<EducationDto> EducationService
 
 <RadzenCard id="education">
     <RadzenText TextStyle="TextStyle.H4" Text="Education" />
@@ -41,6 +43,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Educations = await EducationService.GetEducationsAsync();
+        Educations = await EducationService.GetResourcesAsync();
     }
 }

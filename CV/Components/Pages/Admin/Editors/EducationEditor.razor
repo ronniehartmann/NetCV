@@ -1,8 +1,9 @@
-﻿@using CV.Components.Pages.Shared
+﻿@using Application.Services.Resources
+@using CV.Components.Pages.Shared
 @using Microsoft.AspNetCore.Authorization
 
 @inject NotificationService NotificationService
-@inject IEducationService EducationService
+@inject ResourceService<EducationDto> EducationService
 
 @rendermode InteractiveServer
 @attribute [Authorize]
@@ -93,7 +94,7 @@ else if (Educations is not null)
 
     protected override async Task OnInitializedAsync()
     {
-        Educations = (await EducationService.GetEducationsAsync()).ToList();
+        Educations = (await EducationService.GetResourcesAsync()).ToList();
     }
 
     private async Task SaveChangesAsync()
@@ -102,7 +103,7 @@ else if (Educations is not null)
         {
             foreach (var education in Educations!)
             {
-                await EducationService.UpdateEducationAsync(education);
+                await EducationService.UpdateResourceAsync(education);
             }
             HasChanges = false;
             NotificationService.Notify(NotificationSeverity.Success,
@@ -112,7 +113,7 @@ else if (Educations is not null)
 
     private async Task CancelChangesAsync()
     {
-        Educations = (await EducationService.GetEducationsAsync()).ToList();
+        Educations = (await EducationService.GetResourcesAsync()).ToList();
         HasChanges = false;
     }
 
@@ -124,16 +125,16 @@ else if (Educations is not null)
             return;
         }
 
-        await EducationService.AddEducationAsync(EducationToAdd);
+        await EducationService.AddResourceAsync(EducationToAdd);
         NotificationService.Notify(NotificationSeverity.Success, "Added education", $"Added new education '{EducationToAdd.School}'");
 
-        Educations = (await EducationService.GetEducationsAsync()).ToList();
+        Educations = (await EducationService.GetResourcesAsync()).ToList();
         EducationToAdd = new();
     }
 
     private async Task DeleteExperienceAsync(long id)
     {
-        await EducationService.DeleteEducationAsync(id);
+        await EducationService.DeleteResourceAsync(id);
 
         var existingDbEducation = Educations!.Single(e => e.Id == id);
         Educations!.Remove(existingDbEducation);
