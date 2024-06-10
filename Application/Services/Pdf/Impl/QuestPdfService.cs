@@ -1,5 +1,7 @@
 ﻿using Application.Services.Contents;
 using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
 
 namespace Application.Services.Pdf.Impl;
 
@@ -7,28 +9,79 @@ public class QuestPdfService(IContentService contentService) : IPdfService
 {
     private readonly IContentService _contentService = contentService;
 
-    public byte[] GeneratePdf()
+    public async Task<byte[]> GeneratePdfAsync()
     {
-        var pdfBytes = Document.Create(document =>
+        var portraitBytes = File.ReadAllBytes("wwwroot/images/portrait.jpg");
+        var fullName = await _contentService.GetValueAsync("PROFILE_FULLNAME");
+        var employment = await _contentService.GetValueAsync("PROFILE_EMPLOYMENT");
+        var aboutText = await _contentService.GetValueAsync("ABOUT_TEXT");
+
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var bytes = Document.Create(document =>
         {
             document.Page(page =>
             {
+                page.Margin(32);
                 page.Content()
-                    .Element(e =>
+                    .Column(column =>
                     {
-                        e.Image("/images/portrait.jpg");
-                        e.Border(2);
-                    });
+                        column.Item().Row(row =>
+                        {
+                            row.RelativeItem()
+                                .AlignCenter()
+                                .Width(300)
+                                .Padding(30)
+                                .Image(portraitBytes);
+                        });
 
-                page.Content()
-                    .Element(async e =>
-                    {
-                        var fullName = await _contentService.GetValueAsync("PROFILE_FULLNAME");
-                        e.Text(fullName);
+                        column.Item().Row(row =>
+                        {
+                            row.RelativeItem()
+                                .Text(fullName)
+                                .FontSize(36)
+                                .AlignCenter();
+                        });
+
+                        column.Item().Row(row =>
+                        {
+                            row.RelativeItem()
+                                .PaddingBottom(30)
+                                .Text(employment)
+                                .FontSize(22)
+                                .AlignCenter();
+                        });
+
+                        column.Item().Row(row =>
+                        {
+                            row.Spacing(10);
+
+                            row.RelativeItem()
+                                .Column(column =>
+                                {
+                                    column.Item()
+                                        .Text("About Me")
+                                        .FontSize(22);
+
+                                    column.Item()
+                                        .Text(aboutText);
+                                });
+
+                            row.RelativeItem()
+                                .Column(column =>
+                                {
+                                    column.Item()
+                                        .Text("Bio")
+                                        .FontSize(22);
+
+                                    column.Item()
+                                        .Text("-");
+                                });
+                        });                        
                     });
             });
         }).GeneratePdf();
 
-        return pdfBytes;
+        return bytes;
     }
 }

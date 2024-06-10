@@ -2,5 +2,5 @@
 
 public interface IPdfService
 {
-    byte[] GeneratePdf();
+    Task<byte[]> GeneratePdfAsync();
 }

@@ -4,9 +4,23 @@ public abstract class ResourceService<T>
 {
     public abstract Task<IEnumerable<T>> GetResourcesAsync();
 
-    public abstract Task AddResourceAsync(T resource);
+    public virtual Task AddResourceAsync(T resource)
+    {
+        OnDbChange?.Invoke();
+        return Task.CompletedTask;
+    }
 
-    public abstract Task UpdateResourceAsync(T resource);
+    public virtual Task UpdateResourceAsync(T resource)
+    {
+        OnDbChange?.Invoke();
+        return Task.CompletedTask;
+    }
 
-    public abstract Task DeleteResourceAsync(long id);
+    public virtual Task DeleteResourceAsync(long id)
+    {
+        OnDbChange?.Invoke();
+        return Task.CompletedTask;
+    }
+
+    public virtual Action? OnDbChange { get; set; }
 }
