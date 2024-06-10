@@ -1,6 +1,9 @@
-﻿namespace Application.Dtos;
+﻿using Application.Services.Resources.Models;
+using Domain.Models;
 
-public class ReferenceDto
+namespace Application.Dtos;
+
+public class ReferenceDto : Resource<Reference>
 {
     public long Id { get; set; }
 
@@ -9,4 +12,11 @@ public class ReferenceDto
     public string? Employment { get; set; }
 
     public required string Text { get; set; }
+
+    public override bool IsEqualToModel(Reference model)
+    {
+        return string.Equals(Title, model.Title)
+            && string.Equals(Employment, model.Employment)
+            && string.Equals(Text, model.Text);
+    }
 }

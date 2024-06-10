@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Services.Impl;
+namespace Application.Services.Contents.Impl;
 
 public class ContentService(IServiceProvider serviceProvider, ILogger<ContentService> logger) : IContentService
 {

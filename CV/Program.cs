@@ -1,7 +1,12 @@
 using Application.Authentication;
 using Application.Authentication.Stores;
-using Application.Services;
-using Application.Services.Impl;
+using Application.Dtos;
+using Application.Services.Contents;
+using Application.Services.Contents.Impl;
+using Application.Services.Pdf;
+using Application.Services.Pdf.Impl;
+using Application.Services.Resources;
+using Application.Services.Resources.Impl;
 using CV.Components;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
@@ -43,12 +48,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddRadzenComponents();
 
+builder.Services.AddTransient<IPdfService, QuestPdfService>();
 builder.Services.AddTransient<IContentService, ContentService>();
-builder.Services.AddTransient<IEducationService, EducationService>();
-builder.Services.AddTransient<IExperienceService, ExperienceService>();
-builder.Services.AddTransient<IHobbyService, HobbyService>();
-builder.Services.AddTransient<IReferenceService, ReferenceService>();
-builder.Services.AddTransient<ISkillService, SkillService>();
+builder.Services.AddTransient<ResourceService<EducationDto>, EducationService>();
+builder.Services.AddTransient<ResourceService<ExperienceDto>, ExperienceService>();
+builder.Services.AddTransient<ResourceService<HobbyDto>, HobbyService>();
+builder.Services.AddTransient<ResourceService<ReferenceDto>, ReferenceService>();
+builder.Services.AddTransient<ResourceService<SkillDto>, SkillService>();
 
 var app = builder.Build();
 

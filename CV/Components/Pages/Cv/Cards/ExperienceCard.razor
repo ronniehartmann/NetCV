@@ -1,4 +1,6 @@
-﻿@inject IExperienceService ExperienceService
+﻿@using Application.Services.Resources
+
+@inject ResourceService<ExperienceDto> ExperienceService
 
 <RadzenCard id="experience">
     <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
@@ -41,6 +43,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Experiences = await ExperienceService.GetExperiencesAsync();
+        Experiences = await ExperienceService.GetResourcesAsync();
     }
 }

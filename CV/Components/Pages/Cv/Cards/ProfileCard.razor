@@ -1,5 +1,10 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using Application.Services.Contents
+@using Application.Services.Pdf
+
+@inject NavigationManager NavigationManager
 @inject IContentService ContentService
+@inject IPdfService PdfService
+@inject IJSRuntime JsRuntime
 
 @rendermode InteractiveServer
 
@@ -17,13 +22,23 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center ">
                     <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Text="Hire me"
                                   Click="@(() => NavigationManager.NavigateTo("#contact"))" />
-                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light" Variant="Variant.Outlined" Icon="file_download" Text="Download CV" />
+                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
+                                  Variant="Variant.Outlined" Icon="file_download"
+                                  Text="Download CV" Click="DownloadCvAsync" />
                 </RadzenStack>
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
 </RadzenCard>
 
-@code {
+    @code {
+    private async Task DownloadCvAsync()
+    {
+        var bytes = await PdfService.GeneratePdfAsync();
+        var fileStream = new MemoryStream(bytes);
+        var fileName = "CV_Ronnie-Hartmann.pdf";
 
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
 }
