@@ -52,7 +52,7 @@ public class QuestPdfService(
     private async Task<IEnumerable<BioDataItem>> GetBioDataAsync()
     {
         var birthDate = await _contentService.GetValueAsync("ABOUT_BIRTHDATE");
-        var age = (DateTime.Now - DateTime.Parse(birthDate)).Days / 365;
+        var age = (DateTime.Now - DateTime.ParseExact(birthDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)).Days / 365;
 
         return
         [

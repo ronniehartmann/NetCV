@@ -30,8 +30,8 @@ public class CvDocument(PdfData data) : IDocument
                     {
                         row.Spacing(32);
 
-                        row.RelativeItem().Component(new AboutComponent(_data.AboutText));
-                        row.RelativeItem().Component(new BioComponent(_data.Bio));
+                        row.RelativeItem(4).Component(new AboutComponent(_data.AboutText));
+                        row.RelativeItem(5).Component(new BioComponent(_data.Bio));
                     });
 
                     column.Item().Component(new ListComponent("Hobbies", _data.Hobbies));
