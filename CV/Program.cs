@@ -15,7 +15,7 @@ using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddLog4Net("log4net.config");
+builder.Logging.AddLog4Net(builder.Configuration.GetRequiredSection("Log4NetCore:Log4NetConfigFileName").Value);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
