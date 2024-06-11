@@ -1,18 +1,19 @@
 ﻿@using Application.Services.Resources
+@using System.Globalization
 
 @inject ResourceService<ExperienceDto> ExperienceService
 
 <RadzenCard id="experience">
     <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
-    <RadzenTimeline>
+    <RadzenTimeline LinePosition="LinePosition.Left">
         <Items>
             @foreach (var experience in Experiences)
             {
                 var isActive = !experience.EndDate.HasValue || experience.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
-                var duration = $"{experience.StartDate.ToString("dd.MM.yyyy")} - ";
+                var duration = $"{experience.StartDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} - ";
                 if (experience.EndDate.HasValue)
                 {
-                    duration += experience.EndDate.Value.ToString("dd.MM.yyyy");
+                    duration += experience.EndDate.Value.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -21,17 +22,14 @@
                 }
 
                 <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Light)">
-                    <LabelContent>
-                        <RadzenBadge IsPill="true" BadgeStyle="@(isActive ? BadgeStyle.Primary : BadgeStyle.Light)">
-                            @duration
-                        </RadzenBadge>
-                    </LabelContent>
                     <ChildContent>
                         <RadzenText TextStyle="TextStyle.H5" Text="@experience.Company" />
+                        <RadzenText TextStyle="TextStyle.Caption" Style="font-weight: bold;">@duration</RadzenText>
                         <RadzenText>
                             @experience.Text
                         </RadzenText>
                     </ChildContent>
+              
                 </RadzenTimelineItem>
             }
         </Items>
