@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Application.Authentication.Stores;
+namespace Infrastructure.Identity.Stores;
 
 public class DisabledRoleStore : IRoleStore<IdentityRole>
 {

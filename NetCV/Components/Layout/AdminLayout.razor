@@ -1,52 +1,41 @@
-﻿@using Application.Services.Contents
-
-@inherits LayoutComponentBase
-
-@inject IContentService ContentService
+﻿@inherits LayoutComponentBase
 
 <RadzenComponents @rendermode="InteractiveServer" />
 
 <RadzenLayout>
     <RadzenHeader>
         <RadzenRow Style="height: 100%;">
-            <RadzenColumn Size="0" SizeMD="2" />
-            <RadzenColumn Size="12" SizeMD="8">
-                <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenLink Path="/">
-                        <RadzenText TextStyle="TextStyle.DisplayH6">CV @FullName - Admin</RadzenText>
-                    </RadzenLink>
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
-                        <RadzenLink Path="/Admin/Content" Text="Content" />
-                        <RadzenLink Path="/Admin/Hobbies" Text="Hobbies" />
-                        <RadzenLink Path="/Admin/Skills" Text="Skills" />
-                        <RadzenLink Path="/Admin/Experience" Text="Experience" />
-                        <RadzenLink Path="/Admin/Education" Text="Education" />
-                        <RadzenLink Style="font-size: 16pt;" Icon="logout" Path="/Account/Logout" />
-                    </RadzenStack>
-                </RadzenStack>
+            <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
+            <RadzenColumn Size="12" SizeMD="10" SizeLG="8">
+                <RadzenRow>
+                    <RadzenColumn Size="5">
+                        <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceBetween">
+                            <RadzenLink Path="/" Style="padding-top: 11px;">
+                                <RadzenText TextStyle="TextStyle.DisplayH6">NetCV - Admin</RadzenText>
+                            </RadzenLink>
+                        </RadzenStack>
+                    </RadzenColumn>
+                    <RadzenColumn Size="7">
+                        <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.End">
+                            <HeaderLinks Admin="true" />
+                            <RadzenLink Style="font-size: 17pt;" Icon="logout" Path="/Account/Logout" />
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
             </RadzenColumn>
-            <RadzenColumn Size="0" SizeMD="2" />
+            <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
         </RadzenRow>
     </RadzenHeader>
 
     <RadzenBody>
-        <div class="rz-p-4">
+        <div class="body-padding">
             <RadzenRow>
-                <RadzenColumn Size="0" SizeMD="2" />
-                <RadzenColumn Size="12" SizeMD="8">
+                <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
+                <RadzenColumn Size="12" SizeMD="10" SizeLG="8">
                     @Body
                 </RadzenColumn>
-                <RadzenColumn Size="0" SizeMD="2" />
+                <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
             </RadzenRow>
         </div>
     </RadzenBody>
 </RadzenLayout>
-
-@code {
-    private string FullName = string.Empty;
-
-    protected override async Task OnInitializedAsync()
-    {
-        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
-    }
-}

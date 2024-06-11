@@ -1,7 +1,12 @@
 ﻿@using System.Text.Json
+@using Application.Services.Contents
 @using NetCV.Components.Pages.Cv.Cards
 
+@inject IContentService ContentService
+
 @page "/"
+
+<PageTitle>CV @FullName</PageTitle>
 
 <RadzenStack>
     <ProfileCard />
@@ -11,3 +16,12 @@
     <ExperienceCard />
     <EducationCard />
 </RadzenStack>
+
+@code {
+    private string FullName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+    }
+}

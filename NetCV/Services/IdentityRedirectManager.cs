@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Application.Authentication;
+namespace NetCV.Services;
 
 public class IdentityRedirectManager(NavigationManager navigationManager)
 {

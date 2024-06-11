@@ -6,6 +6,6 @@
 
 @media(max-width: 1023px) {
     .portrait {
-        width: 50%;
+        max-width: 240px;
     }
 }

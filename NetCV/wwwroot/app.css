@@ -10,6 +10,20 @@
 }
 
 /* Radzen Layout */
+.body-padding {
+    padding: 1rem;
+}
+
+@media (max-width: 1023px) {
+    .body-padding {
+        padding: 0;
+    }
+
+    .hide-sm {
+        display: none !important;
+    }
+}
+
 .rz-header {
     padding: 15px;
     background-color: #FFF;
@@ -35,6 +49,12 @@
     border-radius: 10px;
 }
 
+@media (max-width: 1023px) {
+    .rz-card {
+        padding: 20px;
+    }
+}
+
 /* Radzen ProgressBar */
 .rz-progressbar {
     height: 20px;
@@ -50,18 +70,6 @@
     background-color: #FFF;
 }
 
-.rz-menu-toggle {
-    color: #000;
-}
-
-    .rz-menu-toggle:hover {
+    .rz-menu:not(.rz-profile-menu) .rz-navigation-item-link .rzi:not(.rz-navigation-item-icon-children), .rz-menu-toggle, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-link, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link, .rz-menu-toggle:hover, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link .rzi:not(.rz-navigation-item-icon-children) {
         color: #000;
     }
-
-.rz-menu:not(.rz-profile-menu) .rz-navigation-item-link {
-    color: #000;
-}
-
-.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
-    color: #000;
-}

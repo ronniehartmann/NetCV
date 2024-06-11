@@ -1,5 +1,3 @@
-using Application.Authentication;
-using Application.Authentication.Stores;
 using Application.Dtos;
 using Application.Services.Contents;
 using Application.Services.Contents.Impl;
@@ -7,12 +5,15 @@ using Application.Services.Pdf;
 using Application.Services.Pdf.Impl;
 using Application.Services.Resources;
 using Application.Services.Resources.Impl;
-using NetCV.Components;
 using Domain.Repositories;
 using Infrastructure;
+using Infrastructure.Identity;
+using Infrastructure.Identity.Stores;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NetCV.Components;
+using NetCV.Services;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);

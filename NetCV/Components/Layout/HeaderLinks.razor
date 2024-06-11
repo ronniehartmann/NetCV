@@ -1,12 +1,28 @@
 ﻿@rendermode InteractiveServer
 
-<RadzenMenu Responsive="true">
-    <RadzenMenuItem Path="#about" Text="About" />
-    <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
-    <RadzenMenuItem Path="#skills" Text="Skills" />
-    <RadzenMenuItem Path="#experience" Text="Experience" />
-    <RadzenMenuItem Path="#education" Text="Education" />
-    <RadzenMenuItem Path="#portfolio" Text="Portfolio" />
-    <RadzenMenuItem Path="#references" Text="References" />
-    <RadzenMenuItem Path="#contact" Text="Contact" />
+<RadzenMenu Responsive="true" Style="text-align: right;">
+    @if (Admin)
+    {
+        <RadzenMenuItem Path="/Admin/Content" Text="Content" />
+        <RadzenMenuItem Path="/Admin/Hobbies" Text="Hobbies" />
+        <RadzenMenuItem Path="/Admin/Skills" Text="Skills" />
+        <RadzenMenuItem Path="/Admin/Experience" Text="Experience" />
+        <RadzenMenuItem Path="/Admin/Education" Text="Education" />
+    }
+    else
+    {
+        <RadzenMenuItem Path="#about" Text="About" />
+        <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
+        <RadzenMenuItem Path="#skills" Text="Skills" />
+        <RadzenMenuItem Path="#experience" Text="Experience" />
+        <RadzenMenuItem Path="#education" Text="Education" />
+        <RadzenMenuItem Path="#portfolio" Text="Portfolio" />
+        <RadzenMenuItem Path="#references" Text="References" />
+        <RadzenMenuItem Path="#contact" Text="Contact" />
+    }
 </RadzenMenu>
+
+@code {
+    [Parameter]
+    public bool Admin { get; set; } = false;
+}
