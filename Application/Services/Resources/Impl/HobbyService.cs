@@ -1,25 +1,20 @@
 ﻿using Application.Dtos;
 using Domain.Models;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Resources.Impl;
 
 public class HobbyService(
-    IServiceProvider serviceProvider,
+    IHobbyRepository hobbyRepository,
     ILogger<HobbyService> logger) : ResourceService<HobbyDto>
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IHobbyRepository _hobbyRepository = hobbyRepository;
     private readonly ILogger<HobbyService> _logger = logger;
 
     public override async Task<IEnumerable<HobbyDto>> GetResourcesAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var hobbies = await context.Hobbies.ToListAsync();
+        var hobbies = await _hobbyRepository.GetAllHobbiesAsync();
         var hobbyDtos = hobbies.Select(ConvertToHobbyDto);
         return hobbyDtos;
     }
@@ -28,17 +23,13 @@ public class HobbyService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var hobbyModel = new Hobby
+        var hobby = new Hobby
         {
             Text = resource.Name,
             Icon = resource.Icon
         };
 
-        context.Hobbies.Add(hobbyModel);
-        await context.SaveChangesAsync();
+        await _hobbyRepository.AddHobbyAsync(hobby);
         _logger.LogInformation("Added skill '{}'", resource.Name);
     }
 
@@ -46,18 +37,15 @@ public class HobbyService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var existingHobby = await context.Hobbies.FindAsync(resource.Id)
+        var hobby = await _hobbyRepository.GetHobbyAsync(resource.Id)
             ?? throw new InvalidOperationException($"No hobby with id '{resource.Id}' found");
 
-        if (!resource.IsEqualToModel(existingHobby))
+        if (!resource.IsEqualToModel(hobby))
         {
-            existingHobby.Text = resource.Name;
-            existingHobby.Icon = resource.Icon;
+            hobby.Text = resource.Name;
+            hobby.Icon = resource.Icon;
 
-            await context.SaveChangesAsync();
+            await _hobbyRepository.UpdateHobbyAsync(hobby);
             _logger.LogInformation("Updated skill '{}'", resource.Id);
         }
     }
@@ -69,18 +57,7 @@ public class HobbyService(
             throw new ArgumentException($"Provided id {id} is invalid.");
         }
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var hobby = await context.Hobbies.FindAsync(id);
-        if (hobby is null)
-        {
-            _logger.LogError("Couldn't find hobby with id {}", id);
-            throw new InvalidOperationException($"Couldn't find hobby with id {id}.");
-        }
-
-        context.Hobbies.Remove(hobby);
-        await context.SaveChangesAsync();
+        await _hobbyRepository.DeleteHobbyAsync(id);
         _logger.LogInformation("Removed hobby '{}'", id);
     }
 

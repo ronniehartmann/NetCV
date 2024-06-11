@@ -1,25 +1,20 @@
 ﻿using Application.Dtos;
 using Domain.Models;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Resources.Impl;
 
 public class ExperienceService(
-    IServiceProvider serviceProvider,
+    IExperienceRepository experienceRepository,
     ILogger<ExperienceService> logger) : ResourceService<ExperienceDto>
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IExperienceRepository _experienceRepository = experienceRepository;
     private readonly ILogger<ExperienceService> _logger = logger;
 
     public override async Task<IEnumerable<ExperienceDto>> GetResourcesAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var experiences = await context.Experiences.ToListAsync();
+        var experiences = await _experienceRepository.GetAllExperiencesAsync();
         var experienceDtos = experiences.Select(ConvertToExperienceDto);
         return experienceDtos.OrderByDescending(e => e.StartDate);
     }
@@ -28,10 +23,7 @@ public class ExperienceService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var experienceModel = new Experience
+        var experience = new Experience
         {
             StartDate = resource.StartDate,
             EndDate = resource.EndDate,
@@ -40,8 +32,7 @@ public class ExperienceService(
             Text = resource.Text
         };
 
-        context.Experiences.Add(experienceModel);
-        await context.SaveChangesAsync();
+        await _experienceRepository.AddExperienceAsync(experience);
         _logger.LogInformation("Added experience with company '{}'", resource.Company);
     }
 
@@ -49,21 +40,18 @@ public class ExperienceService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var existingExperience = await context.Experiences.FindAsync(resource.Id)
+        var experience = await _experienceRepository.GetExperienceAsync(resource.Id)
             ?? throw new InvalidOperationException($"No experience with id '{resource.Id}' found");
 
-        if (!resource.IsEqualToModel(existingExperience))
+        if (!resource.IsEqualToModel(experience))
         {
-            existingExperience.StartDate = resource.StartDate;
-            existingExperience.EndDate = resource.EndDate;
-            existingExperience.Company = resource.Company;
-            existingExperience.CompanyLink = resource.CompanyLink;
-            existingExperience.Text = resource.Text;
+            experience.StartDate = resource.StartDate;
+            experience.EndDate = resource.EndDate;
+            experience.Company = resource.Company;
+            experience.CompanyLink = resource.CompanyLink;
+            experience.Text = resource.Text;
 
-            await context.SaveChangesAsync();
+            await _experienceRepository.UpdateExperienceAsync(experience);
             _logger.LogInformation("Updated experience '{}'", resource.Id);
         }
     }
@@ -75,18 +63,7 @@ public class ExperienceService(
             throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var experience = await context.Experiences.FindAsync(id);
-        if (experience is null)
-        {
-            _logger.LogError("Couldn't find experience with id '{}'", id);
-            throw new InvalidOperationException($"Couldn't find experience with id '{id}'.");
-        }
-
-        context.Experiences.Remove(experience);
-        await context.SaveChangesAsync();
+        await _experienceRepository.DeleteExperienceAsync(id);
         _logger.LogInformation("Removed experience '{}'", id);
     }
 

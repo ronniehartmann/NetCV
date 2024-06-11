@@ -13,7 +13,7 @@
             <RadzenColumn Size="12" SizeMD="8">
                 <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                     <RadzenLink Path="/">
-                        <RadzenText TextStyle="TextStyle.DisplayH6">CV @ContentService.GetValue("PROFILE_FULLNAME") - Admin</RadzenText>
+                        <RadzenText TextStyle="TextStyle.DisplayH6">CV @FullName - Admin</RadzenText>
                     </RadzenLink>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
                         <RadzenLink Path="/Admin/Content" Text="Content" />
@@ -41,3 +41,12 @@
         </div>
     </RadzenBody>
 </RadzenLayout>
+
+@code {
+    private string FullName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+    }
+}
