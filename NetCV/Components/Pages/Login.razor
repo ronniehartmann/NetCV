@@ -10,8 +10,8 @@
 @page "/Account/Login"
 
 <RadzenRow>
-    <RadzenColumn Size="2" />
-    <RadzenColumn Size="8">
+    <RadzenColumn SizeMD="2" />
+    <RadzenColumn SizeMD="8">
         <RadzenText TextStyle="TextStyle.H2" Text="Login" TextAlign="TextAlign.Center" />
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUserAsync" FormName="login">
             <DataAnnotationsValidator />
@@ -34,7 +34,7 @@
             </div>
         </EditForm>
     </RadzenColumn>
-    <RadzenColumn Size="2" />
+    <RadzenColumn SizeMD="2" />
 </RadzenRow>
 
 @code {
