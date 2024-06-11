@@ -10,35 +10,50 @@
 
 <RadzenCard Style="background-image: url('/images/profile-background.jpg'); background-size: cover; background-position: center;">
     <RadzenRow>
-        <RadzenColumn Size="12" SizeMD="4">
+        <RadzenColumn Size="12" SizeMD="4" Style="text-align: center;">
             <img src="images/portrait.jpg" class="portrait" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="8">
             <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%;">
                 <div style="text-align: center;">
-                    <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">@ContentService.GetValue("PROFILE_FULLNAME")</RadzenText>
-                    <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@ContentService.GetValue("PROFILE_EMPLOYMENT")</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">@FullName</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@Employment</RadzenText>
                 </div>
-                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center ">
-                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Text="Hire me"
-                                  Click="@(() => NavigationManager.NavigateTo("#contact"))" />
+                <div style="text-align: center;">
+                    <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
+                                  Variant="Variant.Flat" Text="Hire me" Click="@(() => NavigationManager.NavigateTo("#contact"))"
+                                  Style="margin: 5px;"/>
+
                     <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
-                                  Variant="Variant.Outlined" Icon="file_download"
-                                  Text="Download CV" Click="DownloadCvAsync" />
-                </RadzenStack>
+                                  Variant="Variant.Outlined" Icon="file_download" Text="Download CV"
+                                  Click="DownloadCvAsync" IsBusy="CvIsGenerating" BusyText="Downloading"
+                                  Style="margin: 5px;"/>
+                </div>
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
 </RadzenCard>
 
-    @code {
+@code {
+    private string FullName = string.Empty;
+    private string Employment = string.Empty;
+    private bool CvIsGenerating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+        Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
+    }
+
     private async Task DownloadCvAsync()
     {
+        CvIsGenerating = true;
         var bytes = await PdfService.GeneratePdfAsync();
         var fileStream = new MemoryStream(bytes);
         var fileName = "CV_Ronnie-Hartmann.pdf";
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
         await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        CvIsGenerating = false;
     }
 }

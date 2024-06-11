@@ -26,7 +26,7 @@
 </div>
 
 <RadzenButton Text="Save Changes" Disabled="!ChangedContents.Any()"
-              Variant="Variant.Flat" class="w-100" Click="SaveChanges" />
+              Variant="Variant.Flat" class="w-100" Click="SaveChangesAsync" />
 
 @code {
     private Dictionary<string, string> Contents = [];
@@ -51,11 +51,11 @@
         }
     }
 
-    private void SaveChanges()
+    private async Task SaveChangesAsync()
     {
         foreach (var content in ChangedContents)
         {
-            ContentService.SetValue(content.Key, content.Value);
+            await ContentService.SetValueAsync(content.Key, content.Value);
         }
         NotificationService.Notify(NotificationSeverity.Success, 
             "Updated content", $"{ChangedContents.Count} content entries were updated.");

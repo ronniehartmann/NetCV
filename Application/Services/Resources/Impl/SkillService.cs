@@ -1,25 +1,20 @@
 ﻿using Application.Dtos;
 using Domain.Models;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Resources.Impl;
 
 public class SkillService(
-    IServiceProvider serviceProvider, 
+    ISkillRepository skillRepository, 
     ILogger<SkillService> logger) : ResourceService<SkillDto>
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly ISkillRepository _skillRepository = skillRepository;
     private readonly ILogger<SkillService> _logger = logger;
 
     public override async Task<IEnumerable<SkillDto>> GetResourcesAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var skills = await context.Skills.ToListAsync();
+        var skills = await _skillRepository.GetAllSkillsAsync();
         var skillDtos = skills.Select(ConvertToSkillDto);
         return skillDtos;
     }
@@ -28,17 +23,13 @@ public class SkillService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var skillModel = new Skill
+        var skill = new Skill
         {
             Name = resource.Name,
             Level = resource.Level
         };
 
-        context.Skills.Add(skillModel);
-        await context.SaveChangesAsync();
+        await _skillRepository.AddSkillAsync(skill);
         _logger.LogInformation("Added skill '{}'", resource.Name);
     }
 
@@ -46,18 +37,15 @@ public class SkillService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var existingSkill = await context.Skills.FindAsync(resource.Id)
+        var skill = await _skillRepository.GetSkillAsync(resource.Id)
             ?? throw new InvalidOperationException($"No skill with id '{resource.Id}' found");
 
-        if (!resource.IsEqualToModel(existingSkill))
+        if (!resource.IsEqualToModel(skill))
         {
-            existingSkill.Name = resource.Name;
-            existingSkill.Level = resource.Level;
+            skill.Name = resource.Name;
+            skill.Level = resource.Level;
 
-            await context.SaveChangesAsync();
+            await _skillRepository.UpdateSkillAsync(skill);
             _logger.LogInformation("Updated skill '{}'", resource.Id);
         }
     }
@@ -69,18 +57,7 @@ public class SkillService(
             throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var skill = await context.Skills.FindAsync(id);
-        if (skill is null)
-        {
-            _logger.LogError("Couldn't find skill with id '{}'", id);
-            throw new InvalidOperationException($"Couldn't find skill with id '{id}'.");
-        }
-
-        context.Skills.Remove(skill);
-        await context.SaveChangesAsync();
+        await _skillRepository.DeleteSkillAsync(id);
         _logger.LogInformation("Removed skill '{}'", id);
     }
 
