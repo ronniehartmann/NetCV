@@ -7,7 +7,7 @@ using Application.Services.Pdf;
 using Application.Services.Pdf.Impl;
 using Application.Services.Resources;
 using Application.Services.Resources.Impl;
-using CV.Components;
+using NetCV.Components;
 using Domain.Repositories;
 using Infrastructure;
 using Infrastructure.Repositories;
