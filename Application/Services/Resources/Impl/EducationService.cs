@@ -1,25 +1,20 @@
 ﻿using Application.Dtos;
 using Domain.Models;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Resources.Impl;
 
 public class EducationService(
-    IServiceProvider serviceProvider,
+    IEducationRepository educationRepository,
     ILogger<EducationService> logger) : ResourceService<EducationDto>
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IEducationRepository _educationRepository = educationRepository;
     private readonly ILogger<EducationService> _logger = logger;
 
     public override async Task<IEnumerable<EducationDto>> GetResourcesAsync()
     {
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var educations = await context.Educations.ToListAsync();
+        var educations = await _educationRepository.GetAllEducationsAsync();
         var experienceDtos = educations.Select(ConvertToEducationDto);
         return experienceDtos.OrderByDescending(e => e.StartDate);
     }
@@ -28,10 +23,7 @@ public class EducationService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var educationModel = new Education
+        var education = new Education
         {
             School = resource.School,
             Title = resource.Title,
@@ -39,8 +31,7 @@ public class EducationService(
             EndDate = resource.EndDate
         };
 
-        context.Educations.Add(educationModel);
-        await context.SaveChangesAsync();
+        await _educationRepository.AddEducationAsync(education);
         _logger.LogInformation("Added education with school '{}'", resource.School);
     }
 
@@ -48,20 +39,17 @@ public class EducationService(
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var existingEducation = await context.Educations.FindAsync(resource.Id)
+        var education = await _educationRepository.GetEducationAsync(resource.Id)
             ?? throw new InvalidOperationException($"No education with id '{resource.Id}' found");
 
-        if (!resource.IsEqualToModel(existingEducation))
+        if (!resource.IsEqualToModel(education))
         {
-            existingEducation.StartDate = resource.StartDate;
-            existingEducation.EndDate = resource.EndDate;
-            existingEducation.School = resource.School;
-            existingEducation.Title = resource.Title;
+            education.StartDate = resource.StartDate;
+            education.EndDate = resource.EndDate;
+            education.School = resource.School;
+            education.Title = resource.Title;
 
-            await context.SaveChangesAsync();
+            await _educationRepository.UpdateEducationAsync(education);
             _logger.LogInformation("Updated education '{}'", resource.Id);
         }
     }
@@ -73,18 +61,7 @@ public class EducationService(
             throw new ArgumentException($"Provided id '{id}' is invalid.");
         }
 
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<CvContext>();
-
-        var education = await context.Educations.FindAsync(id);
-        if (education is null)
-        {
-            _logger.LogError("Couldn't find education with id '{}'", id);
-            throw new InvalidOperationException($"Couldn't find education with id '{id}'.");
-        }
-
-        context.Educations.Remove(education);
-        await context.SaveChangesAsync();
+        await _educationRepository.DeleteEducationAsync(id);
         _logger.LogInformation("Removed education '{}'", id);
     }
 

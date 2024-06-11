@@ -8,7 +8,9 @@ using Application.Services.Pdf.Impl;
 using Application.Services.Resources;
 using Application.Services.Resources.Impl;
 using CV.Components;
+using Domain.Repositories;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
@@ -26,7 +28,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<CvContext>(options =>
+builder.Services.AddDbContextFactory<CvContext>(options =>
     options.UseMySql(connectionString, new MariaDbServerVersion(new Version(10, 5, 23))));
 
 builder.Services.Configure<AdminUserConfig>(builder.Configuration.GetSection("Administrator"));
@@ -47,6 +49,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddRadzenComponents();
+
+builder.Services.AddTransient<IContentRepository, ContentRepository>();
+builder.Services.AddTransient<IEducationRepository, EducationRepository>();
+builder.Services.AddTransient<IExperienceRepository, ExperienceRepository>();
+builder.Services.AddTransient<IHobbyRepository, HobbyRepository>();
+builder.Services.AddTransient<IReferenceRepository, ReferenceRepository>();
+builder.Services.AddTransient<ISkillRepository, SkillRepository>();
 
 builder.Services.AddTransient<IPdfService, QuestPdfService>();
 builder.Services.AddTransient<IContentService, ContentService>();
