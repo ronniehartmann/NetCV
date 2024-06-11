@@ -41,7 +41,7 @@
         </div>
         <RadzenStack AlignItems="AlignItems.Center" Style="margin: 20px 0px;" Gap="5px">
             <RadzenText TextStyle="TextStyle.H5" Text="Ronnie Hartmann" />
-            <RadzenText TextStyle="TextStyle.Caption" Text="V1.2.0" />
+            <RadzenText TextStyle="TextStyle.Caption" Text="@Version" />
             <RadzenLink Path="https://github.com/ronniehartmann/NetCV" Text="GitHub Repository" />
         </RadzenStack>
     </RadzenBody>
@@ -49,9 +49,11 @@
 
 @code {
     private string FullName = string.Empty;
+    private string Version = "V 0.0.0";
 
     protected override async Task OnInitializedAsync()
     {
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+        Version = $"V {typeof(Program).Assembly.GetName().Version!.ToString(3)}";
     }
 }
