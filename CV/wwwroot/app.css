@@ -44,3 +44,24 @@
 .rz-progressbar-value {
     border-radius: 10px;
 }
+
+/* Radzen Menu */
+.rz-menu:not(.rz-profile-menu) {
+    background-color: #FFF;
+}
+
+.rz-menu-toggle {
+    color: #000;
+}
+
+    .rz-menu-toggle:hover {
+        color: #000;
+    }
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-link {
+    color: #000;
+}
+
+.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
+    color: #000;
+}
