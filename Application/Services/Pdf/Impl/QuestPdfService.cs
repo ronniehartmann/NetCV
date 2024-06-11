@@ -3,6 +3,7 @@ using Application.Services.Contents;
 using Application.Services.Pdf.Models;
 using Application.Services.Pdf.Templates;
 using Application.Services.Resources;
+using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.Globalization;
@@ -10,12 +11,14 @@ using System.Globalization;
 namespace Application.Services.Pdf.Impl;
 
 public class QuestPdfService(
+    ILogger<QuestPdfService> logger,
     IContentService contentService,
     ResourceService<HobbyDto> hobbyService,
     ResourceService<SkillDto> skillService,
     ResourceService<ExperienceDto> experienceService,
     ResourceService<EducationDto> educationService) : IPdfService
 {
+    private readonly ILogger<QuestPdfService> _logger = logger;
     private readonly IContentService _contentService = contentService;
     private readonly ResourceService<HobbyDto> _hobbyService = hobbyService;
     private readonly ResourceService<SkillDto> _skillService = skillService;
@@ -29,6 +32,9 @@ public class QuestPdfService(
         QuestPDF.Settings.License = LicenseType.Community;
         var document = new CvDocument(pdfData);
         var bytes = document.GeneratePdf();
+
+        var fileSizeKb = (double)bytes.Length / (1024);
+        _logger.LogInformation("Generated PDF (size: {} KB)", $"{fileSizeKb:N2}");
 
         return bytes;
     }
