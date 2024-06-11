@@ -13,54 +13,54 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="5">
             <RadzenText TextStyle="TextStyle.H4" Text="Bio" />
-            <RadzenRow>
-                <RadzenColumn Size="4">
+            <RadzenRow RowGap="0    ">
+                <RadzenColumn SizeMD="4">
                     <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
                         <RadzenIcon Icon="calendar_today" />
-                        <RadzenText>Age</RadzenText>
+                        <b>Age</b>
                     </RadzenStack>
                 </RadzenColumn>
-                <RadzenColumn Size="8">
+                <RadzenColumn SizeMD="8" Style="padding-bottom: 12px;">
                     @Age
                 </RadzenColumn>
 
-                <RadzenColumn Size="4">
+                <RadzenColumn SizeMD="4">
                     <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
                         <RadzenIcon Icon="email" />
-                        <RadzenText>E-Mail</RadzenText>
+                        <b>E-Mail</b>
                     </RadzenStack>
                 </RadzenColumn>
-                <RadzenColumn Size="8">
+                <RadzenColumn SizeMD="8" Style="padding-bottom: 12px;">
                     <RadzenLink Path="@EmailLink" Text="@Email" />
                 </RadzenColumn>
 
-                <RadzenColumn Size="4">
+                <RadzenColumn SizeMD="4">
                     <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
                         <RadzenIcon Icon="phone" />
-                        <RadzenText>Phone</RadzenText>
+                        <b>Phone</b>
                     </RadzenStack>
                 </RadzenColumn>
-                <RadzenColumn Size="8">
+                <RadzenColumn SizeMD="8" Style="padding-bottom: 12px;">
                     <RadzenLink Path="@PhoneLink" Text="@Phone" />
                 </RadzenColumn>
 
-                <RadzenColumn Size="4">
+                <RadzenColumn SizeMD="4">
                     <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
                         <RadzenIcon Icon="code" />
-                        <RadzenText>Github</RadzenText>
+                        <b>GitHub</b>
                     </RadzenStack>
                 </RadzenColumn>
-                <RadzenColumn Size="8">
+                <RadzenColumn SizeMD="8" Style="padding-bottom: 12px;">
                     <RadzenLink Path="@GitHubLink" Text="@GitHub" />
                 </RadzenColumn>
 
-                <RadzenColumn Size="4">
+                <RadzenColumn SizeMD="4">
                     <RadzenStack Orientation="Orientation.Horizontal" Gap="5px">
                         <RadzenIcon Icon="place" />
-                        <RadzenText>Wohnort</RadzenText>
+                        <b>Wohnort</b>
                     </RadzenStack>
                 </RadzenColumn>
-                <RadzenColumn Size="8">
+                <RadzenColumn SizeMD="8" Style="padding-bottom: 12px;">
                     <RadzenText Text="@Residence" />
                 </RadzenColumn>
             </RadzenRow>

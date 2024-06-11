@@ -10,6 +10,20 @@
 }
 
 /* Radzen Layout */
+.body-padding {
+    padding: 1rem;
+}
+
+@media (max-width: 1023px) {
+    .body-padding {
+        padding: 0;
+    }
+
+    .hide-sm {
+        display: none !important;
+    }
+}
+
 .rz-header {
     padding: 15px;
     background-color: #FFF;
@@ -33,6 +47,12 @@
     padding: 40px;
     margin-bottom: 10px;
     border-radius: 10px;
+}
+
+@media (max-width: 1023px) {
+    .rz-card {
+        padding: 20px;
+    }
 }
 
 /* Radzen ProgressBar */
