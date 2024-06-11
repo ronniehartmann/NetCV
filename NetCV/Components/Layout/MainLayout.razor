@@ -49,11 +49,11 @@
 
 @code {
     private string FullName = string.Empty;
-    private string Version = "V 0.0.0.0";
+    private string Version = "V 0.0.0";
 
     protected override async Task OnInitializedAsync()
     {
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
-        Version = $"V {typeof(Program).Assembly.GetName().Version!.ToString()}";
+        Version = $"V {typeof(Program).Assembly.GetName().Version!.ToString(3)}";
     }
 }
