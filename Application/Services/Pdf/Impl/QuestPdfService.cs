@@ -3,7 +3,6 @@ using Application.Services.Contents;
 using Application.Services.Pdf.Models;
 using Application.Services.Pdf.Templates;
 using Application.Services.Resources;
-using Domain.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.Globalization;

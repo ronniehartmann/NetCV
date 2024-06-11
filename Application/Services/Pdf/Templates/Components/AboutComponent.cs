@@ -1,5 +1,4 @@
-﻿using Application.Services.Pdf.Models;
-using QuestPDF.Fluent;
+﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 namespace Application.Services.Pdf.Templates.Components;

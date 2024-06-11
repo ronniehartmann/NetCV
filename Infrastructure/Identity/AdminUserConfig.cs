@@ -1,4 +1,4 @@
-﻿namespace Application.Authentication;
+﻿namespace Infrastructure.Identity;
 
 public class AdminUserConfig
 {

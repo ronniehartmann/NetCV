@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace Application.Authentication.Stores;
+namespace Infrastructure.Identity.Stores;
 
 public class MonoConfigurationUserStore(
     LockoutService lockoutService,
