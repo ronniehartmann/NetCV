@@ -70,18 +70,6 @@
     background-color: #FFF;
 }
 
-.rz-menu-toggle {
-    color: #000;
-}
-
-    .rz-menu-toggle:hover {
+    .rz-menu:not(.rz-profile-menu) .rz-navigation-item-link .rzi:not(.rz-navigation-item-icon-children), .rz-menu-toggle, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-link, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link, .rz-menu-toggle:hover, .rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link .rzi:not(.rz-navigation-item-icon-children) {
         color: #000;
     }
-
-.rz-menu:not(.rz-profile-menu) .rz-navigation-item-link {
-    color: #000;
-}
-
-.rz-menu:not(.rz-profile-menu) .rz-navigation-item-wrapper:hover .rz-navigation-item-link {
-    color: #000;
-}
