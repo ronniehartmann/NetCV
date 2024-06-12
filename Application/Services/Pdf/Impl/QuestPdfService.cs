@@ -16,7 +16,8 @@ public class QuestPdfService(
     ResourceService<HobbyDto> hobbyService,
     ResourceService<SkillDto> skillService,
     ResourceService<ExperienceDto> experienceService,
-    ResourceService<EducationDto> educationService) : IPdfService
+    ResourceService<EducationDto> educationService,
+    ResourceService<ReferenceDto> referenceService) : IPdfService
 {
     private readonly ILogger<QuestPdfService> _logger = logger;
     private readonly IContentService _contentService = contentService;
@@ -24,6 +25,7 @@ public class QuestPdfService(
     private readonly ResourceService<SkillDto> _skillService = skillService;
     private readonly ResourceService<ExperienceDto> _experienceService = experienceService;
     private readonly ResourceService<EducationDto> _educationService = educationService;
+    private readonly ResourceService<ReferenceDto> _referenceService = referenceService;
 
     public async Task<byte[]> GeneratePdfAsync()
     {
@@ -50,7 +52,8 @@ public class QuestPdfService(
             Hobbies = (await _hobbyService.GetResourcesAsync()).Select(h => h.Name),
             Skills = (await _skillService.GetResourcesAsync()).Select(s => s.Name),
             Experiences = await GetExperienceDataAsync(),
-            Educations = await GetEducationDataAsync()
+            Educations = await GetEducationDataAsync(),
+            References = await GetReferenceDataAsync()
         };
     }
 
@@ -114,6 +117,17 @@ public class QuestPdfService(
             Duration = GetDurationText(education.StartDate, education.EndDate),
             School = education.School,
             Title = education.Title
+        });
+    }
+
+    private async Task<IEnumerable<ReferenceDataItem>> GetReferenceDataAsync()
+    {
+        var references = await _referenceService.GetResourcesAsync();
+        return references.Select(reference => new ReferenceDataItem
+        {
+            Title = reference.Title,
+            Employment = reference.Employment,
+            Text = reference.Text
         });
     }
 

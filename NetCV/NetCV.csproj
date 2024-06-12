@@ -9,9 +9,17 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ronniehartmann/NetCV</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>0.1.3</AssemblyVersion>
+    <AssemblyVersion>0.2.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">

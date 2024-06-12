@@ -38,6 +38,7 @@ public class CvDocument(PdfData data) : IDocument
                     column.Item().Component(new ListComponent("Professional Skills", _data.Skills));
                     column.Item().Component(new ExperienceComponent(_data.Experiences));
                     column.Item().Component(new EducationComponent(_data.Educations));
+                    column.Item().Component(new ReferenceComponent(_data.References));
                 });
         });
     }
