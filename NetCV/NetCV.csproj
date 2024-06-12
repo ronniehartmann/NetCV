@@ -15,10 +15,12 @@
 
   <ItemGroup>
     <None Remove="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+    <None Remove="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+    <Content Include="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

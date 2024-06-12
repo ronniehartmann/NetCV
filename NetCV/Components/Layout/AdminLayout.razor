@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using NetCV.Components.Shared
+@inherits LayoutComponentBase
 
 <RadzenComponents @rendermode="InteractiveServer" />
 
@@ -18,6 +19,7 @@
                     <RadzenColumn Size="7">
                         <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.End">
                             <HeaderLinks Admin="true" />
+                            <ResponsiveIconLink Icon="settings" Text="Settings" Path="/Admin/Settings" />
                             <RadzenLink Style="font-size: 17pt;" Icon="logout" Path="/Account/Logout" />
                         </RadzenStack>
                     </RadzenColumn>
