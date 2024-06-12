@@ -14,6 +14,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

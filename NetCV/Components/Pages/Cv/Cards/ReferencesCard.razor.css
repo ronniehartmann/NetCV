@@ -1,0 +1,9 @@
+﻿.quote {
+    padding: 0 5px;
+    margin: 5px 0;
+    border-left: 2px solid var(--rz-primary);
+}
+
+    .quote q {
+        quotes: "„" "“";
+    }
