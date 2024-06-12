@@ -1,0 +1,144 @@
+﻿@using Application.Services.Resources
+@using NetCV.Components.Pages.Shared
+@using Microsoft.AspNetCore.Authorization
+
+@inject NotificationService NotificationService
+@inject ResourceService<ReferenceDto> ReferenceService
+
+@rendermode InteractiveServer
+@attribute [Authorize]
+@page "/Admin/References"
+
+<PageTitle>Admin - References</PageTitle>
+
+<RadzenText TextStyle="TextStyle.H2" Text="References" />
+
+<LoadingIndicator IsLoading="References is null" />
+
+@if (References is not null && !References.Any())
+{
+    <RadzenText Text="No references created yet" />
+}
+else if (References is not null)
+{
+    <div class="scroll-container">
+        @foreach (var reference in References)
+        {
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenLabel Component="Title" Text="Title" />
+                        <RadzenTextBox Name="Title" Value="@reference.Title" class="w-100" Change="title => { reference.Title = title; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="6">
+                        <RadzenLabel Component="Employment" Text="Employment" />
+                        <RadzenTextBox Name="Employment" Value="@reference.Employment" class="w-100" Change="employment => { reference.Employment = employment; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="11">
+                        <RadzenLabel Component="Text" Text="Text" />
+                        <RadzenTextArea Style="resize: none;" Rows="4" Name="Text" Value="@reference.Text" class="w-100" Change="text => { reference.Text = text; HasChanges = true; }" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="1">
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Right" AlignItems="AlignItems.End" Style="height: 100%;">
+                            <RadzenButton Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="async () => await DeleteReferenceAsync(reference.Id)" />
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        }
+    </div>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Variant="Variant.Flat" Text="Cancel"
+                      Visible="HasChanges" ButtonStyle="ButtonStyle.Info" Shade="Shade.Lighter"
+                      Click="async () => await CancelChangesAsync()" />
+        <RadzenButton Variant="Variant.Flat" Icon="done"
+                      Text="Save changes" Click="async () => await SaveChangesAsync()"
+                      Disabled="!HasChanges" />
+    </RadzenStack>
+}
+
+<hr />
+<RadzenText TextStyle="TextStyle.H4" Text="Add Reference" />
+
+<RadzenCard Variant="Variant.Outlined">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddReferenceTitle" Text="Title" />
+            <RadzenTextBox Name="AddReferenceTitle" class="w-100" @bind-Value="ReferenceToAdd.Title" Placeholder="Max Mustermann" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenLabel Component="AddReferenceEmployment" Text="Employment" />
+            <RadzenTextBox Name="AddReferenceEmployment" class="w-100" @bind-Value="ReferenceToAdd.Employment" Placeholder="Software Engineer" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="12">
+            <RadzenLabel Component="AddReferenceText" Text="Text" />
+            <RadzenTextArea Name="AddReferenceText" class="w-100" @bind-Value="ReferenceToAdd.Text" />
+        </RadzenColumn>
+        <RadzenColumn Size="12">
+            <RadzenButton Variant="Variant.Flat" Text="Add Reference" Icon="add" class="w-100"
+                          Click="async () => await AddReferenceAsync()" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+
+@code {
+    private IList<ReferenceDto>? References;
+    private bool HasChanges;
+    private ReferenceDto ReferenceToAdd = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        References = (await ReferenceService.GetResourcesAsync()).ToList();
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        if (HasChanges)
+        {
+            foreach (var reference in References!)
+            {
+                await ReferenceService.UpdateResourceAsync(reference);
+            }
+            HasChanges = false;
+            NotificationService.Notify(NotificationSeverity.Success,
+                "Updated references", $"References were updated.");
+        }
+    }
+
+    public async Task CancelChangesAsync()
+    {
+        References = (await ReferenceService.GetResourcesAsync()).ToList();
+        HasChanges = false;
+    }
+
+    private async Task AddReferenceAsync()
+    {
+        if (string.IsNullOrEmpty(ReferenceToAdd.Title))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add reference", $"The field {nameof(ReferenceToAdd.Title)} is required");
+            return;
+        }
+        else if (string.IsNullOrEmpty(ReferenceToAdd.Text))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add reference", $"The field {nameof(ReferenceToAdd.Text)} is required");
+            return;
+        }
+
+        await ReferenceService.AddResourceAsync(ReferenceToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added reference", $"Added new reference from '{ReferenceToAdd.Title}'");
+
+        References = (await ReferenceService.GetResourcesAsync()).ToList();
+        ReferenceToAdd = new();
+    }
+
+    private async Task DeleteReferenceAsync(long id)
+    {
+        await ReferenceService.DeleteResourceAsync(id);
+
+        var existingDbReference = References!.Single(e => e.Id == id);
+        References!.Remove(existingDbReference);
+
+        NotificationService.Notify(NotificationSeverity.Success,
+            "Deleted reference", $"Reference '{existingDbReference.Title}' was deleted.");
+    }
+}

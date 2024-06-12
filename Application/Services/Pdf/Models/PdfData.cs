@@ -15,5 +15,8 @@ public class PdfData
     public IEnumerable<string> Skills { get; set; } = [];
 
     public IEnumerable<ExperienceDataItem> Experiences { get; set; } = [];
+
     public IEnumerable<EducationDataItem> Educations { get; set; } = [];
+
+    public IEnumerable<ReferenceDataItem> References { get; set; } = [];
 }
