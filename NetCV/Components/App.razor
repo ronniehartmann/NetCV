@@ -1,7 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using Application.Services.Contents
+
+@inject IContentService ContentService
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <meta name="title" content="CV @FullName">
+    <meta name="description" content="@Description">
+    <meta name="keywords" content="CV, @FullName">
+    <meta name="language" content="English">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
@@ -33,3 +43,14 @@
 </body>
 
 </html>
+
+@code {
+    private string FullName = string.Empty;
+    private string Description = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+        Description = await ContentService.GetValueAsync("ABOUT_TEXT");
+    }
+}
