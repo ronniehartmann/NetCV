@@ -3,6 +3,7 @@
 public interface ISettingsService
 {
     Task<string> GetPortraitFileNameAsync();
+
     Task<string> GetBackgroundFileNameAsync();
 
     Task UpdatePortraitFileNameAsync(string fileName);
