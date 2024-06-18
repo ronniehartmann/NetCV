@@ -1,17 +1,19 @@
 ﻿@using Application.Services.Contents
 @using Application.Services.Pdf
+@using Application.Services.Settings
 
 @inject NavigationManager NavigationManager
 @inject IContentService ContentService
 @inject IPdfService PdfService
+@inject ISettingsService SettingsService
 @inject IJSRuntime JsRuntime
 
 @rendermode InteractiveServer
 
-<RadzenCard Style="background-image: url('/images/profile-background.jpg'); background-size: cover; background-position: center;">
+<RadzenCard Style="@($"background-image: url('/images/{BackgroundFileName}'); background-size: cover; background-position: center;")">
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="4" Style="text-align: center;">
-            <img src="images/portrait.jpg" class="portrait" alt="Portrait of @FullName" />
+            <img src="@($"images/{PortraitFileName}")" class="portrait" alt="Portrait of @FullName" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="8">
             <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%;">
@@ -34,13 +36,17 @@
     </RadzenRow>
 </RadzenCard>
 
-@code {
+    @code {
+    private string PortraitFileName = string.Empty;
+    private string BackgroundFileName = string.Empty;
     private string FullName = string.Empty;
     private string Employment = string.Empty;
     private bool CvIsGenerating = false;
 
     protected override async Task OnInitializedAsync()
     {
+        PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
+        BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
         Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
     }

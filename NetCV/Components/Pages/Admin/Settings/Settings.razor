@@ -1,0 +1,147 @@
+﻿@using Application.Services.Settings
+@using Infrastructure.Services
+@using Microsoft.AspNetCore.Authorization
+@using NetCV.Extensions
+
+@inject NotificationService NotificationService
+@inject FileUploadService FileUploadService
+@inject ISettingsService SettingsService
+
+@rendermode InteractiveServer
+@attribute [Authorize]
+@page "/Admin/Settings"
+
+<PageTitle>Admin - Settings</PageTitle>
+
+<RadzenText TextStyle="TextStyle.H2" Text="Settings" />
+
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Images" />
+    <RadzenIcon Icon="image" />
+</RadzenStack>
+<RadzenRow>
+    <RadzenColumn Size="12" SizeLG="6">
+        <RadzenCard Variant="Variant.Flat" class="p-4">
+            <RadzenText TextStyle="TextStyle.H6" Text="Portrait" />
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <label for="portrait-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                        <RadzenIcon Icon="upload" />
+                        Upload
+                    </label>
+                    <InputFile id="portrait-upload" OnChange="UpdatePortraitAsync" style="display: none;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                    <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="6">
+        <RadzenCard Variant="Variant.Flat" class="p-4">
+            <RadzenText TextStyle="TextStyle.H6" Text="Background" />
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <label for="background-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                        <RadzenIcon Icon="upload" />
+                        Upload
+                    </label>
+                    <InputFile id="background-upload" OnChange="UpdateBackgroundAsync" style="display: none;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                    <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+<br />
+
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Colors" />
+    <RadzenIcon Icon="palette" />
+</RadzenStack>
+
+<RadzenCard Variant="Variant.Flat">
+    <RadzenText Text="Coming soon" />
+</RadzenCard>
+
+@code {
+    private string PortraitFileName = string.Empty;
+    private string BackgroundFileName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
+        BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
+    }
+
+    private async Task UpdatePortraitAsync(InputFileChangeEventArgs args)
+    {
+        if (!await args.File.IsImageAsync())
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "File type is not supported.");
+            return;
+        }
+
+        try
+        {
+            using var stream = args.File.OpenReadStream();
+            var fileName = GenerateFileName(args.File.Name);
+            var oldFileName = await SettingsService.GetPortraitFileNameAsync();
+
+            if (await FileUploadService.UploadFileAsync(stream, $"wwwroot/images/{fileName}", 2097152))
+            {
+                await SettingsService.UpdatePortraitFileNameAsync(fileName);
+                FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
+                PortraitFileName = fileName;
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine(e);
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
+        }
+    }
+
+    private async Task UpdateBackgroundAsync(InputFileChangeEventArgs args)
+    {
+        if (args.File.Size > 2097152)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "Maximum file size of 2 MB exceeded.");
+            return;
+        }
+
+        if (!await args.File.IsImageAsync())
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "File type is not supported.");
+            return;
+        }
+
+        try
+        {
+            using var stream = args.File.OpenReadStream(2097152);
+            var fileName = GenerateFileName(args.File.Name);
+            var oldFileName = await SettingsService.GetBackgroundFileNameAsync();
+
+            if (await FileUploadService.UploadFileAsync(stream, $"wwwroot/images/{fileName}", 2097152))
+            {
+                await SettingsService.UpdateBackgroundFileNameAsync(fileName);
+                FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
+                BackgroundFileName = fileName;
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine(e);
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
+        }
+    }
+
+    private string GenerateFileName(string name)
+    {
+        var guid = Guid.NewGuid();
+        var extension = Path.GetExtension(name);
+        return $"{guid}{extension}";
+    }
+}
