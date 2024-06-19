@@ -9,16 +9,22 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ronniehartmann/NetCV</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>0.2.1</AssemblyVersion>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\Pages\Admin\Settings\Settings.razor.css" />
     <None Remove="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+    <None Remove="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\Pages\Admin\Settings\Settings.razor.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Include="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
+    <Content Include="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +44,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.31.4" />
+    <PackageReference Include="Radzen.Blazor" Version="4.32.7" />
   </ItemGroup>
 
   <ItemGroup>

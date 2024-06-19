@@ -1,4 +1,5 @@
 ﻿@using Application.Services.Contents
+@using Application.Services.Settings
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inherits LayoutComponentBase
@@ -39,21 +40,15 @@
                 <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
             </RadzenRow>
         </div>
-        <RadzenStack AlignItems="AlignItems.Center" Style="margin: 20px 0px;" Gap="5px">
-            <RadzenText TextStyle="TextStyle.H5" Text="@FullName" />
-            <RadzenText TextStyle="TextStyle.Caption" Text="@Version" />
-            <RadzenLink Path="https://github.com/ronniehartmann/NetCV" Text="GitHub Repository" />
-        </RadzenStack>
+        <Footer FullName="@FullName" />
     </RadzenBody>
 </RadzenLayout>
 
 @code {
     private string FullName = string.Empty;
-    private string Version = "V 0.0.0";
 
     protected override async Task OnInitializedAsync()
     {
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
-        Version = $"V {typeof(Program).Assembly.GetName().Version!.ToString(3)}";
     }
 }

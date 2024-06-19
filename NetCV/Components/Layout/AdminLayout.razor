@@ -1,4 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Application.Services.Contents
+@using NetCV.Components.Shared
+
+@inherits LayoutComponentBase
+
+@inject IContentService ContentService
 
 <RadzenComponents @rendermode="InteractiveServer" />
 
@@ -18,6 +23,7 @@
                     <RadzenColumn Size="7">
                         <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.End">
                             <HeaderLinks Admin="true" />
+                            <ResponsiveIconLink Icon="settings" Text="Settings" Path="/Admin/Settings" />
                             <RadzenLink Style="font-size: 17pt;" Icon="logout" Path="/Account/Logout" />
                         </RadzenStack>
                     </RadzenColumn>
@@ -37,17 +43,15 @@
                 <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
             </RadzenRow>
         </div>
-        <RadzenStack AlignItems="AlignItems.Center" Style="margin: 20px 0px;" Gap="5px">
-            <RadzenText TextStyle="TextStyle.Caption" Text="@Version" />
-        </RadzenStack>
+        <Footer FullName="@FullName" />
     </RadzenBody>
 </RadzenLayout>
 
 @code {
-    private string Version = "V 0.0.0";
+    private string FullName = string.Empty;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Version = $"V {typeof(Program).Assembly.GetName().Version!.ToString(3)}";
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
     }
 }
