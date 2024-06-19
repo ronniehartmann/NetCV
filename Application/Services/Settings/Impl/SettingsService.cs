@@ -19,6 +19,12 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         return settings.BackgroundImageFileName;
     }
 
+    public async Task<bool> GetHideFooterAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.HideFooter;
+    }
+
     public async Task UpdatePortraitFileNameAsync(string fileName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
@@ -34,6 +40,13 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
 
         var settings = await _settingsRepository.GetSettingsAsync();
         settings.BackgroundImageFileName = fileName;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
+    public async Task UpdateHideFooterAsync(bool hideFooter)
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.HideFooter = hideFooter;
         await _settingsRepository.SetSettingsAsync(settings);
     }
 }

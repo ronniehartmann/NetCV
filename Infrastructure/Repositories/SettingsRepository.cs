@@ -18,7 +18,8 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
             settings = new Settings
             {
                 BackgroundImageFileName = "profile-background.jpg",
-                PortraitImageFileName = "portrait.jpg"
+                PortraitImageFileName = "portrait.jpg",
+                HideFooter = false
             };
 
             await SetSettingsAsync(settings);
@@ -44,6 +45,7 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
         {
             existingSettings.PortraitImageFileName = settings.PortraitImageFileName;
             existingSettings.BackgroundImageFileName = settings.BackgroundImageFileName;
+            existingSettings.HideFooter = settings.HideFooter;
         }
 
         await context.SaveChangesAsync();

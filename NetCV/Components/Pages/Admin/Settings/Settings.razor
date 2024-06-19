@@ -58,22 +58,33 @@
 <br />
 
 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Colors" />
-    <RadzenIcon Icon="palette" />
+    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Footer" />
+    <RadzenIcon Icon="view_day" />
 </RadzenStack>
 
 <RadzenCard Variant="Variant.Flat">
-    <RadzenText Text="Coming soon" />
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenLabel Text="Hide Footer" Component="hideFooter" />
+                    <RadzenCheckBox Name="hideFooter" TValue="bool" Value="HideFooter" Change="UpdateHideFooterAsync" />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
 </RadzenCard>
 
 @code {
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
+    private bool HideFooter = false;
 
     protected override async Task OnInitializedAsync()
     {
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
+        HideFooter = await SettingsService.GetHideFooterAsync();
     }
 
     private async Task UpdatePortraitAsync(InputFileChangeEventArgs args)
@@ -136,6 +147,12 @@
             Console.WriteLine(e);
             NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
         }
+    }
+
+    private async Task UpdateHideFooterAsync(bool hideFooter)
+    {
+        await SettingsService.UpdateHideFooterAsync(hideFooter);
+        HideFooter = hideFooter;
     }
 
     private string GenerateFileName(string name)

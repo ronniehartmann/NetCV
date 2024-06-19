@@ -7,4 +7,6 @@ public class Settings
     public required string PortraitImageFileName { get; set; }
 
     public required string BackgroundImageFileName { get; set; }
+
+    public required bool HideFooter { get; set; }
 }
