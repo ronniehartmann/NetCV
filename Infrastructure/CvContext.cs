@@ -23,6 +23,8 @@ public partial class CvContext : DbContext
 
     public DbSet<Skill> Skills { get; set; }
 
+    public DbSet<Settings> Settings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContentTypeConfiguration).Assembly);

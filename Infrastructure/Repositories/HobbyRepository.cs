@@ -10,28 +10,28 @@ public class HobbyRepository(IDbContextFactory<CvContext> contextFactory) : IHob
 
     public async Task<IEnumerable<Hobby>> GetAllHobbiesAsync()
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var hobbies = await context.Hobbies.ToListAsync();
         return hobbies;
     }
 
     public async Task<Hobby?> GetHobbyAsync(long id)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var hobby = await context.Hobbies.FindAsync(id);
         return hobby;
     }
 
     public async Task AddHobbyAsync(Hobby hobby)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         await context.Hobbies.AddAsync(hobby);
         await context.SaveChangesAsync();
     }
 
     public async Task UpdateHobbyAsync(Hobby hobby)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var existingHobby = await context.Hobbies.FindAsync(hobby.Id)
             ?? throw new ArgumentException("Provided hobby doesn't exist.");
 
@@ -42,7 +42,7 @@ public class HobbyRepository(IDbContextFactory<CvContext> contextFactory) : IHob
 
     public async Task DeleteHobbyAsync(long id)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var hobby = await context.Hobbies.FindAsync(id)
             ?? throw new ArgumentException($"Couldn't find hobby with id '{id}'");
 

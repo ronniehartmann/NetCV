@@ -10,7 +10,7 @@ public class ContentRepository(IDbContextFactory<CvContext> contextFactory) : IC
 
     public async Task<IEnumerable<Content>> GetAllContentsAsync()
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var contents = await context.Contents.ToListAsync();
         return contents;
     }
@@ -24,14 +24,14 @@ public class ContentRepository(IDbContextFactory<CvContext> contextFactory) : IC
 
     public async Task AddContentAsync(Content content)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         await context.Contents.AddAsync(content);
         await context.SaveChangesAsync();
     }
 
     public async Task UpdateContentAsync(Content content)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var existingContent = await context.Contents.FindAsync(content.Key)
             ?? throw new ArgumentException("Provided content doesn't exist.");
 
@@ -41,7 +41,7 @@ public class ContentRepository(IDbContextFactory<CvContext> contextFactory) : IC
 
     public async Task DeleteContentAsync(string key)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var content = await context.Contents.FindAsync(key)
             ?? throw new ArgumentException($"Couldn't find content with key '{key}'");
 

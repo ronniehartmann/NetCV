@@ -10,28 +10,28 @@ public class ExperienceRepository(IDbContextFactory<CvContext> contextFactory) :
 
     public async Task<IEnumerable<Experience>> GetAllExperiencesAsync()
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var experiences = await context.Experiences.ToListAsync();
         return experiences;
     }
 
     public async Task<Experience?> GetExperienceAsync(long id)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var experience = await context.Experiences.FindAsync(id);
         return experience;
     }
 
     public async Task AddExperienceAsync(Experience experience)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         await context.Experiences.AddAsync(experience);
         await context.SaveChangesAsync();
     }
 
     public async Task UpdateExperienceAsync(Experience experience)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var existingExperience = await context.Experiences.FindAsync(experience.Id)
             ?? throw new ArgumentException("Provided experience doesn't exist.");
 
@@ -45,7 +45,7 @@ public class ExperienceRepository(IDbContextFactory<CvContext> contextFactory) :
 
     public async Task DeleteExperienceAsync(long id)
     {
-        var context = await _contextFactory.CreateDbContextAsync();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var experience = await context.Experiences.FindAsync(id)
             ?? throw new ArgumentException($"Couldn't find experience with id '{id}'");
 
