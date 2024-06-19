@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(CvContext))]
-    partial class CvContextModelSnapshot : ModelSnapshot
+    [Migration("20240619214417_AddSettingShowPoweredByNetCv")]
+    partial class AddSettingShowPoweredByNetCv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,17 +266,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("HideFooter")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("PortraitImageFileName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("ShowFooter")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("ShowPoweredByNetCv")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ShowVersion")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
@@ -285,10 +285,9 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1L,
                             BackgroundImageFileName = "profile-background.jpg",
+                            HideFooter = false,
                             PortraitImageFileName = "portrait.jpg",
-                            ShowFooter = false,
-                            ShowPoweredByNetCv = true,
-                            ShowVersion = true
+                            ShowPoweredByNetCv = true
                         });
                 });
 

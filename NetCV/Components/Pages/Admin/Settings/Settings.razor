@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using NetCV.Extensions
 
+@inject NavigationManager NavigationManager
 @inject NotificationService NotificationService
 @inject FileUploadService FileUploadService
 @inject ISettingsService SettingsService
@@ -67,8 +68,25 @@
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenCard Variant="Variant.Outlined" class="p-3">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenLabel Text="Hide Footer" Component="hideFooter" />
-                    <RadzenCheckBox Name="hideFooter" TValue="bool" Value="HideFooter" Change="UpdateHideFooterAsync" />
+                    <RadzenLabel Text="Show Footer" Component="showFooter" />
+                    <RadzenCheckBox Name="showFooter" TValue="bool" Value="ShowFooter" Change="UpdateShowFooterAsync" />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6"></RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenLabel Text="@("Show Version")" Component="showVersion" Style="@(!ShowFooter ? "color: gray;" : "")" />
+                    <RadzenCheckBox Disabled="!ShowFooter" Name="showVersion" TValue="bool" Value="ShowVersion" Change="UpdateShowVersionAsync" />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenLabel Text="@("Show \"Powered by NetCV\"")" Component="showPoweredByNetCv" Style="@(!ShowFooter ? "color: gray;" : "")" />
+                    <RadzenCheckBox Disabled="!ShowFooter" Name="showPoweredByNetCv" TValue="bool" Value="ShowPoweredByNetCv" Change="UpdateShowPoweredByNetCvAsync" />
                 </RadzenStack>
             </RadzenCard>
         </RadzenColumn>
@@ -78,13 +96,17 @@
 @code {
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
-    private bool HideFooter = false;
+    private bool ShowFooter = true;
+    private bool ShowVersion = true;
+    private bool ShowPoweredByNetCv = true;
 
     protected override async Task OnInitializedAsync()
     {
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
-        HideFooter = await SettingsService.GetHideFooterAsync();
+        ShowFooter = await SettingsService.GetShowFooterAsync();
+        ShowVersion = await SettingsService.GetShowVersionAsync();
+        ShowPoweredByNetCv = await SettingsService.GetShowPoweredByNetCvAsync();
     }
 
     private async Task UpdatePortraitAsync(InputFileChangeEventArgs args)
@@ -149,10 +171,25 @@
         }
     }
 
-    private async Task UpdateHideFooterAsync(bool hideFooter)
+    private async Task UpdateShowFooterAsync(bool showFooter)
     {
-        await SettingsService.UpdateHideFooterAsync(hideFooter);
-        HideFooter = hideFooter;
+        await SettingsService.UpdateShowFooterAsync(showFooter);
+        ShowFooter = showFooter;
+        NavigationManager.Refresh();
+    }
+
+    private async Task UpdateShowVersionAsync(bool showVersion)
+    {
+        await SettingsService.UpdateShowVersionAsync(showVersion);
+        ShowVersion = showVersion;
+        NavigationManager.Refresh();
+    }
+
+    private async Task UpdateShowPoweredByNetCvAsync(bool showPoweredByNetCv)
+    {
+        await SettingsService.UpdateShowPoweredByNetCvAsync(showPoweredByNetCv);
+        ShowPoweredByNetCv = showPoweredByNetCv;
+        NavigationManager.Refresh();
     }
 
     private string GenerateFileName(string name)

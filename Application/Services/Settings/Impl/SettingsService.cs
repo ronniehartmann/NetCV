@@ -19,10 +19,22 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         return settings.BackgroundImageFileName;
     }
 
-    public async Task<bool> GetHideFooterAsync()
+    public async Task<bool> GetShowFooterAsync()
     {
         var settings = await _settingsRepository.GetSettingsAsync();
-        return settings.HideFooter;
+        return settings.ShowFooter;
+    }
+
+    public async Task<bool> GetShowVersionAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.ShowVersion;
+    }
+
+    public async Task<bool> GetShowPoweredByNetCvAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.ShowPoweredByNetCv;
     }
 
     public async Task UpdatePortraitFileNameAsync(string fileName)
@@ -43,10 +55,24 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         await _settingsRepository.SetSettingsAsync(settings);
     }
 
-    public async Task UpdateHideFooterAsync(bool hideFooter)
+    public async Task UpdateShowFooterAsync(bool showFooter)
     {
         var settings = await _settingsRepository.GetSettingsAsync();
-        settings.HideFooter = hideFooter;
+        settings.ShowFooter = showFooter;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
+    public async Task UpdateShowVersionAsync(bool showVersion)
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.ShowVersion = showVersion;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
+    public async Task UpdateShowPoweredByNetCvAsync(bool showPoweredByNetCv)
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.ShowPoweredByNetCv = showPoweredByNetCv;
         await _settingsRepository.SetSettingsAsync(settings);
     }
 }

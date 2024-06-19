@@ -19,7 +19,9 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
             {
                 BackgroundImageFileName = "profile-background.jpg",
                 PortraitImageFileName = "portrait.jpg",
-                HideFooter = false
+                ShowFooter = false,
+                ShowVersion = true,
+                ShowPoweredByNetCv = true
             };
 
             await SetSettingsAsync(settings);
@@ -45,7 +47,9 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
         {
             existingSettings.PortraitImageFileName = settings.PortraitImageFileName;
             existingSettings.BackgroundImageFileName = settings.BackgroundImageFileName;
-            existingSettings.HideFooter = settings.HideFooter;
+            existingSettings.ShowFooter = settings.ShowFooter;
+            existingSettings.ShowVersion = settings.ShowVersion;
+            existingSettings.ShowPoweredByNetCv = settings.ShowPoweredByNetCv;
         }
 
         await context.SaveChangesAsync();

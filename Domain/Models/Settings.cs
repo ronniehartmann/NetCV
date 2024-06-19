@@ -8,5 +8,9 @@ public class Settings
 
     public required string BackgroundImageFileName { get; set; }
 
-    public required bool HideFooter { get; set; }
+    public required bool ShowFooter { get; set; }
+
+    public required bool ShowVersion { get; set; }
+
+    public required bool ShowPoweredByNetCv { get; set; }
 }

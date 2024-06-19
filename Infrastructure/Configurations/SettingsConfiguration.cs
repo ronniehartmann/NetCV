@@ -13,7 +13,9 @@ public class SettingsConfiguration : IEntityTypeConfiguration<Settings>
             Id = 1,
             PortraitImageFileName = "portrait.jpg",
             BackgroundImageFileName = "profile-background.jpg",
-            HideFooter = false
+            ShowFooter = false,
+            ShowVersion = true,
+            ShowPoweredByNetCv = true
         });
     }
 }
