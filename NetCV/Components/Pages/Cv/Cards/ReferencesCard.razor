@@ -2,21 +2,24 @@
 
 @inject ResourceService<ReferenceDto> ReferenceService
 
-<RadzenCard id="references">
-    <RadzenText TextStyle="TextStyle.H4" Text="References" />
-    <RadzenRow>
-        @foreach (var reference in References)
-        {
-            <RadzenColumn Size="12" SizeMD="6">
-                <RadzenText TextStyle="TextStyle.H6" Text="@reference.Title" Style="color: var(--rz-primary); margin-bottom: 0;" />
-                <RadzenText Text="@reference.Employment" Style="font-weight: bold;" />
-                <div class="quote">
-                    <q>@reference.Text</q>
-                </div>
-            </RadzenColumn>
-        }
-    </RadzenRow>
-</RadzenCard>
+@if (References.Any())
+{
+    <RadzenCard id="references">
+        <RadzenText TextStyle="TextStyle.H4" Text="References" />
+        <RadzenRow>
+            @foreach (var reference in References)
+            {
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenText TextStyle="TextStyle.H6" Text="@reference.Title" Style="color: var(--rz-primary); margin-bottom: 0;" />
+                    <RadzenText Text="@reference.Employment" Style="font-weight: bold;" />
+                    <div class="quote">
+                        <q>@reference.Text</q>
+                    </div>
+                </RadzenColumn>
+            }
+        </RadzenRow>
+    </RadzenCard>
+}
 
 @code {
     private IEnumerable<ReferenceDto> References = [];

@@ -3,37 +3,40 @@
 
 @inject ResourceService<EducationDto> EducationService
 
-<RadzenCard id="education">
-    <RadzenText TextStyle="TextStyle.H4" Text="Education" />
-    <RadzenTimeline LinePosition="LinePosition.Left">
-        <Items>
-            @foreach (var education in Educations)
-            {
-                var isActive = !education.EndDate.HasValue || education.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
-                var duration = $"{education.StartDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} - ";
-                if (education.EndDate.HasValue)
+@if (Educations.Any())
+{
+    <RadzenCard id="education">
+        <RadzenText TextStyle="TextStyle.H4" Text="Education" />
+        <RadzenTimeline LinePosition="LinePosition.Left">
+            <Items>
+                @foreach (var education in Educations)
                 {
-                    duration += education.EndDate.Value.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    isActive = true;
-                    duration += "Today";
-                }
+                    var isActive = !education.EndDate.HasValue || education.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
+                    var duration = $"{education.StartDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} - ";
+                    if (education.EndDate.HasValue)
+                    {
+                        duration += education.EndDate.Value.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        isActive = true;
+                        duration += "Today";
+                    }
 
-                <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Success)">
-                    <ChildContent>
-                        <RadzenText TextStyle="TextStyle.H5" Text="@education.School" />
-                        <RadzenText TextStyle="TextStyle.Caption" Style="font-weight: bold;">@duration</RadzenText>
-                        <RadzenText>
-                            @education.Title
-                        </RadzenText>
-                    </ChildContent>
-                </RadzenTimelineItem>
-            }
-        </Items>
-    </RadzenTimeline>
-</RadzenCard>
+                    <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Success)">
+                        <ChildContent>
+                            <RadzenText TextStyle="TextStyle.H5" Text="@education.School" />
+                            <RadzenText TextStyle="TextStyle.Caption" Style="font-weight: bold;">@duration</RadzenText>
+                                <RadzenText>
+                                    @education.Title
+                            </RadzenText>
+                        </ChildContent>
+                    </RadzenTimelineItem>
+                }
+            </Items>
+        </RadzenTimeline>
+    </RadzenCard>
+}
 
 @code {
     private IEnumerable<EducationDto> Educations = [];
