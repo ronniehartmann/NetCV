@@ -1,6 +1,8 @@
 ﻿@using Application.Services.Contents
+@using Application.Services.Settings
 
 @inject IContentService ContentService
+@inject ISettingsService SettingsService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +21,7 @@
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="NetCV.styles.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="icon" type="image/png" href="@($"images/{FavIconFileName}")" />
     <HeadOutlet />
 </head>
 
@@ -35,10 +37,12 @@
 @code {
     private string FullName = string.Empty;
     private string Description = string.Empty;
+    private string FavIconFileName = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
         Description = await ContentService.GetValueAsync("ABOUT_TEXT");
+        FavIconFileName = await SettingsService.GetFavIconFileNameAsync();
     }
 }

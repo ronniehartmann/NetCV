@@ -2,6 +2,8 @@
 
 public interface ISettingsService
 {
+    Task<string> GetFavIconFileNameAsync();
+
     Task<string> GetPortraitFileNameAsync();
 
     Task<string> GetBackgroundFileNameAsync();
@@ -11,6 +13,8 @@ public interface ISettingsService
     Task<bool> GetShowVersionAsync();
 
     Task<bool> GetShowPoweredByNetCvAsync();
+
+    Task UpdateFavIconFileNameAsync(string fileName);
 
     Task UpdatePortraitFileNameAsync(string fileName);
 

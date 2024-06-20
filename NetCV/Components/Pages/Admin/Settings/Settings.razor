@@ -23,6 +23,30 @@
 <RadzenRow>
     <RadzenColumn Size="12" SizeLG="6">
         <RadzenCard Variant="Variant.Flat" class="p-4">
+            <RadzenText TextStyle="TextStyle.H6" Text="Favicon" />
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <label for="favicon-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                        <RadzenIcon Icon="upload" />
+                        Upload
+                    </label>
+                    <InputFile id="favicon-upload" OnChange="UpdateFavIconAsync" style="display: none;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                    @if (!string.IsNullOrEmpty(FavIconFileName))
+                    {
+                        <img src="@($"images/{FavIconFileName}")" class="portrait-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Favicon" style="padding: 50px;" />
+                    }
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="6">
+        <RadzenCard Variant="Variant.Flat" class="p-4">
             <RadzenText TextStyle="TextStyle.H6" Text="Portrait" />
             <RadzenRow>
                 <RadzenColumn Size="12" SizeMD="4">
@@ -108,6 +132,7 @@
 </RadzenCard>
 
 @code {
+    private string FavIconFileName = string.Empty;
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
     private bool ShowFooter = true;
@@ -116,11 +141,40 @@
 
     protected override async Task OnInitializedAsync()
     {
+        FavIconFileName = await SettingsService.GetFavIconFileNameAsync();
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
         ShowFooter = await SettingsService.GetShowFooterAsync();
         ShowVersion = await SettingsService.GetShowVersionAsync();
         ShowPoweredByNetCv = await SettingsService.GetShowPoweredByNetCvAsync();
+    }
+
+    private async Task UpdateFavIconAsync(InputFileChangeEventArgs args)
+    {
+        if (!await args.File.IsImageAsync())
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "File type is not supported.");
+            return;
+        }
+
+        try
+        {
+            using var stream = args.File.OpenReadStream();
+            var fileName = GenerateFileName(args.File.Name);
+            var oldFileName = await SettingsService.GetFavIconFileNameAsync();
+
+            if (await FileUploadService.UploadFileAsync(stream, $"wwwroot/images/{fileName}", 2097152))
+            {
+                await SettingsService.UpdateFavIconFileNameAsync(fileName);
+                FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
+                FavIconFileName = fileName;
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine(e);
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
+        }
     }
 
     private async Task UpdatePortraitAsync(InputFileChangeEventArgs args)
