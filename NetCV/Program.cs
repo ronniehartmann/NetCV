@@ -78,6 +78,9 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
+
+    var context = app.Services.GetRequiredService<CvContext>();
+    context.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

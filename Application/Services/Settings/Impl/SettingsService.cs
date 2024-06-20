@@ -7,6 +7,12 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
 {
     private readonly ISettingsRepository _settingsRepository = settingsRepository;
 
+    public async Task<string> GetFavIconFileNameAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.FavIconFileName;
+    }
+
     public async Task<string> GetPortraitFileNameAsync()
     {
         var settings = await _settingsRepository.GetSettingsAsync();
@@ -35,6 +41,15 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
     {
         var settings = await _settingsRepository.GetSettingsAsync();
         return settings.ShowPoweredByNetCv;
+    }
+
+    public async Task UpdateFavIconFileNameAsync(string fileName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.FavIconFileName = fileName;
+        await _settingsRepository.SetSettingsAsync(settings);
     }
 
     public async Task UpdatePortraitFileNameAsync(string fileName)
