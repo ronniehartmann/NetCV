@@ -1,5 +1,6 @@
 ﻿@using Application.Services.Contents
 @using Microsoft.AspNetCore.Authorization
+@using NetCV.Components.Pages.Shared
 
 @inject NotificationService NotificationService
 @inject IContentService ContentService
@@ -11,6 +12,8 @@
 <PageTitle>Admin - Content</PageTitle>
 
 <RadzenText TextStyle="TextStyle.H2" Text="Content" />
+
+<LoadingIndicator IsLoading="!Contents.Any()" />
 
 <div class="scroll-container">
     <RadzenRow>
@@ -34,9 +37,13 @@
     private Dictionary<string, string> Contents = [];
     private Dictionary<string, string> ChangedContents = [];
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Contents = (Dictionary<string, string>)await ContentService.GetAllValuesAsync();
+        if (firstRender)
+        {
+            Contents = (Dictionary<string, string>)await ContentService.GetAllValuesAsync();
+            StateHasChanged();
+        }        
     }
 
     private void TrackChange(string key, string value)

@@ -33,7 +33,14 @@
                     <InputFile id="portrait-upload" OnChange="UpdatePortraitAsync" style="display: none;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                    @if (!string.IsNullOrEmpty(PortraitFileName))
+                    {
+                        <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Portrait" style="padding: 50px;" />
+                    }
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -50,7 +57,14 @@
                     <InputFile id="background-upload" OnChange="UpdateBackgroundAsync" style="display: none;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                    @if (!string.IsNullOrEmpty(BackgroundFileName))
+                    {
+                        <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="background-image" alt="Loading Background Image" style="padding: 50px;" />
+                    }
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>

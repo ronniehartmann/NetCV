@@ -100,9 +100,13 @@ else if (Hobbies is not null)
     private bool HasChanges;
     private HobbyDto HobbyToAdd = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Hobbies = (await HobbyService.GetResourcesAsync()).ToList();
+        if (firstRender)
+        {
+            Hobbies = (await HobbyService.GetResourcesAsync()).ToList();
+            StateHasChanged();
+        }
     }
 
     private async Task SaveChangesAsync()

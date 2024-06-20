@@ -78,9 +78,13 @@ else if (Skills is not null)
     private bool HasChanges;
     private SkillDto SkillToAdd = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Skills = (await SkillService.GetResourcesAsync()).ToList();
+        if (firstRender)
+        {
+            Skills = (await SkillService.GetResourcesAsync()).ToList();
+            StateHasChanged();
+        }
     }
 
     private async Task SaveChangesAsync()

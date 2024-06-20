@@ -86,9 +86,13 @@ else if (References is not null)
     private bool HasChanges;
     private ReferenceDto ReferenceToAdd = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        References = (await ReferenceService.GetResourcesAsync()).ToList();
+        if (firstRender)
+        {
+            References = (await ReferenceService.GetResourcesAsync()).ToList();
+            StateHasChanged();
+        }
     }
 
     private async Task SaveChangesAsync()
