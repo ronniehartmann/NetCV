@@ -8,6 +8,8 @@ public interface ISettingsService
 
     Task<string> GetBackgroundFileNameAsync();
 
+    Task<bool> GetShowHireMeAsync();
+
     Task<bool> GetShowFooterAsync();
 
     Task<bool> GetShowVersionAsync();
@@ -19,6 +21,8 @@ public interface ISettingsService
     Task UpdatePortraitFileNameAsync(string fileName);
 
     Task UpdateBackgroundFileNameAsync(string fileName);
+
+    Task UpdateShowHireMeAsync(bool showHireMe);
 
     Task UpdateShowFooterAsync(bool showFooter);
 

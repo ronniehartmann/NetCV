@@ -10,6 +10,8 @@ public class Settings
 
     public required string BackgroundImageFileName { get; set; }
 
+    public required bool ShowHireMe { get; set; }
+
     public required bool ShowFooter { get; set; }
 
     public required bool ShowVersion { get; set; }
