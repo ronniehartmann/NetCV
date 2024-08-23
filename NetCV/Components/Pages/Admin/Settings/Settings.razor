@@ -23,6 +23,30 @@
 <RadzenRow>
     <RadzenColumn Size="12" SizeLG="6">
         <RadzenCard Variant="Variant.Flat" class="p-4">
+            <RadzenText TextStyle="TextStyle.H6" Text="Favicon" />
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <label for="favicon-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                        <RadzenIcon Icon="upload" />
+                        Upload
+                    </label>
+                    <InputFile id="favicon-upload" OnChange="UpdateFavIconAsync" style="display: none;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                    @if (!string.IsNullOrEmpty(FavIconFileName))
+                    {
+                        <img src="@($"images/{FavIconFileName}")" class="portrait-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Favicon" style="padding: 50px;" />
+                    }
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="6">
+        <RadzenCard Variant="Variant.Flat" class="p-4">
             <RadzenText TextStyle="TextStyle.H6" Text="Portrait" />
             <RadzenRow>
                 <RadzenColumn Size="12" SizeMD="4">
@@ -33,7 +57,14 @@
                     <InputFile id="portrait-upload" OnChange="UpdatePortraitAsync" style="display: none;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                    @if (!string.IsNullOrEmpty(PortraitFileName))
+                    {
+                        <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Portrait" style="padding: 50px;" />
+                    }
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -50,7 +81,14 @@
                     <InputFile id="background-upload" OnChange="UpdateBackgroundAsync" style="display: none;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                    @if (!string.IsNullOrEmpty(BackgroundFileName))
+                    {
+                        <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                    }
+                    else
+                    {
+                        <img src="https://i.gifer.com/ZKZg.gif" class="background-image" alt="Loading Background Image" style="padding: 50px;" />
+                    }
                 </RadzenColumn>
             </RadzenRow>
         </RadzenCard>
@@ -59,10 +97,27 @@
 <br />
 
 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Banner" />
+    <RadzenIcon Icon="ad_units" />
+</RadzenStack>
+<RadzenCard Variant="Variant.Flat">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-3">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenLabel Text="Show 'Hire Me' Button" Component="showHireMe" />
+                    <RadzenCheckBox Name="showHireMe" TValue="bool" Value="ShowHireMe" Change="UpdateShowHireMeAsync" />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+<br />
+
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
     <RadzenText TextStyle="TextStyle.DisplayH4" Text="Footer" />
     <RadzenIcon Icon="view_day" />
 </RadzenStack>
-
 <RadzenCard Variant="Variant.Flat">
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="6">
@@ -94,19 +149,51 @@
 </RadzenCard>
 
 @code {
+    private string FavIconFileName = string.Empty;
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
+    private bool ShowHireMe = true;
     private bool ShowFooter = true;
     private bool ShowVersion = true;
     private bool ShowPoweredByNetCv = true;
 
     protected override async Task OnInitializedAsync()
     {
+        FavIconFileName = await SettingsService.GetFavIconFileNameAsync();
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
+        ShowHireMe = await SettingsService.GetShowHireMeAsync();
         ShowFooter = await SettingsService.GetShowFooterAsync();
         ShowVersion = await SettingsService.GetShowVersionAsync();
         ShowPoweredByNetCv = await SettingsService.GetShowPoweredByNetCvAsync();
+    }
+
+    private async Task UpdateFavIconAsync(InputFileChangeEventArgs args)
+    {
+        if (!await args.File.IsImageAsync())
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "File type is not supported.");
+            return;
+        }
+
+        try
+        {
+            using var stream = args.File.OpenReadStream();
+            var fileName = GenerateFileName(args.File.Name);
+            var oldFileName = await SettingsService.GetFavIconFileNameAsync();
+
+            if (await FileUploadService.UploadFileAsync(stream, $"wwwroot/images/{fileName}", 2097152))
+            {
+                await SettingsService.UpdateFavIconFileNameAsync(fileName);
+                FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
+                FavIconFileName = fileName;
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine(e);
+            NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
+        }
     }
 
     private async Task UpdatePortraitAsync(InputFileChangeEventArgs args)
@@ -169,6 +256,12 @@
             Console.WriteLine(e);
             NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
         }
+    }
+
+    private async Task UpdateShowHireMeAsync(bool showHireMe)
+    {
+        await SettingsService.UpdateShowHireMeAsync(showHireMe);
+        ShowHireMe = showHireMe;
     }
 
     private async Task UpdateShowFooterAsync(bool showFooter)

@@ -102,9 +102,13 @@ else if (Experiences is not null)
     private bool HasChanges;
     private ExperienceDto ExperienceToAdd = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Experiences = (await ExperienceService.GetResourcesAsync()).ToList();
+        if (firstRender)
+        {
+            Experiences = (await ExperienceService.GetResourcesAsync()).ToList();
+            StateHasChanged();
+        }        
     }
 
     private async Task SaveChangesAsync()

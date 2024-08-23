@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(CvContext))]
-    partial class CvContextModelSnapshot : ModelSnapshot
+    [Migration("20240620142514_AddSettingFavIcon")]
+    partial class AddSettingFavIcon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,9 +277,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("ShowFooter")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("ShowHireMe")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("ShowPoweredByNetCv")
                         .HasColumnType("tinyint(1)");
 
@@ -295,7 +295,6 @@ namespace Infrastructure.Migrations
                             FavIconFileName = "favicon.ico",
                             PortraitImageFileName = "portrait.jpg",
                             ShowFooter = false,
-                            ShowHireMe = true,
                             ShowPoweredByNetCv = true,
                             ShowVersion = true
                         });

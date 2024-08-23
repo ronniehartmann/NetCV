@@ -94,9 +94,13 @@ else if (Educations is not null)
     private bool HasChanges;
     private EducationDto EducationToAdd = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Educations = (await EducationService.GetResourcesAsync()).ToList();
+        if (firstRender)
+        {
+            Educations = (await EducationService.GetResourcesAsync()).ToList();
+            StateHasChanged();
+        }        
     }
 
     private async Task SaveChangesAsync()

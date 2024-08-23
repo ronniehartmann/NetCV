@@ -2,17 +2,20 @@
 
 @inject ResourceService<HobbyDto> HobbyService
 
-<RadzenCard id="hobbies">
-    <RadzenText TextStyle="TextStyle.H4" Text="Hobbies" />
+@if (Hobbies.Any())
+{
+    <RadzenCard id="hobbies">
+        <RadzenText TextStyle="TextStyle.H4" Text="Hobbies" />
 
-    @foreach (var hobby in Hobbies)
-    {
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenIcon Icon="@hobby.Icon" />
-            <RadzenText Text="@hobby.Name" />
-        </RadzenStack>
-    }
-</RadzenCard>
+        @foreach (var hobby in Hobbies)
+        {
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenIcon Icon="@hobby.Icon" />
+                <RadzenText Text="@hobby.Name" />
+            </RadzenStack>
+        }
+    </RadzenCard>
+}
 
 @code {
     private IEnumerable<HobbyDto> Hobbies = [];

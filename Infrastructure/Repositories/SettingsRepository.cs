@@ -17,8 +17,10 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
         {
             settings = new Settings
             {
+                FavIconFileName = "favicon.ico",
                 BackgroundImageFileName = "profile-background.jpg",
                 PortraitImageFileName = "portrait.jpg",
+                ShowHireMe = true,
                 ShowFooter = false,
                 ShowVersion = true,
                 ShowPoweredByNetCv = true
@@ -33,6 +35,7 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
     public async Task SetSettingsAsync(Settings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
+        ArgumentException.ThrowIfNullOrWhiteSpace(settings.FavIconFileName);
         ArgumentException.ThrowIfNullOrWhiteSpace(settings.PortraitImageFileName);
         ArgumentException.ThrowIfNullOrWhiteSpace(settings.BackgroundImageFileName);
 
@@ -45,8 +48,10 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
         }
         else
         {
+            existingSettings.FavIconFileName = settings.FavIconFileName;
             existingSettings.PortraitImageFileName = settings.PortraitImageFileName;
             existingSettings.BackgroundImageFileName = settings.BackgroundImageFileName;
+            existingSettings.ShowHireMe = settings.ShowHireMe;
             existingSettings.ShowFooter = settings.ShowFooter;
             existingSettings.ShowVersion = settings.ShowVersion;
             existingSettings.ShowPoweredByNetCv = settings.ShowPoweredByNetCv;

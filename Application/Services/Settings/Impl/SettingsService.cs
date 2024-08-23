@@ -1,11 +1,16 @@
-﻿
-using Domain.Repositories;
+﻿using Domain.Repositories;
 
 namespace Application.Services.Settings.Impl;
 
 public class SettingsService(ISettingsRepository settingsRepository) : ISettingsService
 {
     private readonly ISettingsRepository _settingsRepository = settingsRepository;
+
+    public async Task<string> GetFavIconFileNameAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.FavIconFileName;
+    }
 
     public async Task<string> GetPortraitFileNameAsync()
     {
@@ -17,6 +22,12 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
     {
         var settings = await _settingsRepository.GetSettingsAsync();
         return settings.BackgroundImageFileName;
+    }
+
+    public async Task<bool> GetShowHireMeAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.ShowHireMe;
     }
 
     public async Task<bool> GetShowFooterAsync()
@@ -37,6 +48,15 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         return settings.ShowPoweredByNetCv;
     }
 
+    public async Task UpdateFavIconFileNameAsync(string fileName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.FavIconFileName = fileName;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
     public async Task UpdatePortraitFileNameAsync(string fileName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
@@ -52,6 +72,13 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
 
         var settings = await _settingsRepository.GetSettingsAsync();
         settings.BackgroundImageFileName = fileName;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
+    public async Task UpdateShowHireMeAsync(bool showHireMe)
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.ShowHireMe = showHireMe;
         await _settingsRepository.SetSettingsAsync(settings);
     }
 

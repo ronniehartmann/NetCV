@@ -3,38 +3,41 @@
 
 @inject ResourceService<ExperienceDto> ExperienceService
 
-<RadzenCard id="experience">
-    <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
-    <RadzenTimeline LinePosition="LinePosition.Left">
-        <Items>
-            @foreach (var experience in Experiences)
-            {
-                var isActive = !experience.EndDate.HasValue || experience.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
-                var duration = $"{experience.StartDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} - ";
-                if (experience.EndDate.HasValue)
+@if (Experiences.Any())
+{
+    <RadzenCard id="experience">
+        <RadzenText TextStyle="TextStyle.H4" Text="Work Experience" />
+        <RadzenTimeline LinePosition="LinePosition.Left">
+            <Items>
+                @foreach (var experience in Experiences)
                 {
-                    duration += experience.EndDate.Value.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    isActive = true;
-                    duration += "Today";
-                }
+                    var isActive = !experience.EndDate.HasValue || experience.EndDate > DateOnly.FromDateTime(DateTime.UtcNow);
+                    var duration = $"{experience.StartDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} - ";
+                    if (experience.EndDate.HasValue)
+                    {
+                        duration += experience.EndDate.Value.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        isActive = true;
+                        duration += "Today";
+                    }
 
-                <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Light)">
-                    <ChildContent>
-                        <RadzenText TextStyle="TextStyle.H5" Text="@experience.Company" />
-                        <RadzenText TextStyle="TextStyle.Caption" Style="font-weight: bold;">@duration</RadzenText>
-                        <RadzenText>
-                            @experience.Text
-                        </RadzenText>
-                    </ChildContent>
-              
-                </RadzenTimelineItem>
-            }
-        </Items>
-    </RadzenTimeline>
-</RadzenCard>
+                    <RadzenTimelineItem PointStyle="@(isActive ? PointStyle.Primary : PointStyle.Light)">
+                        <ChildContent>
+                            <RadzenText TextStyle="TextStyle.H5" Text="@experience.Company" />
+                            <RadzenText TextStyle="TextStyle.Caption" Style="font-weight: bold;">@duration</RadzenText>
+                                <RadzenText>
+                                    @experience.Text
+                            </RadzenText>
+                        </ChildContent>
+
+                    </RadzenTimelineItem>
+                }
+            </Items>
+        </RadzenTimeline>
+    </RadzenCard>
+}
 
 @code {
     private IEnumerable<ExperienceDto> Experiences = [];

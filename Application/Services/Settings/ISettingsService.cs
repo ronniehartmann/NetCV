@@ -2,9 +2,13 @@
 
 public interface ISettingsService
 {
+    Task<string> GetFavIconFileNameAsync();
+
     Task<string> GetPortraitFileNameAsync();
 
     Task<string> GetBackgroundFileNameAsync();
+
+    Task<bool> GetShowHireMeAsync();
 
     Task<bool> GetShowFooterAsync();
 
@@ -12,9 +16,13 @@ public interface ISettingsService
 
     Task<bool> GetShowPoweredByNetCvAsync();
 
+    Task UpdateFavIconFileNameAsync(string fileName);
+
     Task UpdatePortraitFileNameAsync(string fileName);
 
     Task UpdateBackgroundFileNameAsync(string fileName);
+
+    Task UpdateShowHireMeAsync(bool showHireMe);
 
     Task UpdateShowFooterAsync(bool showFooter);
 
