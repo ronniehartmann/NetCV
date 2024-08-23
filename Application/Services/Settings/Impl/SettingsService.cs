@@ -1,5 +1,4 @@
-﻿
-using Domain.Repositories;
+﻿using Domain.Repositories;
 
 namespace Application.Services.Settings.Impl;
 
@@ -23,6 +22,12 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
     {
         var settings = await _settingsRepository.GetSettingsAsync();
         return settings.BackgroundImageFileName;
+    }
+
+    public async Task<bool> GetShowHireMeAsync()
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        return settings.ShowHireMe;
     }
 
     public async Task<bool> GetShowFooterAsync()
@@ -67,6 +72,13 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
 
         var settings = await _settingsRepository.GetSettingsAsync();
         settings.BackgroundImageFileName = fileName;
+        await _settingsRepository.SetSettingsAsync(settings);
+    }
+
+    public async Task UpdateShowHireMeAsync(bool showHireMe)
+    {
+        var settings = await _settingsRepository.GetSettingsAsync();
+        settings.ShowHireMe = showHireMe;
         await _settingsRepository.SetSettingsAsync(settings);
     }
 
