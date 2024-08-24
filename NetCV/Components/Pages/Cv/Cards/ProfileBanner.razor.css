@@ -1,0 +1,23 @@
+﻿.portrait {
+    width: 300px;
+    margin: 100px;
+    border: 3px solid white;
+    border-radius: 3px;
+}
+
+.banner-text {
+    height: 100%;
+    padding-right: 200px;
+}
+
+@media(max-width: 1023px) {
+    .portrait {
+        max-width: 240px;
+        margin: 40px;
+    }
+
+    .banner-text {
+        padding-right: 0px;
+        padding-bottom: 50px;
+    }
+}
