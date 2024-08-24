@@ -1,4 +1,12 @@
-﻿@rendermode InteractiveServer
+﻿@using Application.Services.Resources
+
+@inject ResourceService<HobbyDto> HobbyService
+@inject ResourceService<SkillDto> SkillService
+@inject ResourceService<ExperienceDto> ExperienceService
+@inject ResourceService<EducationDto> EducationService
+@inject ResourceService<ReferenceDto> ReferenceService
+
+@rendermode InteractiveServer
 
 <RadzenMenu Responsive="true" Style="text-align: right;">
     @if (Admin)
@@ -14,12 +22,26 @@
     else
     {
         <RadzenMenuItem Path="#about" Text="About" />
-        <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
-        <RadzenMenuItem Path="#skills" Text="Skills" />
-        <RadzenMenuItem Path="#experience" Text="Experience" />
-        <RadzenMenuItem Path="#education" Text="Education" />
-        <RadzenMenuItem Path="#portfolio" Text="Portfolio" />
-        <RadzenMenuItem Path="#references" Text="References" />
+        @if (ShowHobbies)
+        {
+            <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
+        }
+        @if (ShowSkills)
+        {
+            <RadzenMenuItem Path="#skills" Text="Skills" />
+        }
+        @if (ShowExperience)
+        {
+            <RadzenMenuItem Path="#experience" Text="Experience" />
+        }
+        @if (ShowEducation)
+        {
+            <RadzenMenuItem Path="#education" Text="Education" />
+        }
+        @if (ShowReferences)
+        {
+            <RadzenMenuItem Path="#references" Text="References" />
+        }
         <RadzenMenuItem Path="#contact" Text="Contact" />
     }
 </RadzenMenu>
@@ -27,4 +49,19 @@
 @code {
     [Parameter]
     public bool Admin { get; set; } = false;
+
+    private bool ShowHobbies = false;
+    private bool ShowSkills = false;
+    private bool ShowExperience = false;
+    private bool ShowEducation = false;
+    private bool ShowReferences = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ShowHobbies = (await HobbyService.GetResourcesAsync()).Any();
+        ShowSkills = (await SkillService.GetResourcesAsync()).Any();
+        ShowExperience = (await ExperienceService.GetResourcesAsync()).Any();
+        ShowEducation = (await EducationService.GetResourcesAsync()).Any();
+        ShowReferences = (await ReferenceService.GetResourcesAsync()).Any();
+    }
 }
