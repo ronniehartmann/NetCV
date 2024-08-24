@@ -1,4 +1,7 @@
 /* General */
+.rz-body {
+    padding: 0 !important;
+}
 
 /* Radzen Typography */
 .rz-text-h4 {

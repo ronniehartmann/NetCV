@@ -1,0 +1,67 @@
+﻿@using Application.Services.Contents
+@using Application.Services.Pdf
+@using Application.Services.Settings
+
+@inject NavigationManager NavigationManager
+@inject IContentService ContentService
+@inject IPdfService PdfService
+@inject ISettingsService SettingsService
+@inject IJSRuntime JsRuntime
+
+@rendermode InteractiveServer
+
+<div style="background-image: url('/images/@BackgroundFileName'); background-size: cover; background-position: center; margin-bottom: 50px;">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6" Style="text-align: center;">
+            <img src="@($"images/{PortraitFileName}")" class="portrait" alt="Portrait of @FullName" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <div class="banner-text">
+                <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%; text-align: center;">
+                    <div>
+                        <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">@FullName</RadzenText>
+                            <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@Employment</RadzenText>
+                        </div>
+                        <div>
+                            <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
+                                          Variant="Variant.Flat" Text="Hire me" Click="@(() => NavigationManager.NavigateTo("#contact"))"
+                                          Style="margin: 5px;" />
+
+                            <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
+                                          Variant="Variant.Outlined" Icon="file_download" Text="Download CV"
+                                          Click="DownloadCvAsync" IsBusy="CvIsGenerating" BusyText="Downloading"
+                                          Style="margin: 5px;" />
+                        </div>
+                    </RadzenStack>
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+    </div>
+
+    @code {
+    private string PortraitFileName = string.Empty;
+    private string BackgroundFileName = string.Empty;
+    private string FullName = string.Empty;
+    private string Employment = string.Empty;
+    private bool CvIsGenerating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
+        BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
+        FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
+        Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
+    }
+
+    private async Task DownloadCvAsync()
+    {
+        CvIsGenerating = true;
+        var bytes = await PdfService.GeneratePdfAsync();
+        var fileStream = new MemoryStream(bytes);
+        var fileName = $"CV_{FullName.Replace(" ", "-")}.pdf";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        CvIsGenerating = false;
+    }
+}
