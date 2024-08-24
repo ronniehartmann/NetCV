@@ -23,9 +23,12 @@
                             <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@Employment</RadzenText>
                         </div>
                         <div>
+                        @if (ShowHireMe)
+                        {
                             <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
-                                          Variant="Variant.Flat" Text="Hire me" Click="@(() => NavigationManager.NavigateTo("#contact"))"
+                                          Variant="Variant.Flat" Text="Hire Me" Click="@(() => NavigationManager.NavigateTo("#contact"))"
                                           Style="margin: 5px;" />
+                        }
 
                             <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
                                           Variant="Variant.Outlined" Icon="file_download" Text="Download CV"
@@ -38,9 +41,10 @@
         </RadzenRow>
     </div>
 
-    @code {
+@code {
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
+    private bool ShowHireMe = false;
     private string FullName = string.Empty;
     private string Employment = string.Empty;
     private bool CvIsGenerating = false;
@@ -49,6 +53,7 @@
     {
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
+        ShowHireMe = await SettingsService.GetShowHireMeAsync();
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
         Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
     }
