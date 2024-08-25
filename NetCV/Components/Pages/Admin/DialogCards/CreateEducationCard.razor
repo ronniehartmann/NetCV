@@ -1,0 +1,46 @@
+﻿@using Application.Services.Resources
+
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+@inject ResourceService<EducationDto> EducationService
+
+<RadzenRow>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddEducationSchool" Text="School" />
+        <RadzenTextBox Name="AddEducationSchool" class="w-100" @bind-Value="EducationToAdd.School" Placeholder="Oxford" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="3">
+        <RadzenLabel Component="AddEducationStartDate" Text="Start Date" />
+        <RadzenDatePicker TValue="DateOnly" Name="AddEducationStartDate" class="w-100" @bind-Value="EducationToAdd.StartDate" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="3">
+        <RadzenLabel Component="AddEducationEndDate" Text="End Date" />
+        <RadzenDatePicker TValue="DateOnly?" Name="AddEducationEndDate" class="w-100" @bind-Value="EducationToAdd.EndDate" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="12">
+        <RadzenLabel Component="AddEducationTitle" Text="Title" />
+        <RadzenTextBox Name="AddEducationTitle" class="w-100" @bind-Value="EducationToAdd.Title" Placeholder="Master" />
+    </RadzenColumn>
+    <RadzenColumn Size="12">
+        <RadzenButton Variant="Variant.Flat" Text="Add Education" Icon="add" class="w-100"
+                      Click="async () => await AddEducationAsync()" />
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    private EducationDto EducationToAdd = new();
+
+    private async Task AddEducationAsync()
+    {
+        if (string.IsNullOrEmpty(EducationToAdd.School))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add education", $"The field {nameof(EducationToAdd.School)} is required");
+            return;
+        }
+
+        await EducationService.AddResourceAsync(EducationToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added education", $"Added new education '{EducationToAdd.School}'");
+
+        DialogService.Close();
+    }
+}

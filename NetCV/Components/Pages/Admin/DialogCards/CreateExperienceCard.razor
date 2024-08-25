@@ -1,0 +1,50 @@
+﻿@using Application.Services.Resources
+
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+@inject ResourceService<ExperienceDto> ExperienceService
+
+<RadzenRow>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddExperienceCompany" Text="Company" />
+        <RadzenTextBox Name="AddExperienceCompany" class="w-100" @bind-Value="ExperienceToAdd.Company" Placeholder="Contoso" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="3">
+        <RadzenLabel Component="AddExperienceStartDate" Text="Start Date" />
+        <RadzenDatePicker TValue="DateOnly" Name="AddExperienceStartDate" class="w-100" @bind-Value="ExperienceToAdd.StartDate" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="3">
+        <RadzenLabel Component="AddExperienceEndDate" Text="End Date" />
+        <RadzenDatePicker TValue="DateOnly?" Name="AddExperienceEndDate" class="w-100" @bind-Value="ExperienceToAdd.EndDate" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddExperienceCompanyLink" Text="Company Link" />
+        <RadzenTextBox Name="AddExperienceCompanyLink" class="w-100" @bind-Value="ExperienceToAdd.CompanyLink" Placeholder="https://example.com" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddExperienceText" Text="Text" />
+        <RadzenTextBox Name="AddExperienceText" class="w-100" @bind-Value="ExperienceToAdd.Text" />
+    </RadzenColumn>
+    <RadzenColumn Size="12">
+        <RadzenButton Variant="Variant.Flat" Text="Add Experience" Icon="add" class="w-100"
+                      Click="async () => await AddExperienceAsync()" />
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    private ExperienceDto ExperienceToAdd = new();
+
+    private async Task AddExperienceAsync()
+    {
+        if (string.IsNullOrEmpty(ExperienceToAdd.Company))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add experience", $"The field {nameof(ExperienceToAdd.Company)} is required");
+            return;
+        }
+
+        await ExperienceService.AddResourceAsync(ExperienceToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added experience", $"Added new experience '{ExperienceToAdd.Company}'");
+
+        DialogService.Close();
+    }
+}

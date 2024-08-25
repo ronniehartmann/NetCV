@@ -11,7 +11,7 @@
 
 <PageTitle>Admin - Content</PageTitle>
 
-<RadzenText TextStyle="TextStyle.H2" Text="Content" />
+<RadzenText TextStyle="TextStyle.H3" Text="Content" />
 
 <LoadingIndicator IsLoading="!Contents.Any()" />
 
@@ -20,7 +20,7 @@
         @foreach (var content in Contents)
         {
             <RadzenColumn Size="12" SizeMD="6">
-                <RadzenCard class="p-3" Variant="Variant.Outlined">
+                <RadzenCard class="p-3" Variant="Variant.Filled">
                     <RadzenText TextStyle="TextStyle.Caption" Text="@content.Key" />
                     <RadzenTextBox Value="@Contents[content.Key]"
                                    class="w-100" Change="value => TrackChange(content.Key, value)" />

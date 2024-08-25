@@ -1,0 +1,38 @@
+﻿@using Application.Services.Resources
+
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+@inject ResourceService<SkillDto> SkillService
+
+<RadzenRow>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddSkillName" Text="Name" />
+        <RadzenTextBox Name="AddSkillName" class="w-100" @bind-Value="SkillToAdd.Name" Placeholder="Java" />
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenLabel Component="AddSkillLevel" Text="@($"Level ({SkillToAdd.Level})")" />
+        <RadzenSlider Name="AddSkillLevel" class="w-100" @bind-Value="SkillToAdd.Level" Min="0" Max="100" />
+    </RadzenColumn>
+    <RadzenColumn Size="12">
+        <RadzenButton Variant="Variant.Flat" Text="Add Skill" Icon="add" class="w-100"
+                      Click="async () => await AddSkillAsync()" />
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    private SkillDto SkillToAdd = new();
+
+    private async Task AddSkillAsync()
+    {
+        if (string.IsNullOrEmpty(SkillToAdd.Name))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add skill", $"The field {nameof(SkillToAdd.Name)} is required");
+            return;
+        }
+
+        await SkillService.AddResourceAsync(SkillToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added skill", $"Added new skill '{SkillToAdd.Name}'");
+
+        DialogService.Close();
+    }
+}
