@@ -1,5 +1,4 @@
 ﻿@using Application.Services.Contents
-@using NetCV.Components.Shared
 
 @inherits LayoutComponentBase
 
@@ -8,30 +7,7 @@
 <RadzenComponents @rendermode="InteractiveServer" />
 
 <RadzenLayout>
-    <RadzenHeader>
-        <RadzenRow Style="height: 100%;">
-            <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
-            <RadzenColumn Size="12" SizeMD="10" SizeLG="8">
-                <RadzenRow>
-                    <RadzenColumn Size="5">
-                        <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceBetween">
-                            <RadzenLink Path="/" Style="padding-top: 11px;">
-                                <RadzenText TextStyle="TextStyle.DisplayH6">NetCV - Admin</RadzenText>
-                            </RadzenLink>
-                        </RadzenStack>
-                    </RadzenColumn>
-                    <RadzenColumn Size="7">
-                        <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.End">
-                            <HeaderLinks Admin="true" />
-                            <ResponsiveIconLink Icon="settings" Text="Settings" Path="/Admin/Settings" />
-                            <RadzenLink Style="font-size: 17pt;" Icon="logout" Path="/Account/Logout" />
-                        </RadzenStack>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenColumn>
-            <RadzenColumn Size="0" SizeMD="1" SizeLG="2" />
-        </RadzenRow>
-    </RadzenHeader>
+    <AdminHeaderSidebar />
 
     <RadzenBody>
         <div class="body-padding">
@@ -48,6 +24,7 @@
 </RadzenLayout>
 
 @code {
+    private bool SidebarExpanded = true;
     private string FullName = string.Empty;
 
     protected override async Task OnInitializedAsync()

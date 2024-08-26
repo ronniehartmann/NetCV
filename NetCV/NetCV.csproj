@@ -16,7 +16,6 @@
   <ItemGroup>
     <None Remove="Components\Pages\Admin\Settings\Settings.razor.css" />
     <None Remove="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
-    <None Remove="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +23,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="Components\Pages\Cv\Cards\ReferencesCard.razor.css" />
-    <Content Include="Components\Shared\ResponsiveIconLink.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

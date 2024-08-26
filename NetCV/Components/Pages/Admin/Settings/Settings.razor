@@ -1,6 +1,7 @@
 ﻿@using Application.Services.Settings
 @using Infrastructure.Services
 @using Microsoft.AspNetCore.Authorization
+@using NetCV.Components.Pages.Admin.Editors
 @using NetCV.Extensions
 
 @inject NavigationManager NavigationManager
@@ -147,6 +148,9 @@
         </RadzenColumn>
     </RadzenRow>
 </RadzenCard>
+<br />
+
+<ContentEditor />
 
 @code {
     private string FavIconFileName = string.Empty;
@@ -187,6 +191,11 @@
                 await SettingsService.UpdateFavIconFileNameAsync(fileName);
                 FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
                 FavIconFileName = fileName;
+                NotificationService.Notify(NotificationSeverity.Success, "Image uploaded", "The favicon has successfully been updated.");
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
             }
         }
         catch (IOException e)
@@ -215,6 +224,11 @@
                 await SettingsService.UpdatePortraitFileNameAsync(fileName);
                 FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
                 PortraitFileName = fileName;
+                NotificationService.Notify(NotificationSeverity.Success, "Image uploaded", "The portrait has successfully been updated.");
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
             }
         }
         catch (IOException e)
@@ -249,6 +263,11 @@
                 await SettingsService.UpdateBackgroundFileNameAsync(fileName);
                 FileUploadService.RemoveFile($"wwwroot/images/{oldFileName}");
                 BackgroundFileName = fileName;
+                NotificationService.Notify(NotificationSeverity.Success, "Image uploaded", "The background has successfully been updated.");
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Image not uploaded", "An error occured. Please try again.");
             }
         }
         catch (IOException e)
@@ -261,6 +280,7 @@
     private async Task UpdateShowHireMeAsync(bool showHireMe)
     {
         await SettingsService.UpdateShowHireMeAsync(showHireMe);
+        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Show Hire Me'", $"'Show Hire Me' has been {(showHireMe ? "enabled" : "disabled")}");
         ShowHireMe = showHireMe;
     }
 
@@ -268,6 +288,7 @@
     {
         await SettingsService.UpdateShowFooterAsync(showFooter);
         ShowFooter = showFooter;
+        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Show Footer'", $"'Show Footer' has been {(showFooter ? "enabled" : "disabled")}");
         NavigationManager.Refresh();
     }
 
@@ -275,6 +296,7 @@
     {
         await SettingsService.UpdateShowVersionAsync(showVersion);
         ShowVersion = showVersion;
+        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Show Version'", $"'Show Version' has been {(showVersion ? "enabled" : "disabled")}");
         NavigationManager.Refresh();
     }
 
@@ -282,6 +304,7 @@
     {
         await SettingsService.UpdateShowPoweredByNetCvAsync(showPoweredByNetCv);
         ShowPoweredByNetCv = showPoweredByNetCv;
+        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Show Powered By NetCV'", $"'Show Powered By NetCV' has been {(showPoweredByNetCv ? "enabled" : "disabled")}");
         NavigationManager.Refresh();
     }
 
