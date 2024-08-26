@@ -1,8 +1,10 @@
 ﻿@using Application.Services.Resources
+@using NetCV.Components.Pages.Admin.DialogCards
 @using NetCV.Components.Pages.Shared
 @using Microsoft.AspNetCore.Authorization
 
 @inject NotificationService NotificationService
+@inject DialogService DialogService
 @inject ResourceService<HobbyDto> HobbyService
 
 @rendermode InteractiveServer
@@ -11,7 +13,10 @@
 
 <PageTitle>Admin - Hobbies</PageTitle>
 
-<RadzenText TextStyle="TextStyle.H2" Text="Hobbies" />
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+    <RadzenText TextStyle="TextStyle.H3" Text="Hobbies" />
+    <RadzenButton Text="Add Hobby" Icon="add" Click="OpenCreateDialogAsync" Variant="Variant.Flat" />
+</RadzenStack>
 
 <LoadingIndicator IsLoading="Hobbies is null" />
 
@@ -21,39 +26,37 @@
 }
 else if (Hobbies is not null)
 {
-    <div class="scroll-container">
-        @foreach (var hobby in Hobbies)
-        {
-            <RadzenCard Variant="Variant.Outlined" class="p-3">
-                <RadzenRow>
-                    <RadzenColumn Size="12" SizeMD="5">
-                        <RadzenLabel Component="Name" Text="Name" />
-                        <RadzenTextBox Name="Name" Value="@hobby.Name" class="w-100" Change="name => { hobby.Name = name; HasChanges = true; }" />
-                    </RadzenColumn>
-                    <RadzenColumn Size="9" SizeMD="3">
-                        <RadzenLabel Component="Icon" Text="Icon" />
-                        <RadzenTextBox Name="Icon" Value="@hobby.Icon" class="w-100" Change="icon => { hobby.Icon = icon; HasChanges = true; }" />
-                    </RadzenColumn>
-                    <RadzenColumn Size="3" SizeMD="3">
-                        <RadzenLabel Text="Icon Preview" class="w-100" />
-                        @if (string.IsNullOrEmpty(hobby.Icon))
-                        {
-                            <RadzenText Text="-" class="p-2" />
-                        }
-                        else
-                        {
-                            <RadzenIcon Icon="@hobby.Icon" class="p-3" />
-                        }
-                    </RadzenColumn>
-                    <RadzenColumn Size="12" SizeMD="1">
-                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Right" AlignItems="AlignItems.Center" Style="height: 100%;">
-                            <RadzenButton Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="async () => await DeleteHobbyAsync(hobby.Id)" />
-                        </RadzenStack>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenCard>
-        }
-    </div>
+    @foreach (var hobby in Hobbies)
+    {
+        <RadzenCard Variant="Variant.Filled" class="p-3">
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="5">
+                    <RadzenLabel Component="Name" Text="Name" />
+                    <RadzenTextBox Name="Name" Value="@hobby.Name" class="w-100" Change="name => { hobby.Name = name; HasChanges = true; }" />
+                </RadzenColumn>
+                <RadzenColumn Size="9" SizeMD="3">
+                    <RadzenLabel Component="Icon" Text="Icon" />
+                    <RadzenTextBox Name="Icon" Value="@hobby.Icon" class="w-100" Change="icon => { hobby.Icon = icon; HasChanges = true; }" />
+                </RadzenColumn>
+                <RadzenColumn Size="3" SizeMD="3">
+                    <RadzenLabel Text="Icon Preview" class="w-100" />
+                    @if (string.IsNullOrEmpty(hobby.Icon))
+                    {
+                        <RadzenText Text="-" class="p-2" />
+                    }
+                    else
+                    {
+                        <RadzenIcon Icon="@hobby.Icon" class="p-3" />
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="1">
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Right" AlignItems="AlignItems.Center" Style="height: 100%;">
+                        <RadzenButton Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="async () => await DeleteHobbyAsync(hobby.Id)" />
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenCard>
+    }
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
         <RadzenButton Variant="Variant.Flat" Text="Cancel"
                       Visible="HasChanges" ButtonStyle="ButtonStyle.Info" Shade="Shade.Lighter"
@@ -64,41 +67,9 @@ else if (Hobbies is not null)
     </RadzenStack>
 }
 
-<hr />
-<RadzenText TextStyle="TextStyle.H4" Text="Add Hobby" />
-
-<RadzenCard Variant="Variant.Outlined">
-    <RadzenRow>
-        <RadzenColumn Size="12" SizeMD="7">
-            <RadzenLabel Component="AddHobbyName" Text="Name" />
-            <RadzenTextBox Name="AddHobbyName" class="w-100" @bind-Value="HobbyToAdd.Name" Placeholder="Football" />
-        </RadzenColumn>
-        <RadzenColumn Size="8" SizeMD="3">
-            <RadzenLabel Component="AddHobbyIcon" Text="Icon" />
-            <RadzenTextBox Name="AddHobbyIcon" class="w-100" @bind-Value="HobbyToAdd.Icon" Placeholder="sports_soccer" />
-        </RadzenColumn>
-        <RadzenColumn Size="4" SizeMD="2">
-            <RadzenLabel Text="Icon Preview" class="w-100" />
-            @if (string.IsNullOrEmpty(HobbyToAdd.Icon))
-            {
-                <RadzenText Text="-" class="p-2" />
-            }
-            else
-            {
-                <RadzenIcon Icon="@HobbyToAdd.Icon" class="p-3" />
-            }
-        </RadzenColumn>
-        <RadzenColumn Size="12">
-            <RadzenButton Variant="Variant.Flat" Text="Add Hobby" Icon="add" class="w-100"
-                          Click="async () => await AddHobbyAsync()" />
-        </RadzenColumn>
-    </RadzenRow>
-</RadzenCard>
-
 @code {
     private IList<HobbyDto>? Hobbies;
     private bool HasChanges;
-    private HobbyDto HobbyToAdd = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -106,6 +77,12 @@ else if (Hobbies is not null)
         {
             Hobbies = (await HobbyService.GetResourcesAsync()).ToList();
             StateHasChanged();
+
+            DialogService.OnClose += async x =>
+            {
+                Hobbies = (await HobbyService.GetResourcesAsync()).ToList();
+                StateHasChanged();
+            };
         }
     }
 
@@ -129,19 +106,14 @@ else if (Hobbies is not null)
         HasChanges = false;
     }
 
-    private async Task AddHobbyAsync()
+    private async Task OpenCreateDialogAsync()
     {
-        if (string.IsNullOrEmpty(HobbyToAdd.Name))
+        var options = new DialogOptions
         {
-            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add hobby", $"The field {nameof(HobbyToAdd.Name)} is required");
-            return;
-        }
+            Width = "700px"
+        };
 
-        await HobbyService.AddResourceAsync(HobbyToAdd);
-        NotificationService.Notify(NotificationSeverity.Success, "Added hobby", $"Added new hobby '{HobbyToAdd.Name}'");
-
-        Hobbies = (await HobbyService.GetResourcesAsync()).ToList();
-        HobbyToAdd = new();
+        await DialogService.OpenAsync<CreateHobbyCard>("Add Hobby", options: options);
     }
 
     private async Task DeleteHobbyAsync(long id)

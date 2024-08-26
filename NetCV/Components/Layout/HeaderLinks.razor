@@ -9,47 +9,31 @@
 @rendermode InteractiveServer
 
 <RadzenMenu Responsive="true" Style="text-align: right;">
-    @if (Admin)
+    <RadzenMenuItem Path="#about" Text="About" />
+    @if (ShowHobbies)
     {
-        <RadzenMenuItem Path="/Admin/Content" Text="Content" />
-        <RadzenMenuItem Path="/Admin/Hobbies" Text="Hobbies" />
-        <RadzenMenuItem Path="/Admin/Skills" Text="Skills" />
-        <RadzenMenuItem Path="/Admin/Experience" Text="Experience" />
-        <RadzenMenuItem Path="/Admin/Education" Text="Education" />
-        <RadzenMenuItem Path="/Admin/References" Text="References" />
-
+        <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
     }
-    else
+    @if (ShowSkills)
     {
-        <RadzenMenuItem Path="#about" Text="About" />
-        @if (ShowHobbies)
-        {
-            <RadzenMenuItem Path="#hobbies" Text="Hobbies" />
-        }
-        @if (ShowSkills)
-        {
-            <RadzenMenuItem Path="#skills" Text="Skills" />
-        }
-        @if (ShowExperience)
-        {
-            <RadzenMenuItem Path="#experience" Text="Experience" />
-        }
-        @if (ShowEducation)
-        {
-            <RadzenMenuItem Path="#education" Text="Education" />
-        }
-        @if (ShowReferences)
-        {
-            <RadzenMenuItem Path="#references" Text="References" />
-        }
-        <RadzenMenuItem Path="#contact" Text="Contact" />
+        <RadzenMenuItem Path="#skills" Text="Skills" />
     }
+    @if (ShowExperience)
+    {
+        <RadzenMenuItem Path="#experience" Text="Experience" />
+    }
+    @if (ShowEducation)
+    {
+        <RadzenMenuItem Path="#education" Text="Education" />
+    }
+    @if (ShowReferences)
+    {
+        <RadzenMenuItem Path="#references" Text="References" />
+    }
+    <RadzenMenuItem Path="#contact" Text="Contact" />
 </RadzenMenu>
 
 @code {
-    [Parameter]
-    public bool Admin { get; set; } = false;
-
     private bool ShowHobbies = false;
     private bool ShowSkills = false;
     private bool ShowExperience = false;

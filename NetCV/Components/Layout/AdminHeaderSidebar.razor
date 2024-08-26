@@ -1,0 +1,36 @@
+﻿@rendermode InteractiveServer
+
+<RadzenHeader Style="position: relative;">
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start">
+                <RadzenSidebarToggle Style="color: #000;" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+                <RadzenLink Path="/">
+                    <RadzenText TextStyle="TextStyle.DisplayH6">NetCV</RadzenText>
+                </RadzenLink>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenStack Style="height: 100%;" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenLink Style="font-size: 17pt; padding-right: 10px;" Icon="logout" Path="/Account/Logout" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenHeader>
+
+<RadzenSidebar @bind-Expanded="SidebarExpanded">
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Path="/Admin/Settings" Text="Settings" Icon="settings" />
+    </RadzenPanelMenu>
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Path="/Admin/Hobbies" Text="Hobbies" Icon="skateboarding" />
+        <RadzenPanelMenuItem Path="/Admin/Skills" Text="Skills" Icon="psychology" />
+        <RadzenPanelMenuItem Path="/Admin/Experience" Text="Experience" Icon="business" />
+        <RadzenPanelMenuItem Path="/Admin/Education" Text="Education" Icon="school" />
+        <RadzenPanelMenuItem Path="/Admin/References" Text="References" Icon="group" />
+    </RadzenPanelMenu>
+</RadzenSidebar>
+
+@code {
+    private bool SidebarExpanded = true;
+}

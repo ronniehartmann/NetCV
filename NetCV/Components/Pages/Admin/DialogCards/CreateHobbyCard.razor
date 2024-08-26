@@ -1,0 +1,49 @@
+﻿@using Application.Services.Resources
+
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+@inject ResourceService<HobbyDto> HobbyService
+
+<RadzenRow>
+    <RadzenColumn Size="12" SizeMD="7">
+        <RadzenLabel Component="AddHobbyName" Text="Name" />
+        <RadzenTextBox Name="AddHobbyName" class="w-100" @bind-Value="HobbyToAdd.Name" Placeholder="Football" />
+    </RadzenColumn>
+    <RadzenColumn Size="8" SizeMD="3">
+        <RadzenLabel Component="AddHobbyIcon" Text="Icon" />
+        <RadzenTextBox Name="AddHobbyIcon" class="w-100" @bind-Value="HobbyToAdd.Icon" Placeholder="sports_soccer" />
+    </RadzenColumn>
+    <RadzenColumn Size="4" SizeMD="2">
+        <RadzenLabel Text="Icon Preview" class="w-100" />
+        @if (string.IsNullOrEmpty(HobbyToAdd.Icon))
+        {
+            <RadzenText Text="-" class="p-2" />
+        }
+        else
+        {
+            <RadzenIcon Icon="@HobbyToAdd.Icon" class="p-3" />
+        }
+    </RadzenColumn>
+    <RadzenColumn Size="12">
+        <RadzenButton Variant="Variant.Flat" Text="Add Hobby" Icon="add" class="w-100"
+                      Click="async () => await AddHobbyAsync()" />
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    private HobbyDto HobbyToAdd = new();
+
+    private async Task AddHobbyAsync()
+    {
+        if (string.IsNullOrEmpty(HobbyToAdd.Name))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Couldn't add hobby", $"The field {nameof(HobbyToAdd.Name)} is required");
+            return;
+        }
+
+        await HobbyService.AddResourceAsync(HobbyToAdd);
+        NotificationService.Notify(NotificationSeverity.Success, "Added hobby", $"Added new hobby '{HobbyToAdd.Name}'");
+
+        DialogService.Close();
+    }
+}
