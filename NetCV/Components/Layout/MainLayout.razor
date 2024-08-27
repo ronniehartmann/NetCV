@@ -1,6 +1,5 @@
 ﻿@using Application.Services.Contents
 @using Application.Services.Settings
-@using Microsoft.AspNetCore.Components.Authorization
 @using NetCV.Components.Pages.Cv.Cards
 
 @inherits LayoutComponentBase
@@ -10,15 +9,6 @@
 
 <RadzenComponents />
 
-<div class="w-100">
-    <AuthorizeView>
-        <RadzenRow>
-            <RadzenColumn Size="12" Style="text-align: center; background-color: darkslategray;">
-                <RadzenLink Path="/Admin" Text="Admin" Style="color: white;" />
-            </RadzenColumn>
-        </RadzenRow>
-    </AuthorizeView>
-</div>
 <RadzenLayout>
     <RadzenHeader>
         <RadzenRow Style="height: 100%;">
