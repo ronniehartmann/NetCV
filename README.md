@@ -1,4 +1,4 @@
-![NetCV_Logo_Dark](https://github.com/user-attachments/assets/6e5162c6-ad0c-499d-bd92-eae0a2c49e7e)
+![NetCV_Logo](https://github.com/user-attachments/assets/79d1ec60-4ab1-492f-8972-685df346a937)
 
 [![Demo](https://img.shields.io/badge/Demo-ronniehartmann.ch-blue?style=flat-square)](https://ronniehartmann.ch)
 
