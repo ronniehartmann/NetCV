@@ -44,7 +44,10 @@ else if (Experiences is not null)
                     <RadzenDatePicker TValue="DateOnly" Name="EndDate" Value="@experience.EndDate" class="w-100" Change="endDate => { experience.EndDate = DateOnly.FromDateTime(endDate ?? DateTime.MinValue); HasChanges = true; }" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="5">
-                    <RadzenLabel Component="CompanyLink" Text="Company Link" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" JustifyContent="JustifyContent.Left" Gap="5px">
+                        <RadzenLabel Component="CompanyLink" Text="Company Link" />
+                        <RadzenIcon Icon="link" />
+                    </RadzenStack>
                     <RadzenTextBox Name="CompanyLink" Value="@experience.CompanyLink" class="w-100" Change="companyLink => { experience.CompanyLink = companyLink; HasChanges = true; }" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="6">

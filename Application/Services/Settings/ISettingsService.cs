@@ -8,7 +8,7 @@ public interface ISettingsService
 
     Task<string> GetBackgroundFileNameAsync();
 
-    Task<bool> GetShowHireMeAsync();
+    Task<bool> GetOpenToWorkAsync();
 
     Task<bool> GetShowFooterAsync();
 
@@ -22,7 +22,7 @@ public interface ISettingsService
 
     Task UpdateBackgroundFileNameAsync(string fileName);
 
-    Task UpdateShowHireMeAsync(bool showHireMe);
+    Task UpdateOpenToWorkAsync(bool openToWork);
 
     Task UpdateShowFooterAsync(bool showFooter);
 

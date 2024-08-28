@@ -1,4 +1,5 @@
 ﻿@using Application.Services.Resources
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject ResourceService<HobbyDto> HobbyService
 @inject ResourceService<SkillDto> SkillService
@@ -9,6 +10,11 @@
 @rendermode InteractiveServer
 
 <RadzenMenu Responsive="true" Style="text-align: right;">
+    <AuthorizeView>
+        <Authorized>
+            <RadzenMenuItem Path="/Admin" Text="Admin Panel" Icon="admin_panel_settings" Style="margin-right: 16px; padding-right: 16px; border-right: 1px solid #AAA;" />
+        </Authorized>
+    </AuthorizeView>
     <RadzenMenuItem Path="#about" Text="About" />
     @if (ShowHobbies)
     {
@@ -30,7 +36,6 @@
     {
         <RadzenMenuItem Path="#references" Text="References" />
     }
-    <RadzenMenuItem Path="#contact" Text="Contact" />
 </RadzenMenu>
 
 @code {

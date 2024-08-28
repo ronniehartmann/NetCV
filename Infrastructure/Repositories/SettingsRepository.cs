@@ -20,7 +20,7 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
                 FavIconFileName = "favicon.ico",
                 BackgroundImageFileName = "profile-background.jpg",
                 PortraitImageFileName = "portrait.jpg",
-                ShowHireMe = true,
+                OpenToWork = true,
                 ShowFooter = false,
                 ShowVersion = true,
                 ShowPoweredByNetCv = true
@@ -51,7 +51,7 @@ public class SettingsRepository(IDbContextFactory<CvContext> contextFactory) : I
             existingSettings.FavIconFileName = settings.FavIconFileName;
             existingSettings.PortraitImageFileName = settings.PortraitImageFileName;
             existingSettings.BackgroundImageFileName = settings.BackgroundImageFileName;
-            existingSettings.ShowHireMe = settings.ShowHireMe;
+            existingSettings.OpenToWork = settings.OpenToWork;
             existingSettings.ShowFooter = settings.ShowFooter;
             existingSettings.ShowVersion = settings.ShowVersion;
             existingSettings.ShowPoweredByNetCv = settings.ShowPoweredByNetCv;

@@ -24,10 +24,10 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         return settings.BackgroundImageFileName;
     }
 
-    public async Task<bool> GetShowHireMeAsync()
+    public async Task<bool> GetOpenToWorkAsync()
     {
         var settings = await _settingsRepository.GetSettingsAsync();
-        return settings.ShowHireMe;
+        return settings.OpenToWork;
     }
 
     public async Task<bool> GetShowFooterAsync()
@@ -75,10 +75,10 @@ public class SettingsService(ISettingsRepository settingsRepository) : ISettings
         await _settingsRepository.SetSettingsAsync(settings);
     }
 
-    public async Task UpdateShowHireMeAsync(bool showHireMe)
+    public async Task UpdateOpenToWorkAsync(bool openToWork)
     {
         var settings = await _settingsRepository.GetSettingsAsync();
-        settings.ShowHireMe = showHireMe;
+        settings.OpenToWork = openToWork;
         await _settingsRepository.SetSettingsAsync(settings);
     }
 

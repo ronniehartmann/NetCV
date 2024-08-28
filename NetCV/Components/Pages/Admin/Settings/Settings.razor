@@ -17,97 +17,101 @@
 
 <RadzenText TextStyle="TextStyle.H3" Text="Settings" />
 
-<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Images" />
-    <RadzenIcon Icon="image" />
-</RadzenStack>
-<RadzenRow>
-    <RadzenColumn Size="12" SizeLG="6">
-        <RadzenCard Variant="Variant.Filled" class="p-4">
-            <RadzenText TextStyle="TextStyle.H6" Text="Favicon" />
-            <RadzenRow>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <label for="favicon-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
-                        <RadzenIcon Icon="upload" />
-                        Upload
-                    </label>
-                    <InputFile id="favicon-upload" OnChange="UpdateFavIconAsync" style="display: none;" />
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    @if (!string.IsNullOrEmpty(FavIconFileName))
-                    {
-                        <img src="@($"images/{FavIconFileName}")" class="portrait-image" />
-                    }
-                    else
-                    {
-                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Favicon" style="padding: 50px;" />
-                    }
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCard>
-    </RadzenColumn>
-    <RadzenColumn Size="12" SizeLG="6">
-        <RadzenCard Variant="Variant.Filled" class="p-4">
-            <RadzenText TextStyle="TextStyle.H6" Text="Portrait" />
-            <RadzenRow>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <label for="portrait-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
-                        <RadzenIcon Icon="upload" />
-                        Upload
-                    </label>
-                    <InputFile id="portrait-upload" OnChange="UpdatePortraitAsync" style="display: none;" />
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    @if (!string.IsNullOrEmpty(PortraitFileName))
-                    {
-                        <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
-                    }
-                    else
-                    {
-                        <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Portrait" style="padding: 50px;" />
-                    }
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCard>
-    </RadzenColumn>
-    <RadzenColumn Size="12" SizeLG="6">
-        <RadzenCard Variant="Variant.Filled" class="p-4">
-            <RadzenText TextStyle="TextStyle.H6" Text="Background" />
-            <RadzenRow>
-                <RadzenColumn Size="12" SizeMD="4">
-                    <label for="background-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
-                        <RadzenIcon Icon="upload" />
-                        Upload
-                    </label>
-                    <InputFile id="background-upload" OnChange="UpdateBackgroundAsync" style="display: none;" />
-                </RadzenColumn>
-                <RadzenColumn Size="12" SizeMD="8" class="text-end">
-                    @if (!string.IsNullOrEmpty(BackgroundFileName))
-                    {
-                        <img src="@($"images/{BackgroundFileName}")" class="background-image" />
-                    }
-                    else
-                    {
-                        <img src="https://i.gifer.com/ZKZg.gif" class="background-image" alt="Loading Background Image" style="padding: 50px;" />
-                    }
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenCard>
-    </RadzenColumn>
-</RadzenRow>
+<RadzenCard Variant="Variant.Filled">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+        <RadzenText TextStyle="TextStyle.DisplayH4" Text="Images" />
+        <RadzenIcon Icon="image" />
+    </RadzenStack>
+    <br />
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-4">
+                <RadzenText TextStyle="TextStyle.H6" Text="Favicon" />
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <label for="favicon-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                            <RadzenIcon Icon="upload" />
+                            Upload
+                        </label>
+                        <InputFile id="favicon-upload" OnChange="UpdateFavIconAsync" style="display: none;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                        @if (!string.IsNullOrEmpty(FavIconFileName))
+                        {
+                            <img src="@($"images/{FavIconFileName}")" class="portrait-image" />
+                        }
+                        else
+                        {
+                            <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Favicon" style="padding: 50px;" />
+                        }
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-4">
+                <RadzenText TextStyle="TextStyle.H6" Text="Portrait" />
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <label for="portrait-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                            <RadzenIcon Icon="upload" />
+                            Upload
+                        </label>
+                        <InputFile id="portrait-upload" OnChange="UpdatePortraitAsync" style="display: none;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                        @if (!string.IsNullOrEmpty(PortraitFileName))
+                        {
+                            <img src="@($"images/{PortraitFileName}")" class="portrait-image" />
+                        }
+                        else
+                        {
+                            <img src="https://i.gifer.com/ZKZg.gif" class="portrait-image" alt="Loading Portrait" style="padding: 50px;" />
+                        }
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG="6">
+            <RadzenCard Variant="Variant.Outlined" class="p-4">
+                <RadzenText TextStyle="TextStyle.H6" Text="Background" />
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <label for="background-upload" class="rz-button rz-button-md rz-variant-flat rz-info rz-shade-default text-center">
+                            <RadzenIcon Icon="upload" />
+                            Upload
+                        </label>
+                        <InputFile id="background-upload" OnChange="UpdateBackgroundAsync" style="display: none;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8" class="text-end">
+                        @if (!string.IsNullOrEmpty(BackgroundFileName))
+                        {
+                            <img src="@($"images/{BackgroundFileName}")" class="background-image" />
+                        }
+                        else
+                        {
+                            <img src="https://i.gifer.com/ZKZg.gif" class="background-image" alt="Loading Background Image" style="padding: 50px;" />
+                        }
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
 <br />
 
-<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Banner" />
-    <RadzenIcon Icon="ad_units" />
-</RadzenStack>
 <RadzenCard Variant="Variant.Filled">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+        <RadzenText TextStyle="TextStyle.DisplayH4" Text="Banner" />
+        <RadzenIcon Icon="ad_units" />
+    </RadzenStack>
+    <br />
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenCard Variant="Variant.Outlined" class="p-3">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenLabel Text="Show 'Hire Me' Button" Component="showHireMe" />
-                    <RadzenCheckBox Name="showHireMe" TValue="bool" Value="ShowHireMe" Change="UpdateShowHireMeAsync" />
+                    <RadzenLabel Text="Open to work" Component="openToWork" />
+                    <RadzenCheckBox Name="openToWork" TValue="bool" Value="OpenToWork" Change="UpdateOpenToWorkAsync" />
                 </RadzenStack>
             </RadzenCard>
         </RadzenColumn>
@@ -115,11 +119,12 @@
 </RadzenCard>
 <br />
 
-<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-    <RadzenText TextStyle="TextStyle.DisplayH4" Text="Footer" />
-    <RadzenIcon Icon="view_day" />
-</RadzenStack>
 <RadzenCard Variant="Variant.Filled">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+        <RadzenText TextStyle="TextStyle.DisplayH4" Text="Footer" />
+        <RadzenIcon Icon="view_day" />
+    </RadzenStack>
+    <br />
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenCard Variant="Variant.Outlined" class="p-3">
@@ -156,7 +161,7 @@
     private string FavIconFileName = string.Empty;
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
-    private bool ShowHireMe = true;
+    private bool OpenToWork = false;
     private bool ShowFooter = true;
     private bool ShowVersion = true;
     private bool ShowPoweredByNetCv = true;
@@ -166,7 +171,7 @@
         FavIconFileName = await SettingsService.GetFavIconFileNameAsync();
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
-        ShowHireMe = await SettingsService.GetShowHireMeAsync();
+        OpenToWork = await SettingsService.GetOpenToWorkAsync();
         ShowFooter = await SettingsService.GetShowFooterAsync();
         ShowVersion = await SettingsService.GetShowVersionAsync();
         ShowPoweredByNetCv = await SettingsService.GetShowPoweredByNetCvAsync();
@@ -277,11 +282,11 @@
         }
     }
 
-    private async Task UpdateShowHireMeAsync(bool showHireMe)
+    private async Task UpdateOpenToWorkAsync(bool openToWork)
     {
-        await SettingsService.UpdateShowHireMeAsync(showHireMe);
-        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Show Hire Me'", $"'Show Hire Me' has been {(showHireMe ? "enabled" : "disabled")}");
-        ShowHireMe = showHireMe;
+        await SettingsService.UpdateOpenToWorkAsync(openToWork);
+        NotificationService.Notify(NotificationSeverity.Success, "Updated 'Open to work'", $"'Open to work' has been {(openToWork ? "enabled" : "disabled")}");
+        OpenToWork = openToWork;
     }
 
     private async Task UpdateShowFooterAsync(bool showFooter)
