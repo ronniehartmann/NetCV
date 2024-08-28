@@ -31,7 +31,7 @@
                     <div>
                         <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
                                       Variant="Variant.Flat" Icon="contact_mail" Text="Contact"
-                                      Click="@(() => NavigationManager.NavigateTo("#contact"))"
+                                      Click="@(() => NavigationManager.NavigateTo(EmailLink))"
                                       Style="margin: 5px;" />
 
                         <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
@@ -52,6 +52,7 @@
     private string FullName = string.Empty;
     private string Employment = string.Empty;
     private bool CvIsGenerating = false;
+    private string EmailLink = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +61,7 @@
         OpenToWork = await SettingsService.GetOpenToWorkAsync();
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
         Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
+        EmailLink = await ContentService.GetValueAsync("ABOUT_EMAIL_LINK");
     }
 
     private async Task DownloadCvAsync()
