@@ -13,38 +13,42 @@
 <div style="background-image: url('/images/@BackgroundFileName'); background-size: cover; background-position: center; margin-bottom: 50px;">
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="6" Style="text-align: center;">
-            <img src="@($"images/{PortraitFileName}")" class="portrait" alt="Portrait of @FullName" />
+            <div class="portrait-container">
+                <img class="portrait" src="@($"images/{PortraitFileName}")" alt="Portrait of @FullName" />
+                @if (OpenToWork)
+                {
+                    <div class="open-to-work">Open to work</div>
+                }
+            </div>
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <div class="banner-text">
                 <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="25px;" Style="height: 100%; text-align: center;">
                     <div>
                         <RadzenText TextStyle="TextStyle.H2" Style="color: #FFF;">@FullName</RadzenText>
-                            <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@Employment</RadzenText>
-                        </div>
-                        <div>
-                        @if (ShowHireMe)
-                        {
-                            <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
-                                          Variant="Variant.Flat" Text="Hire Me" Click="@(() => NavigationManager.NavigateTo("#contact"))"
-                                          Style="margin: 5px;" />
-                        }
+                        <RadzenText TextStyle="TextStyle.H4" Style="color: #FFF;">@Employment</RadzenText>
+                    </div>
+                    <div>
+                        <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Info"
+                                      Variant="Variant.Flat" Icon="contact_mail" Text="Contact"
+                                      Click="@(() => NavigationManager.NavigateTo("#contact"))"
+                                      Style="margin: 5px;" />
 
-                            <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
-                                          Variant="Variant.Outlined" Icon="file_download" Text="Download CV"
-                                          Click="DownloadCvAsync" IsBusy="CvIsGenerating" BusyText="Downloading"
-                                          Style="margin: 5px;" />
-                        </div>
-                    </RadzenStack>
-                </div>
-            </RadzenColumn>
-        </RadzenRow>
-    </div>
+                        <RadzenButton Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Light"
+                                      Variant="Variant.Outlined" Icon="file_download" Text="Download CV"
+                                      Click="DownloadCvAsync" IsBusy="CvIsGenerating" BusyText="Downloading"
+                                      Style="margin: 5px;" />
+                    </div>
+                </RadzenStack>
+            </div>
+        </RadzenColumn>
+    </RadzenRow>
+</div>
 
 @code {
     private string PortraitFileName = string.Empty;
     private string BackgroundFileName = string.Empty;
-    private bool ShowHireMe = false;
+    private bool OpenToWork = false;
     private string FullName = string.Empty;
     private string Employment = string.Empty;
     private bool CvIsGenerating = false;
@@ -53,7 +57,7 @@
     {
         PortraitFileName = await SettingsService.GetPortraitFileNameAsync();
         BackgroundFileName = await SettingsService.GetBackgroundFileNameAsync();
-        ShowHireMe = await SettingsService.GetShowHireMeAsync();
+        OpenToWork = await SettingsService.GetOpenToWorkAsync();
         FullName = await ContentService.GetValueAsync("PROFILE_FULLNAME");
         Employment = await ContentService.GetValueAsync("PROFILE_EMPLOYMENT");
     }

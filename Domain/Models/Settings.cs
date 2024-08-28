@@ -10,7 +10,7 @@ public class Settings
 
     public required string BackgroundImageFileName { get; set; }
 
-    public required bool ShowHireMe { get; set; }
+    public required bool OpenToWork { get; set; }
 
     public required bool ShowFooter { get; set; }
 

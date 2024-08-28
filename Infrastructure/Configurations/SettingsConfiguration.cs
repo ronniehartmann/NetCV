@@ -14,7 +14,7 @@ public class SettingsConfiguration : IEntityTypeConfiguration<Settings>
             FavIconFileName = "favicon.ico",
             PortraitImageFileName = "portrait.jpg",
             BackgroundImageFileName = "profile-background.jpg",
-            ShowHireMe = true,
+            OpenToWork = true,
             ShowFooter = false,
             ShowVersion = true,
             ShowPoweredByNetCv = true
