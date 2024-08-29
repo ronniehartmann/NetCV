@@ -226,6 +226,139 @@ public class SettingsServiceTests
         await _settingsService.UpdateFavIconFileNameAsync(fileName);
 
         // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public void UpdateFavIconFileNameAsync_Whitespace_ArgumentException()
+    {
+        // Arrange
+        var fileName = " ";
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(async ()
+            => await _settingsService.UpdateFavIconFileNameAsync(fileName));
+
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Never);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdatePortraitFileNameAsync_String_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var fileName = "portrait.png";
+
+        // Act
+        await _settingsService.UpdatePortraitFileNameAsync(fileName);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public void UpdatePortraitFileNameAsync_Whitespace_ArgumentException()
+    {
+        // Arrange
+        var fileName = " ";
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(async ()
+            => await _settingsService.UpdatePortraitFileNameAsync(fileName));
+
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Never);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdateBackgroundFileNameAsync_String_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var fileName = "background.png";
+
+        // Act
+        await _settingsService.UpdateBackgroundFileNameAsync(fileName);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public void UpdateBackgroundFileNameAsync_Whitespace_ArgumentException()
+    {
+        // Arrange
+        var fileName = " ";
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(async ()
+            => await _settingsService.UpdateBackgroundFileNameAsync(fileName));
+
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Never);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Never);
+    }
+
+    [Test]
+    public async Task UpdateOpenToWorkAsync_True_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var openToWork = true;
+
+        // Act
+        await _settingsService.UpdateOpenToWorkAsync(openToWork);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public async Task UpdateShowFooterAsync_True_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var showFooter = true;
+
+        // Act
+        await _settingsService.UpdateShowFooterAsync(showFooter);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public async Task UpdateShowVersionAsync_True_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var showVersion = true;
+
+        // Act
+        await _settingsService.UpdateShowVersionAsync(showVersion);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+        _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
+    }
+
+    [Test]
+    public async Task UpdateShowPoweredByNetCvAsync_True_Success()
+    {
+        // Arrange
+        _settingsRepositoryMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(SettingsData.EMPTY_SETTINGS);
+        var showPoweredByNetCv = true;
+
+        // Act
+        await _settingsService.UpdateShowPoweredByNetCvAsync(showPoweredByNetCv);
+
+        // Assert
+        _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Once);
         _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Once);
     }
 }
