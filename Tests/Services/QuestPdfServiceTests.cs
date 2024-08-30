@@ -1,13 +1,12 @@
 ﻿using Application.Dtos;
 using Application.Services.Contents;
-using Application.Services.Pdf;
 using Application.Services.Pdf.Impl;
 using Application.Services.Resources;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.DummyData;
 
-namespace Tests.Services.Resources;
+namespace Tests.Services;
 
 public class QuestPdfServiceTests
 {

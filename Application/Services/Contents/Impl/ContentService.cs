@@ -52,12 +52,4 @@ public class ContentService(IContentRepository contentRepository, ILogger<Conten
             _logger.LogInformation("Updated value of content '{}' to '{}'", key, value);
         }
     }
-
-    public async Task RemoveValueAsync(string key)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(key);
-
-        await _contentRepository.DeleteContentAsync(key);
-        _logger.LogInformation("Removed content '{}'", key);
-    }
 }

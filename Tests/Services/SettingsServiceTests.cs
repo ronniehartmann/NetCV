@@ -295,9 +295,7 @@ public class SettingsServiceTests
         var fileName = " ";
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(async ()
-            => await _settingsService.UpdateBackgroundFileNameAsync(fileName));
-
+        Assert.That(async () => await _settingsService.UpdateBackgroundFileNameAsync(fileName), Throws.ArgumentException);
         _settingsRepositoryMock.Verify(x => x.GetSettingsAsync(), Times.Never);
         _settingsRepositoryMock.Verify(x => x.SetSettingsAsync(It.IsAny<Settings>()), Times.Never);
     }
